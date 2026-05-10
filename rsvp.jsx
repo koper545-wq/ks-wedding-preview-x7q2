@@ -688,6 +688,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
         <RSVPCover variant={variant} compact />
         <SuccessScreen answers={answers} onReset={reset} onBack={onBack} />
         <PaginationBack onBack={onBack} />
+        <SiteFooter />
       </main>
     );
   }
@@ -718,6 +719,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
           </div>
         </section>
         <PaginationBack onBack={onBack} />
+        <SiteFooter />
       </main>
     );
   }
@@ -737,6 +739,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
         />
       </section>
       <PaginationBack onBack={onBack} />
+      <SiteFooter />
     </main>
   );
 }

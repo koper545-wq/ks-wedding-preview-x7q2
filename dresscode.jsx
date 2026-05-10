@@ -142,7 +142,6 @@ function DressCodePage({ onBack }) {
             label={tr('dresscode.rule1.label')}
             headline={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule1.headline') }} />}
             body={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule1.body') }} />}
-            accent={<FabricIcon />}
           />
           <DressCodeRule
             num="02"
@@ -153,25 +152,12 @@ function DressCodePage({ onBack }) {
                 <p key={i} style={{ margin: i === 0 ? 0 : '14px 0 0' }}>{p}</p>
               ))}
             </>}
-            accent={<ColorSwatches swatches={[
-              { name: 'sage', color: '#9DA98F' },
-              { name: 'navy', color: '#2B3A55' },
-              { name: 'dusty rose', color: '#C99B92' },
-              { name: 'terracotta', color: '#B36A4A' },
-              { name: 'olive', color: '#7C7B4E' },
-            ]} />}
           />
           <DressCodeRule
             num="03"
             label={tr('dresscode.rule3.label')}
             headline={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule3.headline') }} />}
             body={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule3.body') }} />}
-            accent={<ColorSwatches swatches={[
-              { name: 'navy', color: '#2B3A55' },
-              { name: 'beige', color: '#C7B59A' },
-              { name: 'lt. grey', color: '#B5B2AA' },
-              { name: 'olive', color: '#7C7B4E' },
-            ]} />}
           />
         </div>
       </section>

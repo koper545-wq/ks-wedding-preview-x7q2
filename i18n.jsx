@@ -11,6 +11,7 @@ const STRINGS = {
       rsvp:       'rsvp',
       dresscode:  'dress code',
       plandnia:   'plan dnia',
+      prezenty:   'prezenty',
       menu:       'menu',
       home:       'strona główna',
       open:       'otwórz menu',
@@ -33,18 +34,17 @@ const STRINGS = {
       kicker: '01',
       title: 'sobota,<br><em>15</em> sierpnia',
       facts: {
-        date:      ['data',      '15.08.2026', 'sobota'],
-        start:     ['początek',  '15:00', 'cocktail hour · spokojne zbieranie gości'],
-        ceremony:  ['ceremonia', '16:00', 'ceremonia wśród zieleni · more info na miejscu'],
-        end:       ['koniec',    '~04:00', 'świętujemy do rana'],
+        date:      ['data',      '15.08.2026', 'Sobota'],
+        start:     ['początek',  '15:00', 'Cocktail hour · spokojne zbieranie gości'],
+        ceremony:  ['ceremonia', '16:00', 'Ceremonia wśród zieleni · more info na miejscu'],
+        end:       ['koniec',    '~04:00', 'Świętujemy do rana'],
         venue:     ['miejsce',   'Wrocław Golf Club', 'Kryniczno, ul. Golfowa 1'],
-        directions:['dojazd',    'ok. 25 min od centrum', 'własny transport · parking na miejscu'],
+        directions:['dojazd',    'ok. 25 min od centrum', 'Własny transport · parking na miejscu'],
       },
       mapBadge: 'dojazd',
       mapPoints: [
-        'na miejscu znajduje się duży parking',
-        'dla chętnych będą dostępne taksówki',
-        'więcej szczegółów soon',
+        'Na miejscu znajduje się duży parking.',
+        'Dla chętnych będą dostępne taksówki.',
       ],
       mapsLink: 'google maps →',
     },
@@ -52,8 +52,8 @@ const STRINGS = {
       kicker: '0¹ – list do gości',
       annot:  'a note · §01',
       title:  'do zobaczenia <em>już</em> niedługo.',
-      body1:  'specjalnie dla Was stworzyliśmy dedykowaną stronę z ważnymi informacjami. mamy nadzieję, że odpowiemy tu na wszystkie Wasze pytania.',
-      body2:  'na początku bardzo prosimy o wypełnienie RSVP wraz z mailem, na który będziemy wysyłać wszelkie aktualizacje. już nie możemy się doczekać wspólnego świętowania!',
+      body1:  'Specjalnie dla Was stworzyliśmy dedykowaną stronę z ważnymi informacjami. Mamy nadzieję, że odpowiemy tu na wszystkie Wasze pytania.',
+      body2:  'Na początku bardzo prosimy o wypełnienie RSVP wraz z mailem, na który będziemy wysyłać wszelkie aktualizacje. Już nie możemy się doczekać wspólnego świętowania!',
       sign:   'k & s',
     },
     format: {
@@ -63,30 +63,29 @@ const STRINGS = {
       cols: {
         food: {
           name:    'jedzenie <em>&amp;</em> bar',
-          tagline: 'lekka formuła',
-          body:    'zamiast kolacji – bufet, pizza z pieca i grill.<br>bar z naszymi fav koktajlami,<br>stół z polskimi winami i polską wódką.',
+          tagline: 'Lekka formuła',
+          body:    'Zamiast kolacji – bufet, pizza z pieca i grill.<br>Bar z naszymi fav koktajlami,<br>stół z polskimi winami i polską wódką.',
         },
         outdoor: {
           name:    'outdoor',
-          tagline: 'popołudnie i wczesny wieczór',
-          body:    'ceremonia i pierwsza część odbędzie się na zewnątrz. muzyka na żywo, pierwszy taniec, rozmowy i gry.',
+          tagline: 'Popołudnie i wczesny wieczór',
+          body:    'Ceremonia i pierwsza część odbędzie się na zewnątrz. Muzyka na żywo, pierwszy taniec, rozmowy i gry.',
         },
         late: {
           name:    'late <em>night</em>',
-          tagline: 'po 22:00',
+          tagline: 'Po 22:00',
           time:    '',
-          body:    'przenosimy się do środka i zaczynamy tańce!',
+          body:    'Przenosimy się do środka i zaczynamy tańce!',
         },
       },
-      outro: 'dokładny plan ceremonii soon',
+      outro: 'Dokładny plan ceremonii soon.',
     },
     rsvpTeaser: {
       kicker: '0³ – rsvp',
       annot:  'please reply · §03',
       title:  'dajcie znać<br>czy będziecie.',
-      body:   'formularz rsvp z preferencjami żywieniowymi, zajmie Wam dwie minuty. prosimy o wypełnienie maksymalnie do końca czerwca!',
+      body:   'Formularz RSVP z preferencjami żywieniowymi, zajmie Wam dwie minuty. Prosimy o wypełnienie maksymalnie do końca czerwca!',
       cta:    'wypełnij rsvp',
-      ctaSub: 'dwie minuty',
     },
     footer: {
       contact: 'kontakt',
@@ -98,28 +97,28 @@ const STRINGS = {
       kicker: '04 – dress code',
       annot:  'what to wear · §04',
       title:  'ubierzcie się <em>elegancko</em>,<br>jak na letnie <em>cocktail</em> party.',
-      sub:    'outdoor po południu, indoor wieczorem.',
+      sub:    'Outdoor po południu, indoor wieczorem.',
       rule1: {
         label:    'tkaniny',
         headline: 'lekkie <em>i</em> zwiewne.',
-        body:     'polecamy oddychające materiały. unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji. to będzie letnie wesele! 🍓',
+        body:     'Polecamy oddychające materiały. Unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji. To będzie letnie wesele! 🍓',
       },
       rule2: {
         label:    'kolory sukienek',
         headline: 'girls, <em>nie</em> mamy bardzo sztywnych zasad, ale…',
         bodyParas: [
-          'unikajcie bardzo mocnych kolorów, takich jak np. krwista czerwień czy neony.',
-          'czerń jest ok, ale stawiajcie na kolory – to jest letnie wesele! naturalnie biel, ecru, kość słoniowa zarezerwowane są dla panny młodej.',
-          'wzory czy kwieciste kreacje są jak najbardziej okej.',
+          'Unikajcie bardzo mocnych kolorów, takich jak np. krwista czerwień czy neony.',
+          'Czerń jest ok, ale stawiajcie na kolory – to jest letnie wesele! Naturalnie biel, ecru, kość słoniowa zarezerwowane są dla panny młodej.',
+          'Wzory czy kwieciste kreacje są jak najbardziej okej.',
         ],
       },
       rule3: {
         label:    'dla panów',
         headline: 'guys, <em>nie</em> akceptujemy t-shirtów – koszule only!',
-        body:     'stawiajcie na elegancki look. uprzedzając pytania – lniany garnitur też jest ok.',
+        body:     'Stawiajcie na elegancki look. Uprzedzając pytania – lniany garnitur też jest ok.',
       },
       outroKicker: 'jeśli macie wątpliwości',
-      outro:       'piszcie, <em>postaramy się</em> doradzić i odpowiedzieć na wszystkie Wasze pytania!',
+      outro:       'Piszcie, <em>postaramy się</em> doradzić i odpowiedzieć na wszystkie Wasze pytania!',
       contact:     'kontakt@klaraiszymon.pl',
       back:        'powrót na cover',
       pageMeta:    '§04 · dress code · k&s mmxxvi',
@@ -134,12 +133,19 @@ const STRINGS = {
       back:       'powrót na cover',
       pageMeta:   '§05 · plan dnia · k&s mmxxvi',
     },
+    prezenty: {
+      kicker: '06 – prezenty',
+      annot:  'gifts · §06',
+      title:  '<em>more info</em><br>soon',
+      back:   'powrót na cover',
+      pageMeta: '§06 · prezenty · k&s mmxxvi',
+    },
     rsvp: {
       coverKicker: '0⁴ — rsvp',
       coverAnnot:  'krok po kroku · §04',
       coverAnnotLong: 'jeden ekran · §04',
       coverTitle:  'dajcie <em>znać</em><br>czy <em>będziecie</em>.',
-      coverBody:   'sześć krótkich pytań, dwie minuty. odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.',
+      coverBody:   'Sześć krótkich pytań, dwie minuty. Odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.',
       progress:    'postęp',
       previous:    'poprzednie',
       next:        'dalej',
@@ -158,7 +164,7 @@ const STRINGS = {
         attending: {
           kicker: 'pytanie 02',
           label:  'będziecie <em>na</em> naszym weselu 15.08?',
-          hint:   'odpowiedzcie jak najszybciej, najpóźniej do końca czerwca.',
+          hint:   'Odpowiedzcie jak najszybciej, najpóźniej do końca czerwca.',
           options: {
             yes:   ['tak', ''],
             no:    ['nie', ''],
@@ -167,7 +173,7 @@ const STRINGS = {
         plus_one: {
           kicker: 'pytanie 03',
           label:  'osoba <em>towarzysząca</em>?',
-          hint:   'jeśli nie było jej na zaproszeniu – podajcie imię i nazwisko.',
+          hint:   'Jeśli nie było jej na zaproszeniu – podajcie imię i nazwisko.',
           yes:    'tak, przyjdę z kimś',
           no:     'przyjdę solo',
           nameLabel: 'imię i nazwisko osoby towarzyszącej',
@@ -176,13 +182,13 @@ const STRINGS = {
         diet: {
           kicker: 'pytanie 04',
           label:  'dieta <em>albo</em> alergie?',
-          hint:   'na przyjęciu będzie bufet, znajdziecie w nim dania wegetariańskie jak i mięsne, ale w razie mocniejszych alergii lub diety wegańskiej postaramy się przygotować coś osobno.',
+          hint:   'Na przyjęciu będzie bufet, znajdziecie w nim dania wegetariańskie jak i mięsne, ale w razie mocniejszych alergii lub diety wegańskiej postaramy się przygotować coś osobno.',
           placeholder: 'jem wszystko…',
         },
         drinks: {
           kicker: 'pytanie 05',
           label:  'co <em>do</em> baru?',
-          hint:   'chcemy zamówić odpowiednie ilości.',
+          hint:   'Chcemy zamówić odpowiednie ilości.',
           options: {
             alko:     ['alkohol',  'wino · cocktails · wódka'],
             non_alko: ['non-alco', 'mocktails'],
@@ -191,7 +197,7 @@ const STRINGS = {
         email: {
           kicker: 'pytanie 06',
           label:  'jaki <em>e-mail</em>?',
-          hint:   'na ten adres dosypiemy szczegóły bliżej daty.',
+          hint:   'Na ten adres dosypiemy szczegóły bliżej daty.',
           placeholder: 'imie@domena.pl',
         },
       },
@@ -232,6 +238,7 @@ const STRINGS = {
       rsvp:       'rsvp',
       dresscode:  'dress code',
       plandnia:   'day plan',
+      prezenty:   'gifts',
       menu:       'menu',
       home:       'home',
       open:       'open menu',
@@ -255,17 +262,16 @@ const STRINGS = {
       title: 'Saturday,<br>August <em>15</em>',
       facts: {
         date:      ['date',         '08.15.2026', 'Saturday'],
-        start:     ['start',        '3:00 PM',    'cocktail hour · easy gathering'],
-        ceremony:  ['ceremony',     '4:00 PM',    'outdoor ceremony · more info on the day'],
-        end:       ['end',          '~4:00 AM',   'we celebrate till morning'],
+        start:     ['start',        '3:00 PM',    'Cocktail hour · easy gathering'],
+        ceremony:  ['ceremony',     '4:00 PM',    'Outdoor ceremony · more info on the day'],
+        end:       ['end',          '~4:00 AM',   'We celebrate till morning'],
         venue:     ['venue',        'Wrocław Golf Club', 'Kryniczno, Golfowa 1'],
-        directions:['directions',   'ca. 25 min from centre', 'own transport · parking on site'],
+        directions:['directions',   'ca. 25 min from centre', 'Own transport · parking on site'],
       },
       mapBadge: 'directions',
       mapPoints: [
-        'large parking on site',
-        'taxis available on request',
-        'more details soon',
+        'Large parking on site.',
+        'Taxis available on request.',
       ],
       mapsLink: 'google maps →',
     },
@@ -273,8 +279,8 @@ const STRINGS = {
       kicker: '0¹ – a letter',
       annot:  'a note · §01',
       title:  'see you <em>very</em> soon.',
-      body1:  'we made this site just for you, with all the important info. we hope you find here every answer you need.',
-      body2:  'first, please fill out the RSVP with your email — we will be sending updates there. we can\'t wait to celebrate with you!',
+      body1:  'We made this site just for you, with all the important info. We hope you find here every answer you need.',
+      body2:  'First, please fill out the RSVP with your email — we will be sending updates there. We can\'t wait to celebrate with you!',
       sign:   'k & s',
     },
     format: {
@@ -284,30 +290,29 @@ const STRINGS = {
       cols: {
         food: {
           name:    'food <em>&amp;</em> bar',
-          tagline: 'a light formula',
-          body:    'no sit-down dinner – buffet, pizza from a wood oven, grill.<br>a bar with our fav cocktails,<br>a table with Polish wines and Polish vodka.',
+          tagline: 'A light formula',
+          body:    'No sit-down dinner – buffet, pizza from a wood oven, grill.<br>A bar with our fav cocktails,<br>a table with Polish wines and Polish vodka.',
         },
         outdoor: {
           name:    'outdoor',
-          tagline: 'afternoon & early evening',
-          body:    'ceremony and the first part outside. live music, first dance, conversations and games.',
+          tagline: 'Afternoon & early evening',
+          body:    'Ceremony and the first part outside. Live music, first dance, conversations and games.',
         },
         late: {
           name:    'late <em>night</em>',
-          tagline: 'after 10 PM',
+          tagline: 'After 10 PM',
           time:    '',
-          body:    'we move inside and the dancing begins!',
+          body:    'We move inside and the dancing begins!',
         },
       },
-      outro: 'detailed timeline coming soon',
+      outro: 'Detailed timeline coming soon.',
     },
     rsvpTeaser: {
       kicker: '0³ – rsvp',
       annot:  'please reply · §03',
       title:  'let us know<br>if you\'re coming.',
-      body:   'a quick rsvp form with dietary preferences — takes two minutes. please reply by end of June at the latest!',
+      body:   'A quick RSVP form with dietary preferences — takes two minutes. Please reply by end of June at the latest!',
       cta:    'fill out rsvp',
-      ctaSub: 'two minutes',
     },
     footer: {
       contact: 'contact',
@@ -319,28 +324,28 @@ const STRINGS = {
       kicker: '04 – dress code',
       annot:  'what to wear · §04',
       title:  'dress <em>elegantly</em>,<br>like for a summer <em>cocktail</em> party.',
-      sub:    'outdoor in the afternoon, indoor in the evening.',
+      sub:    'Outdoor in the afternoon, indoor in the evening.',
       rule1: {
         label:    'fabrics',
         headline: 'light <em>and</em> airy.',
-        body:     'we recommend breathable materials. avoid heavy synthetics, full-length satin, stiff constructions. it\'s a summer wedding! 🍓',
+        body:     'We recommend breathable materials. Avoid heavy synthetics, full-length satin, stiff constructions. It\'s a summer wedding! 🍓',
       },
       rule2: {
         label:    'dress colors',
         headline: 'girls, we <em>don\'t</em> have super strict rules, but…',
         bodyParas: [
-          'avoid very bold colors like blood-red or neons.',
-          'black is fine, but lean into colors – it\'s a summer wedding! and naturally white, ecru, ivory are reserved for the bride.',
-          'patterns and floral pieces are absolutely welcome.',
+          'Avoid very bold colors like blood-red or neons.',
+          'Black is fine, but lean into colors – it\'s a summer wedding! And naturally white, ecru, ivory are reserved for the bride.',
+          'Patterns and floral pieces are absolutely welcome.',
         ],
       },
       rule3: {
         label:    'for guys',
         headline: 'guys, <em>no</em> t-shirts – shirts only!',
-        body:     'go for an elegant look. answering the obvious – a linen suit is also ok.',
+        body:     'Go for an elegant look. Answering the obvious – a linen suit is also ok.',
       },
       outroKicker: 'if you have any doubts',
-      outro:       'write to us — <em>we\'ll do our best</em> to advise and answer all your questions!',
+      outro:       'Write to us — <em>we\'ll do our best</em> to advise and answer all your questions!',
       contact:     'kontakt@klaraiszymon.pl',
       back:        'back to cover',
       pageMeta:    '§04 · dress code · k&s mmxxvi',
@@ -355,12 +360,19 @@ const STRINGS = {
       back:       'back to cover',
       pageMeta:   '§05 · day plan · k&s mmxxvi',
     },
+    prezenty: {
+      kicker: '06 – gifts',
+      annot:  'gifts · §06',
+      title:  '<em>more info</em><br>soon',
+      back:   'back to cover',
+      pageMeta: '§06 · gifts · k&s mmxxvi',
+    },
     rsvp: {
       coverKicker: '0⁴ — rsvp',
       coverAnnot:  'step by step · §04',
       coverAnnotLong: 'one screen · §04',
       coverTitle:  'tell us if<br>you\'re <em>coming</em>.',
-      coverBody:   'six short questions, two minutes. answers save locally, so you can come back and edit if anything changes.',
+      coverBody:   'Six short questions, two minutes. Answers save locally, so you can come back and edit if anything changes.',
       progress:    'progress',
       previous:    'previous',
       next:        'next',
@@ -379,7 +391,7 @@ const STRINGS = {
         attending: {
           kicker: 'question 02',
           label:  'will you be at <em>our wedding</em> on Aug 15?',
-          hint:   'please reply as soon as possible, no later than end of June.',
+          hint:   'Please reply as soon as possible, no later than end of June.',
           options: {
             yes:   ['yes', ''],
             no:    ['no',  ''],
@@ -388,7 +400,7 @@ const STRINGS = {
         plus_one: {
           kicker: 'question 03',
           label:  'a <em>plus one</em>?',
-          hint:   'if not on the invitation — please give us their full name.',
+          hint:   'If not on the invitation — please give us their full name.',
           yes:    'yes, bringing someone',
           no:     'coming solo',
           nameLabel: 'plus one — full name',
@@ -397,13 +409,13 @@ const STRINGS = {
         diet: {
           kicker: 'question 04',
           label:  'diet <em>or</em> allergies?',
-          hint:   'we\'ll have a buffet with both vegetarian and meat dishes. for serious allergies or vegan diet, we\'ll prepare something separately.',
+          hint:   'We\'ll have a buffet with both vegetarian and meat dishes. For serious allergies or vegan diet, we\'ll prepare something separately.',
           placeholder: 'i eat everything…',
         },
         drinks: {
           kicker: 'question 05',
           label:  'what <em>about</em> the bar?',
-          hint:   'we want to order the right amounts.',
+          hint:   'We want to order the right amounts.',
           options: {
             alko:     ['alcohol',  'wine · cocktails · vodka'],
             non_alko: ['non-alc',  'mocktails'],
@@ -412,7 +424,7 @@ const STRINGS = {
         email: {
           kicker: 'question 06',
           label:  'what <em>e-mail</em>?',
-          hint:   'we\'ll send details closer to the date.',
+          hint:   'We\'ll send details closer to the date.',
           placeholder: 'name@domain.com',
         },
       },
@@ -444,6 +456,36 @@ const STRINGS = {
   },
 };
 
+/* Polish typographic orphans:
+   single-letter words (a, i, o, u, w, z) should not end a line — bind them
+   to the next word with a non-breaking space. Applied to every string at
+   render time so all strings benefit without per-string maintenance. */
+function noOrphans(s) {
+  if (typeof s !== 'string') return s;
+  // Already has a nbsp? skip to avoid double-processing.
+  // Bind: <whitespace-start>(single letter)<whitespace> → keep letter, replace following ws with nbsp.
+  // Run twice to catch consecutive cases like "a i to" → "a i to".
+  let out = s;
+  for (let pass = 0; pass < 2; pass++) {
+    out = out.replace(/(^|[\s>( ])([aiouwzAIOUWZ])\s+/g, '$1$2 ');
+  }
+  return out;
+}
+
+/* Recursively apply noOrphans to strings inside arrays/objects.
+   Functions pass through unchanged. */
+function deepNoOrphans(v) {
+  if (v == null) return v;
+  if (typeof v === 'string') return noOrphans(v);
+  if (Array.isArray(v)) return v.map(deepNoOrphans);
+  if (typeof v === 'object') {
+    const out = {};
+    for (const k of Object.keys(v)) out[k] = deepNoOrphans(v[k]);
+    return out;
+  }
+  return v;
+}
+
 const LangContext = React.createContext({ lang: 'pl', setLang: () => {} });
 
 function getInitialLang() {
@@ -472,9 +514,10 @@ function useT() {
         v = STRINGS.pl;
         for (const p of parts) v = (v == null) ? null : v[p];
       }
-      return v == null ? key : v;
+      if (v == null) return key;
+      return deepNoOrphans(v);
     };
   }, [lang]);
 }
 
-Object.assign(window, { LangContext, useLang, useT, STRINGS, getInitialLang });
+Object.assign(window, { LangContext, useLang, useT, STRINGS, getInitialLang, noOrphans });

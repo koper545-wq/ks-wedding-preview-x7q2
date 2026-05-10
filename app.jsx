@@ -9,6 +9,7 @@ function TopNav({ active, onJump, route, goto }) {
     { id: 'rsvp',       labelKey: 'nav.rsvp',       num: '03', kind: 'route' },
     { id: 'dresscode',  labelKey: 'nav.dresscode',  num: '04', kind: 'route' },
     { id: 'plandnia',   labelKey: 'nav.plandnia',   num: '05', kind: 'route' },
+    { id: 'prezenty',   labelKey: 'nav.prezenty',   num: '06', kind: 'route' },
   ];
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -259,9 +260,6 @@ function RSVPTeaser({ onOpen }) {
               {tr('rsvpTeaser.cta')}
               <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>→</span>
             </button>
-            <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'rgba(255,252,240,0.55)', marginTop: 14 }}>
-              {tr('rsvpTeaser.ctaSub')}
-            </div>
           </div>
         </div>
       </div>
@@ -324,6 +322,8 @@ function App() {
         <DressCodePage onBack={() => goto('home')} />
       ) : route === 'plandnia' ? (
         <PlanDniaPage onBack={() => goto('home')} />
+      ) : route === 'prezenty' ? (
+        <PrezentyPage onBack={() => goto('home')} />
       ) : route === 'rsvp' ? (
         <RSVPPage onBack={() => goto('home')} variant="steps" />
       ) : (
