@@ -201,7 +201,7 @@ function DressCodePage({ onBack }) {
             </p>
           </div>
           <div style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'rgba(255,252,240,0.85)', lineHeight: 1.7, textAlign: 'right' }}>
-            klara@wedded.studio
+            kontakt@klaraiszymon.pl
           </div>
         </div>
       </section>

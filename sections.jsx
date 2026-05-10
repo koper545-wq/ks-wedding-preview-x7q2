@@ -363,15 +363,11 @@ function SiteFooter() {
       borderTop: '1px solid var(--rule)',
       marginRight: 0,
     }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 48, marginRight: 64, alignItems: 'baseline' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginRight: 64, gap: 48 }}>
         <Monogram size={32} />
-        <div style={{ textAlign: 'center' }}>
-          <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>edition</div>
-          <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>vol. 01 – summer mmxxvi</div>
-        </div>
         <div style={{ textAlign: 'right' }}>
           <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>kontakt</div>
-          <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)' }}>klara@wedded.studio</div>
+          <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)' }}>kontakt@klaraiszymon.pl</div>
         </div>
       </div>
       <div className="rule-h" style={{ marginTop: 40, marginBottom: 24, marginRight: 64 }} />
