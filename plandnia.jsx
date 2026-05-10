@@ -3,7 +3,7 @@
 function PlanDniaPage({ onBack }) {
   return (
     <main>
-      <section style={{ padding: '120px 56px 80px 56px' }}>
+      <section style={{ padding: '120px var(--pad-x) 80px var(--pad-x)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: 80 }}>
           <div className="smallcaps" style={{ color: 'var(--ink)' }}>05 – plan dnia</div>
           <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
@@ -27,7 +27,7 @@ function PlanDniaPage({ onBack }) {
       </section>
 
       <section style={{
-        padding: '96px 56px 96px 56px',
+        padding: '96px var(--pad-x) 96px var(--pad-x)',
         borderTop: '1px solid var(--rule)',
         background: 'var(--ink)',
         color: 'var(--cream)',
@@ -63,7 +63,7 @@ function PlanDniaPage({ onBack }) {
         </div>
       </section>
 
-      <section style={{ padding: '40px 56px 64px 56px', borderTop: '1px solid var(--rule)' }}>
+      <section style={{ padding: '40px var(--pad-x) 64px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button onClick={onBack} style={{
             background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,

@@ -5,14 +5,14 @@
 function SectionInformacje() {
   return (
     <section style={{
-      padding: '120px 56px 120px 56px',
+      padding: '120px var(--pad-x) 120px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
     }}>
       <div style={{ marginBottom: 56 }}>
         <div className="smallcaps" style={{ color: 'var(--ink)' }}>01</div>
       </div>
 
-      <div style={{
+      <div className="stack-mobile" style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1px 1fr',
         gap: 64,
@@ -111,7 +111,7 @@ function SectionInformacje() {
 
 function FactRow({ label, value, sub, last }) {
   return (
-    <div style={{
+    <div className="stack-mobile" style={{
       display: 'grid',
       gridTemplateColumns: '120px 1fr',
       gap: 24,
@@ -187,7 +187,7 @@ function MapPlaceholder() {
 function SectionSoon() {
   return (
     <section style={{
-      padding: '88px 56px 120px 56px',
+      padding: '88px var(--pad-x) 120px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
       position: 'relative',
     }}>
@@ -198,7 +198,7 @@ function SectionSoon() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 80, marginRight: 64, alignItems: 'start' }}>
+      <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 80, marginRight: 64, alignItems: 'start' }}>
         <div>
           <h2 style={{
             fontFamily: 'var(--serif)',
@@ -253,7 +253,7 @@ function SectionSoon() {
 function SectionFormat({ onDressCode }) {
   return (
     <section style={{
-      padding: '120px 56px 140px 56px',
+      padding: '120px var(--pad-x) 140px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 80 }}>
@@ -275,7 +275,7 @@ function SectionFormat({ onDressCode }) {
         letnie, polskie wesele – <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party na tarasie.
       </h2>
 
-      <div style={{
+      <div className="stack-mobile" style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1px 1fr 1px 1fr',
         gap: 56,
@@ -359,7 +359,7 @@ function FormatColumn({ number, name, tagline, time, body }) {
 function SiteFooter() {
   return (
     <footer style={{
-      padding: '64px 56px 56px 56px',
+      padding: '64px var(--pad-x) 56px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
       marginRight: 0,
     }}>

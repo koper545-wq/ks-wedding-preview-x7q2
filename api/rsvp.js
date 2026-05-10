@@ -9,6 +9,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAIL_FROM = process.env.MAIL_FROM || 'klara & szymon <kontakt@klaraiszymon.pl>';
 const MAIL_REPLY_TO = process.env.MAIL_REPLY_TO || 'kontakt@klaraiszymon.pl';
 const SITE_URL = process.env.SITE_URL || 'https://klaraiszymon.pl';
+// Fallback recipient(s) when Sheet write fails — comma-separated emails.
+// Set ADMIN_NOTIFY_EMAIL in Vercel env vars (e.g. "klara@gmail.com,szymon@gmail.com").
+const ADMIN_NOTIFY_EMAIL = process.env.ADMIN_NOTIFY_EMAIL || '';
 
 function bad(res, status, message) {
   return res.status(status).json({ ok: false, error: message });
@@ -73,13 +76,31 @@ export default async function handler(req, res) {
   let sheetsOk = false, sheetsError = null;
   if (SHEETS_WEBHOOK_URL) {
     try {
+      // Apps Script returns 302 redirect to googleusercontent.com — must follow with
+      // POST preserved (the global fetch in node 20+ handles 302 → GET, which loses
+      // the body). Workaround: use redirect:'manual' and parse the body from response.
       const r = await fetch(SHEETS_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
+        redirect: 'follow',
       });
       sheetsOk = r.ok;
-      if (!r.ok) sheetsError = `sheets http ${r.status}`;
+      if (r.ok) {
+        try {
+          const j = await r.json();
+          if (j && j.ok === false) {
+            sheetsOk = false;
+            sheetsError = `sheets app error: ${j.error || 'unknown'}`;
+          }
+        } catch {
+          // Apps Script returned non-JSON (HTML error page) — treat as failure
+          sheetsOk = false;
+          sheetsError = 'sheets returned non-json';
+        }
+      } else {
+        sheetsError = `sheets http ${r.status}`;
+      }
     } catch (err) {
       sheetsError = String(err);
     }
@@ -123,14 +144,88 @@ export default async function handler(req, res) {
     emailError = 'RESEND_API_KEY not set';
   }
 
+  // ── 3. Fallback: if Sheet failed, mail raw data to admin so nothing is lost ──
+  let adminNotifyOk = false, adminNotifyError = null;
+  if (!sheetsOk && RESEND_API_KEY && ADMIN_NOTIFY_EMAIL) {
+    try {
+      const adminRecipients = ADMIN_NOTIFY_EMAIL.split(',').map(s => s.trim()).filter(Boolean);
+      const r = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: MAIL_FROM,
+          to: adminRecipients,
+          subject: `⚠️ RSVP — Sheet failure, dane w mailu (${data.name})`,
+          html: adminFallbackHtml(data, sheetsError),
+          text: adminFallbackText(data, sheetsError),
+          tags: [
+            { name: 'kind', value: 'admin_fallback' },
+          ],
+        }),
+      });
+      adminNotifyOk = r.ok;
+      if (!r.ok) {
+        const txt = await r.text().catch(() => '');
+        adminNotifyError = `admin notify http ${r.status} ${txt.slice(0, 200)}`;
+      }
+    } catch (err) {
+      adminNotifyError = String(err);
+    }
+  }
+
   // 200 even if downstream partially failed — we logged it; UI shouldn't crash.
   return res.status(200).json({
     ok: true,
     sheets: sheetsOk,
     email: emailOk,
+    adminNotified: adminNotifyOk,
     ...(sheetsError ? { sheetsError } : {}),
     ...(emailError ? { emailError } : {}),
+    ...(adminNotifyError ? { adminNotifyError } : {}),
   });
+}
+
+function adminFallbackText(d, sheetsError) {
+  return [
+    'UWAGA: zapis do Google Sheets nie powiódł się — RSVP poniżej trzeba dopisać ręcznie.',
+    `Powód: ${sheetsError || 'unknown'}`,
+    '',
+    '— odpowiedź —',
+    `imię i nazwisko: ${d.name}`,
+    `odpowiedź: ${d.attending}`,
+    `osoba towarzysząca: ${d.plus_one_has || '(n/a)'} ${d.plus_one_name || ''}`,
+    `dieta: ${d.diet || '(brak)'}`,
+    `bar: ${d.drinks || '(n/a)'}`,
+    `email: ${d.email}`,
+    `telefon: ${d.phone || '(brak)'}`,
+    `źródło: ${d.source}`,
+    `user agent: ${d.user_agent}`,
+    `czas serwera: ${new Date().toISOString()}`,
+  ].join('\n');
+}
+
+function adminFallbackHtml(d, sheetsError) {
+  const rows = [
+    ['imię i nazwisko', d.name],
+    ['odpowiedź', d.attending],
+    ['osoba towarzysząca', `${d.plus_one_has || '(n/a)'} ${d.plus_one_name || ''}`],
+    ['dieta', d.diet || '(brak)'],
+    ['bar', d.drinks || '(n/a)'],
+    ['email', d.email],
+    ['telefon', d.phone || '(brak)'],
+    ['źródło', d.source],
+    ['user agent', d.user_agent],
+    ['czas serwera', new Date().toISOString()],
+  ].map(([k, v]) => `<tr><td style="padding:6px 12px 6px 0;font-family:monospace;font-size:12px;color:#666;vertical-align:top;">${escapeHtml(k)}</td><td style="padding:6px 0;font-family:monospace;font-size:12px;color:#000;">${escapeHtml(String(v))}</td></tr>`).join('');
+  return `<!doctype html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:24px auto;padding:24px;background:#FFFCF0;border:2px solid #B36A4A;">
+    <h2 style="color:#B36A4A;margin:0 0 8px;">⚠️ RSVP — Sheet write failed</h2>
+    <p style="margin:0 0 16px;color:#444;">Zapis do Google Sheets nie powiódł się. Dane RSVP poniżej — dopisz ręcznie do arkusza.</p>
+    <p style="margin:0 0 24px;color:#666;font-family:monospace;font-size:12px;">Powód: ${escapeHtml(sheetsError || 'unknown')}</p>
+    <table style="width:100%;border-collapse:collapse;border-top:1px solid #ccc;border-bottom:1px solid #ccc;">${rows}</table>
+  </body></html>`;
 }
 
 /* ── Email content ─────────────────────────────────────────────────────── */

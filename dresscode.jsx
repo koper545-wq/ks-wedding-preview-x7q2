@@ -2,7 +2,7 @@
 
 function DressCodeRule({ num, label, headline, body, accent }) {
   return (
-    <article style={{
+    <article className="stack-mobile" style={{
       display: 'grid',
       gridTemplateColumns: '120px 1fr',
       gap: 48,
@@ -100,7 +100,7 @@ function DressCodePage({ onBack }) {
   return (
     <main>
       {/* Cover */}
-      <section style={{ padding: '80px 56px 56px 56px' }}>
+      <section style={{ padding: '80px var(--pad-x) 56px var(--pad-x)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: 32 }}>
           <div className="smallcaps" style={{ color: 'var(--ink)' }}>04 – dress code</div>
           <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
@@ -108,7 +108,7 @@ function DressCodePage({ onBack }) {
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end', marginTop: 24 }}>
+        <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end', marginTop: 24 }}>
           <h1 style={{
             fontFamily: 'var(--serif)',
             fontWeight: 400,
@@ -135,7 +135,7 @@ function DressCodePage({ onBack }) {
       </section>
 
       {/* Rules */}
-      <section style={{ padding: '0 56px 80px 56px' }}>
+      <section style={{ padding: '0 var(--pad-x) 80px var(--pad-x)' }}>
         <div style={{ borderTop: '1px solid var(--rule)' }}>
           <DressCodeRule
             num="01"
@@ -188,12 +188,12 @@ function DressCodePage({ onBack }) {
 
       {/* Outro */}
       <section style={{
-        padding: '80px 56px 96px 56px',
+        padding: '80px var(--pad-x) 96px var(--pad-x)',
         borderTop: '1px solid var(--rule)',
         background: 'var(--ink)',
         color: 'var(--cream)',
       }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+        <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
           <div>
             <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)', marginBottom: 18 }}>jeśli macie wątpliwości</div>
             <p style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(26px, 3.2vw, 40px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.02em', margin: 0, color: 'var(--cream)' }}>
@@ -207,7 +207,7 @@ function DressCodePage({ onBack }) {
       </section>
 
       {/* Pagination – back to landing */}
-      <section style={{ padding: '40px 56px 32px 56px', borderTop: '1px solid var(--rule)' }}>
+      <section style={{ padding: '40px var(--pad-x) 32px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button onClick={onBack} style={{
             background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,

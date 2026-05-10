@@ -6,8 +6,8 @@ const heroStyles = {
     width: '100%',
     paddingTop: 40,
     paddingBottom: 64,
-    paddingLeft: 56,
-    paddingRight: 56,
+    paddingLeft: 'var(--pad-x)',
+    paddingRight: 'var(--pad-x)',
     overflow: 'hidden',
   },
   cornerLabel: {
@@ -118,12 +118,12 @@ function Hero() {
         </div>
         <h1 style={{
           fontFamily: 'var(--serif)',
-          fontSize: 'clamp(64px, 11vw, 168px)',
+          fontSize: 'clamp(48px, 11vw, 168px)',
           fontWeight: 400,
           lineHeight: 0.88,
           letterSpacing: '-0.045em',
           margin: 0,
-          whiteSpace: 'nowrap',
+          textWrap: 'balance',
         }}>
           klara <span style={{ fontStyle: 'italic', fontWeight: 300 }}>&amp;</span> szymon
         </h1>

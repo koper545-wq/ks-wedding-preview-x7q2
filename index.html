@@ -54,6 +54,75 @@
   .bw img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   ::selection { background: var(--ink); color: var(--cream); }
+
+  /* ── Responsive scaling helpers ─────────────────────────────────────── */
+  /* Use --pad-x in inline styles for section side-padding so mobile shrinks. */
+  :root {
+    --pad-x: 56px;
+  }
+  @media (max-width: 768px) {
+    :root { --pad-x: 24px; }
+    body { font-size: 14px; }
+  }
+  @media (max-width: 420px) {
+    :root { --pad-x: 18px; }
+  }
+
+  /* Hamburger button (only used on mobile via display rule) */
+  .nav-hamburger {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 16px;
+    height: 1px;
+    background: var(--ink);
+    position: relative;
+  }
+  .nav-hamburger span::before,
+  .nav-hamburger span::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--ink);
+  }
+  .nav-hamburger span::before { top: -5px; }
+  .nav-hamburger span::after  { top:  5px; }
+
+  @media (max-width: 768px) {
+    .nav-desktop-items { display: none !important; }
+    .nav-desktop-date  { display: none !important; }
+    .nav-hamburger { display: inline-flex !important; }
+
+    /* Force grid containers with .stack-mobile to single column */
+    .stack-mobile {
+      display: block !important;
+      margin-right: 0 !important;
+    }
+    .stack-mobile > * + * { margin-top: 32px; }
+    /* Vertical 1px divider columns become horizontal dividers in stacked flow */
+    .stack-mobile > .vdiv {
+      width: 100% !important;
+      height: 1px !important;
+      background: var(--rule);
+    }
+  }
+
+  /* RSVP step fade-in (used by .rsvp-step-fade injected from rsvp.jsx) */
+  @keyframes rsvp-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
@@ -63,11 +132,11 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="hero.jsx"></script>
-<script type="text/babel" src="sections.jsx"></script>
-<script type="text/babel" src="dresscode.jsx"></script>
-<script type="text/babel" src="plandnia.jsx"></script>
-<script type="text/babel" src="rsvp.jsx"></script>
-<script type="text/babel" src="app.jsx"></script>
+<script type="text/babel" src="hero.jsx?v=5"></script>
+<script type="text/babel" src="sections.jsx?v=5"></script>
+<script type="text/babel" src="dresscode.jsx?v=5"></script>
+<script type="text/babel" src="plandnia.jsx?v=5"></script>
+<script type="text/babel" src="rsvp.jsx?v=5"></script>
+<script type="text/babel" src="app.jsx?v=5"></script>
 </body>
 </html>

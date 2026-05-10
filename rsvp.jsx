@@ -1,5 +1,29 @@
 /* RSVP subpage – typeform-style step-by-step + long-form variant + easter egg on submit */
 
+(function injectRSVPStyles() {
+  if (typeof document === 'undefined') return;
+  if (document.getElementById('rsvp-styles')) return;
+  const s = document.createElement('style');
+  s.id = 'rsvp-styles';
+  s.textContent = `
+    .rsvp-step-fade {
+      animation: rsvp-fade-in 320ms cubic-bezier(.2,.8,.2,1) both;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rsvp-step-fade { animation: none; }
+    }
+    .rsvp-step-fade button:focus-visible,
+    .rsvp-step-fade input:focus-visible,
+    .rsvp-step-fade textarea:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 4px;
+    }
+  `;
+  document.head.appendChild(s);
+})();
+
+const EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
+
 const RSVP_STEPS = [
   {
     id: 'name',
@@ -252,18 +276,49 @@ function isStepValid(step, value, answers) {
     return true;
   }
   if (step.type === 'email') {
-    if (!step.required && !value) return true;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value || '');
+    const v = (value || '').trim();
+    if (!step.required && !v) return true;
+    return EMAIL_RE.test(v);
   }
   if (step.type === 'tel') {
     if (!step.required && !value) return true;
-    return (value || '').replace(/\D/g, '').length >= 6;
+    const digits = (value || '').replace(/\D/g, '');
+    return digits.length >= 7 && digits.length <= 15;
   }
   if (step.type === 'textarea' || step.type === 'text') {
     if (!step.required && !value) return true;
-    return !!(value && value.trim());
+    return !!(value && value.trim().length >= 2);
   }
   return true;
+}
+
+/* Reason a step is invalid (shown as inline hint after first interaction) */
+function stepValidationMessage(step, value, answers) {
+  if (step.onlyIfAttending && answers.attending && answers.attending !== 'yes') return null;
+  const v = typeof value === 'string' ? value.trim() : value;
+  if (step.type === 'choice') return v ? null : 'wybierzcie jedną z opcji.';
+  if (step.type === 'plus_one') {
+    if (!value || !value.has) return null;
+    if (value.has === 'yes' && !value.name?.trim()) return 'imię osoby towarzyszącej.';
+    return null;
+  }
+  if (step.type === 'email') {
+    if (!v) return step.required ? 'email jest potrzebny.' : null;
+    return EMAIL_RE.test(v) ? null : 'sprawdźcie pisownię — to nie wygląda na email.';
+  }
+  if (step.type === 'tel') {
+    if (!v) return step.required ? 'telefon jest potrzebny.' : null;
+    const digits = v.replace(/\D/g, '');
+    if (digits.length < 7) return 'telefon wygląda na za krótki.';
+    if (digits.length > 15) return 'telefon wygląda na za długi.';
+    return null;
+  }
+  if (step.type === 'textarea' || step.type === 'text') {
+    if (!v) return step.required ? 'to pole jest potrzebne.' : null;
+    if (v.length < 2) return 'trochę za krótko.';
+    return null;
+  }
+  return null;
 }
 
 function activeSteps(answers) {
@@ -286,7 +341,7 @@ function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvanc
   const buttonDisabled = !canAdvance || submitting;
   const buttonLabel = submitting && isLast ? 'wysyłam…' : isLast ? 'wyślij rsvp' : 'dalej';
   return (
-    <div style={{
+    <div key={step.id} className="rsvp-step-fade" style={{
       display: 'grid',
       gridTemplateColumns: '1fr',
       gap: 32,
@@ -500,7 +555,7 @@ function SuccessScreen({ answers, onReset, onBack }) {
     <section style={{
       position: 'relative',
       minHeight: '70vh',
-      padding: '120px 56px 96px 56px',
+      padding: '120px var(--pad-x) 96px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
       background: 'var(--ink)',
       color: 'var(--cream)',
@@ -673,7 +728,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
     return (
       <main>
         <RSVPCover variant={variant} />
-        <section style={{ padding: '72px 56px 96px 56px', borderTop: '1px solid var(--rule)' }}>
+        <section style={{ padding: '72px var(--pad-x) 96px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
           <div>
             <StepView
               step={currentStep}
@@ -702,7 +757,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
   return (
     <main>
       <RSVPCover variant={variant} />
-      <section style={{ padding: '72px 56px 96px 56px', borderTop: '1px solid var(--rule)' }}>
+      <section style={{ padding: '72px var(--pad-x) 96px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
         <LongForm
           answers={answers}
           setAnswer={setAnswer}
@@ -749,7 +804,7 @@ function RSVPCover({ variant, compact }) {
       </div>
 
       {!compact && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end', marginTop: 24 }}>
+        <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 64, alignItems: 'end', marginTop: 24 }}>
           <h1 style={{
             fontFamily: 'var(--serif)',
             fontWeight: 400,
@@ -780,7 +835,7 @@ function RSVPCover({ variant, compact }) {
 
 function PaginationBack({ onBack }) {
   return (
-    <section style={{ padding: '40px 56px 64px 56px', borderTop: '1px solid var(--rule)' }}>
+    <section style={{ padding: '40px var(--pad-x) 64px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button onClick={onBack} style={{
           background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,

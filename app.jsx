@@ -8,82 +8,177 @@ function TopNav({ active, onJump, route, goto }) {
     { id: 'dresscode',  label: 'dress code',  num: '04', kind: 'route' },
     { id: 'plandnia',   label: 'plan dnia',   num: '05', kind: 'route' },
   ];
+  const [menuOpen, setMenuOpen] = React.useState(false);
+
   const handleClick = (it) => {
+    setMenuOpen(false);
     if (it.kind === 'route') { goto(it.id); return; }
     if (route !== 'home') { goto('home'); setTimeout(() => onJump(it.id), 50); return; }
     onJump(it.id);
   };
+
+  // Lock body scroll when mobile menu is open
+  React.useEffect(() => {
+    if (menuOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [menuOpen]);
+
+  // Esc closes menu
+  React.useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
   return (
-    <nav aria-label="contents" style={{
-      position: 'sticky',
-      top: 0,
-      zIndex: 40,
-      background: 'var(--cream)',
-      borderBottom: '1px solid var(--rule)',
-      backdropFilter: 'saturate(140%) blur(6px)',
-      WebkitBackdropFilter: 'saturate(140%) blur(6px)',
-      display: 'grid',
-      gridTemplateColumns: 'auto 1fr auto',
-      alignItems: 'center',
-      gap: 32,
-      padding: '14px 56px',
-    }}>
-      <button onClick={() => goto('home')}
-        style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
-        <Monogram size={22} />
-      </button>
-
-      <div style={{
-        display: 'flex',
-        gap: 36,
-        justifyContent: 'center',
+    <>
+      <nav aria-label="contents" style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 40,
+        background: 'var(--cream)',
+        borderBottom: '1px solid var(--rule)',
+        backdropFilter: 'saturate(140%) blur(6px)',
+        WebkitBackdropFilter: 'saturate(140%) blur(6px)',
+        display: 'grid',
+        gridTemplateColumns: 'auto 1fr auto',
         alignItems: 'center',
+        gap: 16,
+        padding: '14px var(--pad-x)',
       }}>
-        {items.map((it) => {
-          const isActive = (it.kind === 'route' ? route === it.id : (route === 'home' && active === it.id));
-          return (
-            <button key={it.id}
-              onClick={() => handleClick(it)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px 0',
-                display: 'inline-flex',
-                alignItems: 'baseline',
-                gap: 8,
-                color: isActive ? 'var(--ink)' : 'var(--muted)',
-                borderBottom: isActive ? '1px solid var(--ink)' : '1px solid transparent',
-                fontFamily: 'var(--sans)',
-                fontSize: 10,
-                letterSpacing: '0.28em',
-                textTransform: 'uppercase',
-                fontWeight: isActive ? 600 : 400,
-              }}>
-              <span style={{ fontFamily: 'var(--mono)', letterSpacing: '0.04em', fontSize: 9, opacity: 0.7 }}>{it.num}</span>
-              <span>{it.label}</span>
-            </button>
-          );
-        })}
-      </div>
+        <button onClick={() => goto('home')}
+          aria-label="strona główna"
+          style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <Monogram size={22} />
+        </button>
 
-      <div style={{
-        fontFamily: 'var(--mono)',
-        fontSize: 9,
-        letterSpacing: '0.18em',
-        color: 'var(--muted)',
-        textTransform: 'uppercase',
-      }}>
-        15 / 08 / 2026
-      </div>
-    </nav>
+        <div className="nav-desktop-items" style={{
+          display: 'flex',
+          gap: 36,
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}>
+          {items.map((it) => {
+            const isActive = (it.kind === 'route' ? route === it.id : (route === 'home' && active === it.id));
+            return (
+              <button key={it.id}
+                onClick={() => handleClick(it)}
+                aria-current={isActive ? 'page' : undefined}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '8px 0',
+                  display: 'inline-flex',
+                  alignItems: 'baseline',
+                  gap: 8,
+                  color: isActive ? 'var(--ink)' : 'var(--muted)',
+                  borderBottom: isActive ? '1px solid var(--ink)' : '1px solid transparent',
+                  fontFamily: 'var(--sans)',
+                  fontSize: 10,
+                  letterSpacing: '0.28em',
+                  textTransform: 'uppercase',
+                  fontWeight: isActive ? 600 : 400,
+                }}>
+                <span style={{ fontFamily: 'var(--mono)', letterSpacing: '0.04em', fontSize: 9, opacity: 0.7 }}>{it.num}</span>
+                <span>{it.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="nav-desktop-date" style={{
+          fontFamily: 'var(--mono)',
+          fontSize: 9,
+          letterSpacing: '0.18em',
+          color: 'var(--muted)',
+          textTransform: 'uppercase',
+        }}>
+          15 / 08 / 2026
+        </div>
+
+        <button
+          className="nav-hamburger"
+          aria-label={menuOpen ? 'zamknij menu' : 'otwórz menu'}
+          aria-expanded={menuOpen}
+          aria-controls="nav-mobile-menu"
+          onClick={() => setMenuOpen((v) => !v)}
+          style={{ gridColumn: '3' }}
+        >
+          <span />
+        </button>
+      </nav>
+
+      {menuOpen && (
+        <div
+          id="nav-mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="menu"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            top: 67,
+            zIndex: 50,
+            background: 'var(--cream)',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '24px var(--pad-x) 40px',
+            animation: 'rsvp-fade-in 220ms cubic-bezier(.2,.8,.2,1) both',
+          }}
+        >
+          <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 16 }}>menu</div>
+          {items.map((it) => {
+            const isActive = (it.kind === 'route' ? route === it.id : (route === 'home' && active === it.id));
+            return (
+              <button key={it.id}
+                onClick={() => handleClick(it)}
+                aria-current={isActive ? 'page' : undefined}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid var(--rule)',
+                  padding: '20px 0',
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: 18,
+                  color: 'var(--ink)',
+                  fontFamily: 'var(--serif)',
+                  fontWeight: isActive ? 500 : 400,
+                  fontSize: 28,
+                }}>
+                <span style={{
+                  fontFamily: 'var(--mono)',
+                  fontSize: 11,
+                  letterSpacing: '0.04em',
+                  opacity: 0.55,
+                  minWidth: 28,
+                }}>{it.num}</span>
+                <span style={{ fontStyle: isActive ? 'italic' : 'normal', fontWeight: isActive ? 400 : 300 }}>{it.label}</span>
+                {isActive && <span style={{ marginLeft: 'auto', fontSize: 16, color: 'var(--muted)' }}>·</span>}
+              </button>
+            );
+          })}
+          <div style={{ marginTop: 'auto', paddingTop: 32, color: 'var(--muted)' }} className="smallcaps">
+            15 · viii · mmxxvi · wrocław
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
 function RSVPTeaser({ onOpen }) {
   return (
     <section id="rsvp-anchor" style={{
-      padding: '120px 56px 140px 56px',
+      padding: '120px var(--pad-x) 140px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
       background: 'var(--ink)',
       color: 'var(--cream)',
@@ -96,7 +191,7 @@ function RSVPTeaser({ onOpen }) {
         </div>
       </div>
 
-      <div style={{
+      <div className="stack-mobile" style={{
         display: 'grid',
         gridTemplateColumns: '1.4fr 1fr',
         gap: 80,
