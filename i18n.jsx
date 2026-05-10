@@ -158,7 +158,7 @@ const STRINGS = {
         attending: {
           kicker: 'pytanie 02',
           label:  'będziecie <em>na</em> naszym weselu 15.08?',
-          hint:   'odpowiedzcie jak najszybciej, najpóźniej do końca maja.',
+          hint:   'odpowiedzcie jak najszybciej, najpóźniej do końca czerwca.',
           options: {
             yes:   ['tak', ''],
             no:    ['nie', ''],
@@ -379,7 +379,7 @@ const STRINGS = {
         attending: {
           kicker: 'question 02',
           label:  'will you be at <em>our wedding</em> on Aug 15?',
-          hint:   'please reply as soon as possible, no later than end of May.',
+          hint:   'please reply as soon as possible, no later than end of June.',
           options: {
             yes:   ['yes', ''],
             no:    ['no',  ''],
