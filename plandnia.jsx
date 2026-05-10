@@ -62,19 +62,7 @@ function PlanDniaPage({ onBack }) {
         </div>
       </section>
 
-      <section style={{ padding: '40px var(--pad-x) 64px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button onClick={onBack} style={{
-            background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,
-            display: 'inline-flex', alignItems: 'center', gap: 14,
-            color: 'var(--ink)',
-          }}>
-            <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
-            <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>{tr('plandnia.back')}</span>
-          </button>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>{tr('plandnia.pageMeta')}</div>
-        </div>
-      </section>
+      <SiteFooter />
     </main>
   );
 }

@@ -28,35 +28,27 @@ function DressCodeRule({ num, label, headline, body, accent }) {
         )}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'start' }}>
-        <div>
-          <h3 style={{
-            fontFamily: 'var(--serif)',
-            fontWeight: 400,
-            fontSize: 'clamp(28px, 3.6vw, 44px)',
-            lineHeight: 1.05,
-            letterSpacing: '-0.025em',
-            margin: 0,
-          }}>
-            {headline}
-          </h3>
-          <div style={{
-            fontFamily: 'var(--sans)',
-            fontSize: 15,
-            lineHeight: 1.65,
-            color: 'var(--ink)',
-            marginTop: 18,
-            maxWidth: 540,
-            textWrap: 'pretty',
-          }}>
-            {body}
-          </div>
+      <div>
+        <h3 style={{
+          fontFamily: 'var(--serif)',
+          fontWeight: 400,
+          fontSize: 'clamp(28px, 3.6vw, 44px)',
+          lineHeight: 1.05,
+          letterSpacing: '-0.025em',
+          margin: 0,
+        }}>
+          {headline}
+        </h3>
+        <div style={{
+          fontFamily: 'var(--sans)',
+          fontSize: 15,
+          lineHeight: 1.65,
+          color: 'var(--ink)',
+          marginTop: 18,
+          textWrap: 'pretty',
+        }}>
+          {body}
         </div>
-        {accent && (
-          <div style={{ width: 120 }}>
-            {accent}
-          </div>
-        )}
       </div>
     </article>
   );
@@ -179,21 +171,6 @@ function DressCodePage({ onBack }) {
           <div style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'rgba(255,252,240,0.85)', lineHeight: 1.7, textAlign: 'right' }}>
             {tr('dresscode.contact')}
           </div>
-        </div>
-      </section>
-
-      {/* Pagination – back to landing */}
-      <section style={{ padding: '40px var(--pad-x) 32px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <button onClick={onBack} style={{
-            background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,
-            display: 'inline-flex', alignItems: 'center', gap: 14,
-            color: 'var(--ink)',
-          }}>
-            <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
-            <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>{tr('dresscode.back')}</span>
-          </button>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>{tr('dresscode.pageMeta')}</div>
         </div>
       </section>
 
