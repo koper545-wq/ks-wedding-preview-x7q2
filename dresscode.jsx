@@ -97,14 +97,15 @@ function FabricIcon() {
 }
 
 function DressCodePage({ onBack }) {
+  const tr = useT();
   return (
     <main>
       {/* Cover */}
       <section style={{ padding: '80px var(--pad-x) 56px var(--pad-x)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: 32 }}>
-          <div className="smallcaps" style={{ color: 'var(--ink)' }}>04 – dress code</div>
+          <div className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('dresscode.kicker')}</div>
           <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-            what to wear · §04
+            {tr('dresscode.annot')}
           </div>
         </div>
 
@@ -116,10 +117,9 @@ function DressCodePage({ onBack }) {
             lineHeight: 0.95,
             letterSpacing: '-0.04em',
             margin: 0,
-          }}>
-            ubierzcie się <span style={{ fontStyle: 'italic', fontWeight: 300 }}>elegancko</span>,<br/>
-            jak na letnie <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party.
-          </h1>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('dresscode.title') }}
+          />
           <p style={{
             fontFamily: 'var(--sans)',
             fontSize: 15,
@@ -129,7 +129,7 @@ function DressCodePage({ onBack }) {
             maxWidth: 380,
             textWrap: 'pretty',
           }}>
-            outdoor po południu, indoor wieczorem.
+            {tr('dresscode.sub')}
           </p>
         </div>
       </section>
@@ -139,27 +139,19 @@ function DressCodePage({ onBack }) {
         <div style={{ borderTop: '1px solid var(--rule)' }}>
           <DressCodeRule
             num="01"
-            label="tkaniny"
-            headline={<>lekkie <span style={{ fontStyle: 'italic', fontWeight: 300 }}>i</span> zwiewne.</>}
-            body={<>
-              polecamy oddychające materiały. unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji. to będzie letnie wesele! 🍓
-            </>}
+            label={tr('dresscode.rule1.label')}
+            headline={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule1.headline') }} />}
+            body={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule1.body') }} />}
             accent={<FabricIcon />}
           />
           <DressCodeRule
             num="02"
-            label="kolory sukienek"
-            headline={<>girls, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>nie</span> mamy bardzo sztywnych zasad, ale…</>}
+            label={tr('dresscode.rule2.label')}
+            headline={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule2.headline') }} />}
             body={<>
-              <p style={{ margin: 0 }}>
-                unikajcie bardzo mocnych kolorów, takich jak np. krwista czerwień czy neony.
-              </p>
-              <p style={{ margin: '14px 0 0' }}>
-                czerń jest ok, ale stawiajcie na kolory – to jest letnie wesele! naturalnie biel, ecru, kość słoniowa zarezerwowane są dla panny młodej.
-              </p>
-              <p style={{ margin: '14px 0 0' }}>
-                wzory czy kwieciste kreacje są jak najbardziej okej.
-              </p>
+              {tr('dresscode.rule2.bodyParas').map((p, i) => (
+                <p key={i} style={{ margin: i === 0 ? 0 : '14px 0 0' }}>{p}</p>
+              ))}
             </>}
             accent={<ColorSwatches swatches={[
               { name: 'sage', color: '#9DA98F' },
@@ -171,11 +163,9 @@ function DressCodePage({ onBack }) {
           />
           <DressCodeRule
             num="03"
-            label="dla panów"
-            headline={<>guys, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>nie</span> akceptujemy t-shirtów – koszule only!</>}
-            body={<>
-              stawiajcie na elegancki look. uprzedzając pytania – lniany garnitur też jest ok.
-            </>}
+            label={tr('dresscode.rule3.label')}
+            headline={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule3.headline') }} />}
+            body={<span dangerouslySetInnerHTML={{ __html: tr('dresscode.rule3.body') }} />}
             accent={<ColorSwatches swatches={[
               { name: 'navy', color: '#2B3A55' },
               { name: 'beige', color: '#C7B59A' },
@@ -195,13 +185,13 @@ function DressCodePage({ onBack }) {
       }}>
         <div className="stack-mobile" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
           <div>
-            <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)', marginBottom: 18 }}>jeśli macie wątpliwości</div>
-            <p style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(26px, 3.2vw, 40px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.02em', margin: 0, color: 'var(--cream)' }}>
-              piszcie, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>postaramy się</span> doradzić i odpowiedzieć na wszystkie Wasze pytania!
-            </p>
+            <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)', marginBottom: 18 }}>{tr('dresscode.outroKicker')}</div>
+            <p style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(26px, 3.2vw, 40px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.02em', margin: 0, color: 'var(--cream)' }}
+              dangerouslySetInnerHTML={{ __html: tr('dresscode.outro') }}
+            />
           </div>
           <div style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'rgba(255,252,240,0.85)', lineHeight: 1.7, textAlign: 'right' }}>
-            kontakt@klaraiszymon.pl
+            {tr('dresscode.contact')}
           </div>
         </div>
       </section>
@@ -215,9 +205,9 @@ function DressCodePage({ onBack }) {
             color: 'var(--ink)',
           }}>
             <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
-            <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>powrót na cover</span>
+            <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>{tr('dresscode.back')}</span>
           </button>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>§04 · dress code · k&amp;s mmxxvi</div>
+          <div className="smallcaps" style={{ color: 'var(--muted)' }}>{tr('dresscode.pageMeta')}</div>
         </div>
       </section>
 

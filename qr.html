@@ -206,7 +206,7 @@
 
 <a class="back" href="/">
   <span style="font-family: var(--serif); font-style: italic; font-size: 18px;">←</span>
-  <span class="smallcaps">powrót</span>
+  <span class="smallcaps" data-i18n="back">powrót</span>
 </a>
 
 <div class="page">
@@ -220,11 +220,11 @@
 
     <div class="rule"></div>
 
-    <span class="smallcaps" style="color: var(--muted);">§04 — rsvp · zeskanuj</span>
+    <span class="smallcaps" style="color: var(--muted);" data-i18n="kicker">§04 — rsvp · zeskanuj</span>
 
-    <h1>dajcie <em>znać</em><br>czy <em>będziecie</em>.</h1>
+    <h1 data-i18n="title">dajcie <em>znać</em><br>czy <em>będziecie</em>.</h1>
 
-    <p class="lead">
+    <p class="lead" data-i18n="lead">
       zeskanuj kod telefonem — wypełnij formularz w dwie minuty. potwierdzenie przyjdzie mailem.
     </p>
 
@@ -238,21 +238,62 @@
     <p class="url">klaraiszymon.pl/#rsvp</p>
 
     <div class="actions">
-      <a class="btn" href="img/rsvp-qr.svg" download="klara-szymon-rsvp-qr.svg">
+      <a class="btn" href="img/rsvp-qr.svg" download="klara-szymon-rsvp-qr.svg" data-i18n="download">
         ↓ pobierz svg
       </a>
-      <button class="btn" onclick="window.print()">
+      <button class="btn" onclick="window.print()" data-i18n="print">
         🖨 drukuj
       </button>
     </div>
 
     <div class="footer">
       <span class="smallcaps">15 · viii · mmxxvi</span>
-      <span class="smallcaps">k&amp;s · cocktail · ślub</span>
+      <span class="smallcaps" data-i18n="footerRight">k&amp;s · cocktail · ślub</span>
     </div>
 
   </div>
 </div>
+
+<script>
+  (function () {
+    var STR = {
+      pl: {
+        back: 'powrót',
+        kicker: '§04 — rsvp · zeskanuj',
+        title: 'dajcie <em>znać</em><br>czy <em>będziecie</em>.',
+        lead:  'zeskanuj kod telefonem — wypełnij formularz w dwie minuty. potwierdzenie przyjdzie mailem.',
+        download: '↓ pobierz svg',
+        print:    '🖨 drukuj',
+        footerRight: 'k&s · cocktail · ślub',
+      },
+      en: {
+        back: 'back',
+        kicker: '§04 — rsvp · scan',
+        title: 'tell us if<br>you\'re <em>coming</em>.',
+        lead:  'scan the code — fill the form in two minutes. confirmation will arrive by email.',
+        download: '↓ download svg',
+        print:    '🖨 print',
+        footerRight: 'k&s · cocktail · wedding',
+      },
+    };
+    function pickLang() {
+      var fromUrl = new URLSearchParams(location.search).get('lang');
+      if (fromUrl === 'pl' || fromUrl === 'en') return fromUrl;
+      try {
+        var saved = localStorage.getItem('ks2026_lang');
+        if (saved === 'pl' || saved === 'en') return saved;
+      } catch (e) {}
+      return (navigator.language || '').indexOf('pl') === 0 ? 'pl' : 'en';
+    }
+    var lang = pickLang();
+    document.documentElement.lang = lang;
+    var dict = STR[lang] || STR.pl;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n');
+      if (dict[key]) el.innerHTML = dict[key];
+    });
+  })();
+</script>
 
 </body>
 </html>

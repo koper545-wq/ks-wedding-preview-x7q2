@@ -1,14 +1,18 @@
 /* App – top sticky masthead + state-based routing */
 
 function TopNav({ active, onJump, route, goto }) {
+  const tr = useT();
+  const { lang, setLang } = useLang();
   const items = [
-    { id: 'soon',       label: 'list',        num: '01', kind: 'scroll' },
-    { id: 'informacje', label: 'informacje',  num: '02', kind: 'scroll' },
-    { id: 'rsvp',       label: 'rsvp',        num: '03', kind: 'route' },
-    { id: 'dresscode',  label: 'dress code',  num: '04', kind: 'route' },
-    { id: 'plandnia',   label: 'plan dnia',   num: '05', kind: 'route' },
+    { id: 'soon',       labelKey: 'nav.list',       num: '01', kind: 'scroll' },
+    { id: 'informacje', labelKey: 'nav.informacje', num: '02', kind: 'scroll' },
+    { id: 'rsvp',       labelKey: 'nav.rsvp',       num: '03', kind: 'route' },
+    { id: 'dresscode',  labelKey: 'nav.dresscode',  num: '04', kind: 'route' },
+    { id: 'plandnia',   labelKey: 'nav.plandnia',   num: '05', kind: 'route' },
   ];
   const [menuOpen, setMenuOpen] = React.useState(false);
+
+  const toggleLang = () => setLang(lang === 'pl' ? 'en' : 'pl');
 
   const handleClick = (it) => {
     setMenuOpen(false);
@@ -51,7 +55,7 @@ function TopNav({ active, onJump, route, goto }) {
         padding: '14px var(--pad-x)',
       }}>
         <button onClick={() => goto('home')}
-          aria-label="strona główna"
+          aria-label={tr('nav.home')}
           style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}>
           <Monogram size={22} />
         </button>
@@ -86,32 +90,46 @@ function TopNav({ active, onJump, route, goto }) {
                   fontWeight: isActive ? 600 : 400,
                 }}>
                 <span style={{ fontFamily: 'var(--mono)', letterSpacing: '0.04em', fontSize: 9, opacity: 0.7 }}>{it.num}</span>
-                <span>{it.label}</span>
+                <span>{tr(it.labelKey)}</span>
               </button>
             );
           })}
         </div>
 
-        <div className="nav-desktop-date" style={{
-          fontFamily: 'var(--mono)',
-          fontSize: 9,
-          letterSpacing: '0.18em',
-          color: 'var(--muted)',
-          textTransform: 'uppercase',
-        }}>
-          15 / 08 / 2026
-        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <button
+            className="lang-toggle"
+            onClick={toggleLang}
+            aria-label={`Switch to ${lang === 'pl' ? 'English' : 'Polski'}`}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '4px 0',
+              fontFamily: 'var(--mono)',
+              fontSize: 10,
+              letterSpacing: '0.18em',
+              color: 'var(--ink)',
+              textTransform: 'uppercase',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 4,
+            }}>
+            <span style={{ fontWeight: lang === 'pl' ? 700 : 400, opacity: lang === 'pl' ? 1 : 0.4 }}>pl</span>
+            <span style={{ opacity: 0.4 }}>/</span>
+            <span style={{ fontWeight: lang === 'en' ? 700 : 400, opacity: lang === 'en' ? 1 : 0.4 }}>en</span>
+          </button>
 
-        <button
-          className="nav-hamburger"
-          aria-label={menuOpen ? 'zamknij menu' : 'otwórz menu'}
-          aria-expanded={menuOpen}
-          aria-controls="nav-mobile-menu"
-          onClick={() => setMenuOpen((v) => !v)}
-          style={{ gridColumn: '3' }}
-        >
-          <span />
-        </button>
+          <button
+            className="nav-hamburger"
+            aria-label={menuOpen ? tr('nav.close') : tr('nav.open')}
+            aria-expanded={menuOpen}
+            aria-controls="nav-mobile-menu"
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span />
+          </button>
+        </div>
       </nav>
 
       {menuOpen && (
@@ -132,7 +150,7 @@ function TopNav({ active, onJump, route, goto }) {
             animation: 'rsvp-fade-in 220ms cubic-bezier(.2,.8,.2,1) both',
           }}
         >
-          <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 16 }}>menu</div>
+          <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 16 }}>{tr('nav.menu')}</div>
           {items.map((it) => {
             const isActive = (it.kind === 'route' ? route === it.id : (route === 'home' && active === it.id));
             return (
@@ -161,13 +179,28 @@ function TopNav({ active, onJump, route, goto }) {
                   opacity: 0.55,
                   minWidth: 28,
                 }}>{it.num}</span>
-                <span style={{ fontStyle: isActive ? 'italic' : 'normal', fontWeight: isActive ? 400 : 300 }}>{it.label}</span>
+                <span style={{ fontStyle: isActive ? 'italic' : 'normal', fontWeight: isActive ? 400 : 300 }}>{tr(it.labelKey)}</span>
                 {isActive && <span style={{ marginLeft: 'auto', fontSize: 16, color: 'var(--muted)' }}>·</span>}
               </button>
             );
           })}
-          <div style={{ marginTop: 'auto', paddingTop: 32, color: 'var(--muted)' }} className="smallcaps">
-            15 · viii · mmxxvi · wrocław
+          <div style={{ marginTop: 'auto', paddingTop: 32, color: 'var(--muted)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span className="smallcaps">15 · viii · mmxxvi · wrocław</span>
+            <button onClick={toggleLang} style={{
+              background: 'transparent',
+              border: '1px solid var(--rule-strong)',
+              padding: '8px 14px',
+              cursor: 'pointer',
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              color: 'var(--ink)',
+              textTransform: 'uppercase',
+            }}>
+              <span style={{ fontWeight: lang === 'pl' ? 700 : 400, opacity: lang === 'pl' ? 1 : 0.4 }}>pl</span>
+              <span style={{ opacity: 0.4, margin: '0 4px' }}>/</span>
+              <span style={{ fontWeight: lang === 'en' ? 700 : 400, opacity: lang === 'en' ? 1 : 0.4 }}>en</span>
+            </button>
           </div>
         </div>
       )}
@@ -176,6 +209,7 @@ function TopNav({ active, onJump, route, goto }) {
 }
 
 function RSVPTeaser({ onOpen }) {
+  const tr = useT();
   return (
     <section id="rsvp-anchor" style={{
       padding: '120px var(--pad-x) 140px var(--pad-x)',
@@ -185,9 +219,9 @@ function RSVPTeaser({ onOpen }) {
       position: 'relative',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 64 }}>
-        <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)' }}>0³ – rsvp</div>
+        <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)' }}>{tr('rsvpTeaser.kicker')}</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'rgba(255,252,240,0.5)', textAlign: 'right' }}>
-          please reply · §03
+          {tr('rsvpTeaser.annot')}
         </div>
       </div>
 
@@ -206,14 +240,13 @@ function RSVPTeaser({ onOpen }) {
           letterSpacing: '-0.04em',
           margin: 0,
           color: 'var(--cream)',
-        }}>
-          dajcie znać<br/>
-          <span style={{ fontStyle: 'italic', fontWeight: 300 }}>czy</span> będziecie.
-        </h2>
+        }}
+          dangerouslySetInnerHTML={{ __html: tr('rsvpTeaser.title') }}
+        />
 
         <div>
           <p style={{ fontFamily: 'var(--sans)', fontSize: 15, lineHeight: 1.65, color: 'rgba(255,252,240,0.78)', maxWidth: 360, margin: 0 }}>
-            formularz rsvp z preferencjami żywieniowymi, zajmie Wam dwie minuty. prosimy o wypełnienie maksymalnie do końca czerwca!
+            {tr('rsvpTeaser.body')}
           </p>
           <div style={{ marginTop: 40 }}>
             <button onClick={onOpen} style={{
@@ -223,11 +256,11 @@ function RSVPTeaser({ onOpen }) {
               textTransform: 'uppercase', fontWeight: 500,
               display: 'inline-flex', alignItems: 'center', gap: 12,
             }}>
-              wypełnij rsvp
+              {tr('rsvpTeaser.cta')}
               <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>→</span>
             </button>
             <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'rgba(255,252,240,0.55)', marginTop: 14 }}>
-              dwie minuty
+              {tr('rsvpTeaser.ctaSub')}
             </div>
           </div>
         </div>
@@ -239,6 +272,16 @@ function RSVPTeaser({ onOpen }) {
 function App() {
   const [active, setActive] = React.useState('cover');
   const [route, setRoute] = React.useState(() => (window.location.hash.replace('#','') || 'home'));
+  const [lang, setLangState] = React.useState(() => getInitialLang());
+
+  const setLang = React.useCallback((l) => {
+    setLangState(l);
+    try { localStorage.setItem('ks2026_lang', l); } catch {}
+  }, []);
+
+  React.useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   React.useEffect(() => {
     const onHash = () => {
@@ -274,7 +317,7 @@ function App() {
   };
 
   return (
-    <>
+    <LangContext.Provider value={{ lang, setLang }}>
       <TopNav active={active} onJump={jump} route={route} goto={goto} />
 
       {route === 'dresscode' ? (
@@ -293,7 +336,7 @@ function App() {
           <SiteFooter />
         </main>
       )}
-    </>
+    </LangContext.Provider>
   );
 }
 

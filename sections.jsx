@@ -3,13 +3,16 @@
 /* ── 00 Informacje ──────────────────────────────────────────────────────── */
 
 function SectionInformacje() {
+  const tr = useT();
+  const facts = tr('informacje.facts');
+  const points = tr('informacje.mapPoints');
   return (
     <section style={{
       padding: '120px var(--pad-x) 120px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
     }}>
       <div style={{ marginBottom: 56 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>01</div>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('informacje.kicker')}</div>
       </div>
 
       <div className="stack-mobile" style={{
@@ -27,17 +30,16 @@ function SectionInformacje() {
             lineHeight: 0.95,
             letterSpacing: '-0.035em',
             margin: '0 0 56px',
-          }}>
-            sobota,<br/>
-            <span style={{ fontStyle: 'italic', fontWeight: 300 }}>15</span> sierpnia
-          </h2>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('informacje.title') }}
+          />
 
-          <FactRow label="data" value="15.08.2026" sub="sobota" />
-          <FactRow label="początek" value="15:00" sub="cocktail hour · spokojne zbieranie gości" />
-          <FactRow label="ceremonia" value="16:00" sub="ceremonia wśród zieleni · more info na miejscu" />
-          <FactRow label="koniec" value="~04:00" sub="świętujemy do rana" />
-          <FactRow label="miejsce" value="Wrocław Golf Club" sub="Kryniczno, ul. Golfowa 1" />
-          <FactRow label="dojazd" value="ok. 25 min od centrum" sub="własny transport · parking na miejscu" last />
+          <FactRow label={facts.date[0]}       value={facts.date[1]}       sub={facts.date[2]} />
+          <FactRow label={facts.start[0]}      value={facts.start[1]}      sub={facts.start[2]} />
+          <FactRow label={facts.ceremony[0]}   value={facts.ceremony[1]}   sub={facts.ceremony[2]} />
+          <FactRow label={facts.end[0]}        value={facts.end[1]}        sub={facts.end[2]} />
+          <FactRow label={facts.venue[0]}      value={facts.venue[1]}      sub={facts.venue[2]} />
+          <FactRow label={facts.directions[0]} value={facts.directions[1]} sub={facts.directions[2]} last />
         </div>
 
         <div className="rule-v" />
@@ -63,7 +65,7 @@ function SectionInformacje() {
               color: 'var(--muted)',
               background: 'var(--cream)',
               padding: '4px 8px',
-            }}>dojazd</div>
+            }}>{tr('informacje.mapBadge')}</div>
           </div>
 
           <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16 }}>
@@ -79,15 +81,15 @@ function SectionInformacje() {
             }}>
               <li style={{ display: 'flex', gap: 10 }}>
                 <span style={{ color: 'var(--muted)' }}>·</span>
-                <span>na miejscu znajduje się duży parking</span>
+                <span>{points[0]}</span>
               </li>
               <li style={{ display: 'flex', gap: 10 }}>
                 <span style={{ color: 'var(--muted)' }}>·</span>
-                <span>dla chętnych będą dostępne taksówki</span>
+                <span>{points[1]}</span>
               </li>
               <li style={{ display: 'flex', gap: 10, color: 'var(--muted)', fontStyle: 'italic', fontFamily: 'var(--serif)', fontSize: 14 }}>
                 <span>·</span>
-                <span>więcej szczegółów soon</span>
+                <span>{points[2]}</span>
               </li>
             </ul>
             <a href="https://maps.google.com/?q=Wrocław+Golf+Club+Kryniczno"
@@ -100,7 +102,7 @@ function SectionInformacje() {
                  paddingBottom: 2,
                  whiteSpace: 'nowrap',
                }}>
-              google maps →
+              {tr('informacje.mapsLink')}
             </a>
           </div>
         </div>
@@ -185,6 +187,7 @@ function MapPlaceholder() {
 /* ── Soon / Intro ───────────────────────────────────────────────────────── */
 
 function SectionSoon() {
+  const tr = useT();
   return (
     <section style={{
       padding: '88px var(--pad-x) 120px var(--pad-x)',
@@ -192,9 +195,9 @@ function SectionSoon() {
       position: 'relative',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 24 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0¹ – list do gości</div>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('soon.kicker')}</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-          a note · §01
+          {tr('soon.annot')}
         </div>
       </div>
 
@@ -207,9 +210,9 @@ function SectionSoon() {
             lineHeight: 0.96,
             letterSpacing: '-0.035em',
             margin: 0,
-          }}>
-            do zobaczenia <span style={{ fontStyle: 'italic', fontWeight: 300 }}>już</span> niedługo.
-          </h2>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('soon.title') }}
+          />
         </div>
 
         <div style={{ paddingTop: 16, maxWidth: 460 }}>
@@ -222,7 +225,7 @@ function SectionSoon() {
             margin: 0,
             textWrap: 'pretty',
           }}>
-            specjalnie dla Was stworzyliśmy dedykowaną stronę z ważnymi informacjami. mamy nadzieję, że odpowiemy tu na wszystkie Wasze pytania.
+            {tr('soon.body1')}
           </p>
           <p style={{
             fontFamily: 'var(--sans)',
@@ -233,13 +236,13 @@ function SectionSoon() {
             maxWidth: 420,
             textWrap: 'pretty',
           }}>
-            na początku bardzo prosimy o wypełnienie RSVP wraz z mailem, na który będziemy wysyłać wszelkie aktualizacje. już nie możemy się doczekać wspólnego świętowania!
+            {tr('soon.body2')}
           </p>
 
           <div style={{ marginTop: 56, display: 'flex', alignItems: 'center', gap: 16 }}>
             <span style={{ width: 32, height: 1, background: 'var(--ink)' }} />
             <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18, color: 'var(--ink)' }}>
-              k &amp; s
+              {tr('soon.sign')}
             </span>
           </div>
         </div>
@@ -251,15 +254,17 @@ function SectionSoon() {
 /* ── Format wesela – 01 / 02 / 03 ───────────────────────────────────────── */
 
 function SectionFormat({ onDressCode }) {
+  const tr = useT();
+  const cols = tr('format.cols');
   return (
     <section style={{
       padding: '120px var(--pad-x) 140px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 80 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0² – format wesela</div>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('format.kicker')}</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-          how it goes · §02
+          {tr('format.annot')}
         </div>
       </div>
 
@@ -271,9 +276,9 @@ function SectionFormat({ onDressCode }) {
         letterSpacing: '-0.035em',
         margin: '0 0 80px',
         maxWidth: '14ch',
-      }}>
-        letnie, polskie wesele – <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party na tarasie.
-      </h2>
+      }}
+        dangerouslySetInnerHTML={{ __html: tr('format.title') }}
+      />
 
       <div className="stack-mobile" style={{
         display: 'grid',
@@ -281,35 +286,16 @@ function SectionFormat({ onDressCode }) {
         gap: 56,
         marginRight: 64,
       }}>
-        <FormatColumn
-          number="01"
-          name={<>jedzenie <em>&amp;</em> bar</>}
-          tagline="lekka formuła"
-          body={<>
-            zamiast kolacji – bufet, pizza z pieca i grill.<br/>
-            bar z naszymi fav koktajlami,<br/>
-            stół z polskimi winami i polską wódką.
-          </>}
-        />
+        <FormatColumn number="01" name={cols.food.name}    tagline={cols.food.tagline}    body={cols.food.body} />
         <div className="rule-v" />
-        <FormatColumn
-          number="02"
-          name="outdoor"
-          tagline="popołudnie i wczesny wieczór"
-          body="ceremonia i pierwsza część odbędzie się na zewnątrz. muzyka na żywo, pierwszy taniec, rozmowy i gry."
-        />
+        <FormatColumn number="02" name={cols.outdoor.name} tagline={cols.outdoor.tagline} body={cols.outdoor.body} />
         <div className="rule-v" />
-        <FormatColumn
-          number="03"
-          name={<><span>late</span> <em>night</em></>}
-          tagline="po 22:00"
-          body="przenosimy się do środka i zaczynamy tańce!"
-        />
+        <FormatColumn number="03" name={cols.late.name}    tagline={cols.late.tagline}    body={cols.late.body} />
       </div>
 
       <div style={{ marginTop: 96, borderTop: '1px solid var(--rule)', paddingTop: 32, marginRight: 64, textAlign: 'center' }}>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18, color: 'var(--muted)' }}>
-          dokładny plan ceremonii soon
+          {tr('format.outro')}
         </div>
       </div>
     </section>
@@ -333,9 +319,9 @@ function FormatColumn({ number, name, tagline, time, body }) {
         lineHeight: 1,
         letterSpacing: '-0.025em',
         margin: '0 0 8px',
-      }}>
-        {name}
-      </h3>
+      }}
+        dangerouslySetInnerHTML={{ __html: name }}
+      />
       <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 15, color: 'var(--muted)', marginBottom: 28 }}>
         – {tagline}
       </div>
@@ -347,9 +333,9 @@ function FormatColumn({ number, name, tagline, time, body }) {
         color: 'var(--ink)',
         margin: 0,
         textWrap: 'pretty',
-      }}>
-        {body}
-      </p>
+      }}
+        dangerouslySetInnerHTML={{ __html: body }}
+      />
     </div>
   );
 }
@@ -357,6 +343,7 @@ function FormatColumn({ number, name, tagline, time, body }) {
 /* ── Footer ─────────────────────────────────────────────────────────────── */
 
 function SiteFooter() {
+  const tr = useT();
   return (
     <footer style={{
       padding: '64px var(--pad-x) 56px var(--pad-x)',
@@ -366,14 +353,14 @@ function SiteFooter() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginRight: 64, gap: 48 }}>
         <Monogram size={32} />
         <div style={{ textAlign: 'right' }}>
-          <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>kontakt</div>
-          <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)' }}>kontakt@klaraiszymon.pl</div>
+          <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>{tr('footer.contact')}</div>
+          <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)' }}>{tr('footer.contactValue')}</div>
         </div>
       </div>
       <div className="rule-h" style={{ marginTop: 40, marginBottom: 24, marginRight: 64 }} />
       <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: 64, fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-        <span>© mmxxvi · klara &amp; szymon koprowscy</span>
-        <span>made by <em style={{ fontFamily: 'var(--serif)', textTransform: 'none', letterSpacing: 0, fontSize: 13 }}>wedded</em></span>
+        <span>{tr('footer.copyright')}</span>
+        <span>{tr('footer.madeBy')} <em style={{ fontFamily: 'var(--serif)', textTransform: 'none', letterSpacing: 0, fontSize: 13 }}>wedded</em></span>
       </div>
     </footer>
   );

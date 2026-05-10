@@ -24,67 +24,36 @@
 
 const EMAIL_RE = /^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
 
+/* RSVP_STEPS holds only meta — labels/hints/options come from i18n at render time.
+   Use stepWithLabels(step, tr) to get the renderable shape. */
 const RSVP_STEPS = [
-  {
-    id: 'name',
-    kicker: 'pytanie 01',
-    label: 'imię <em>i</em> nazwisko',
-    hint: '',
-    type: 'text',
-    placeholder: 'np. Anna Kowalska i Jan Kowalski',
-    required: true,
-  },
-  {
-    id: 'attending',
-    kicker: 'pytanie 02',
-    label: 'będziecie <em>na</em> naszym weselu 15.08?',
-    hint: 'odpowiedzcie jak najszybciej, najpóźniej do końca maja.',
-    type: 'choice',
-    options: [
-      { value: 'yes', label: 'tak', sub: '' },
-      { value: 'no',  label: 'nie', sub: '' },
-    ],
-    required: true,
-  },
-  {
-    id: 'plus_one',
-    kicker: 'pytanie 03',
-    label: 'osoba <em>towarzysząca</em>?',
-    hint: 'jeśli nie było jej na zaproszeniu – podajcie imię i nazwisko.',
-    type: 'plus_one',
-    onlyIfAttending: true,
-  },
-  {
-    id: 'diet',
-    kicker: 'pytanie 04',
-    label: 'dieta <em>albo</em> alergie?',
-    hint: 'na przyjęciu będzie bufet, znajdziecie w nim dania wegetariańskie jak i mięsne, ale w razie mocniejszych alergii lub diety wegańskiej postaramy się przygotować coś osobno.',
-    type: 'textarea',
-    placeholder: 'jem wszystko…',
-    onlyIfAttending: true,
-  },
-  {
-    id: 'drinks',
-    kicker: 'pytanie 05',
-    label: 'co <em>do</em> baru?',
-    hint: 'chcemy zamówić odpowiednie ilości.',
-    type: 'choice',
-    options: [
-      { value: 'alko',     label: 'alkohol',  sub: 'wino · cocktails · wódka' },
-      { value: 'non_alko', label: 'non-alco', sub: 'mocktails' },
-    ],
-    onlyIfAttending: true,
-  },
-  {
-    id: 'email',
-    kicker: 'pytanie 06',
-    label: 'jaki <em>e-mail</em>?',
-    hint: 'na ten adres dosypiemy szczegóły bliżej daty.',
-    type: 'email',
-    placeholder: 'imie@domena.pl',
-    required: true,
-  },
+  { id: 'name',      type: 'text',     required: true },
+  { id: 'attending', type: 'choice',   required: true,  optionValues: ['yes', 'no'] },
+  { id: 'plus_one',  type: 'plus_one', onlyIfAttending: true },
+  { id: 'diet',      type: 'textarea', onlyIfAttending: true },
+  { id: 'drinks',    type: 'choice',   onlyIfAttending: true, optionValues: ['alko', 'non_alko'] },
+  { id: 'email',     type: 'email',    required: true },
 ];
+
+function stepWithLabels(step, tr) {
+  const base = `rsvp.steps.${step.id}`;
+  const out = {
+    ...step,
+    kicker: tr(`${base}.kicker`),
+    label:  tr(`${base}.label`),
+    hint:   tr(`${base}.hint`),
+    placeholder: tr(`${base}.placeholder`),
+  };
+  if (step.optionValues) {
+    const opts = tr(`${base}.options`) || {};
+    out.options = step.optionValues.map((v) => ({
+      value: v,
+      label: opts[v]?.[0] || v,
+      sub:   opts[v]?.[1] || '',
+    }));
+  }
+  return out;
+}
 
 /* ── Storage helpers ───────────────────────────────────────────────────── */
 
@@ -217,14 +186,14 @@ function ChoiceField({ value, onChange, options }) {
 
 function PlusOneField({ value, onChange }) {
   // value: { has: 'yes'|'no'|null, name: string }
+  const tr = useT();
   const v = value || { has: null, name: '' };
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         {[
-          { val: 'yes', label: 'tak, przyjdę z kimś' },
-          { val: 'no',  label: 'przyjdę solo' },
-          { val: 'na',  label: 'nie dotyczy' },
+          { val: 'yes', label: tr('rsvp.steps.plus_one.yes') },
+          { val: 'no',  label: tr('rsvp.steps.plus_one.no') },
         ].map((o) => {
           const isActive = v.has === o.val;
           return (
@@ -249,12 +218,12 @@ function PlusOneField({ value, onChange }) {
       {v.has === 'yes' && (
         <div>
           <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 8 }}>
-            imię i nazwisko osoby towarzyszącej
+            {tr('rsvp.steps.plus_one.nameLabel')}
           </div>
           <TextField
             value={v.name}
             onChange={(name) => onChange({ ...v, name })}
-            placeholder="np. piotr nowak"
+            placeholder={tr('rsvp.steps.plus_one.namePlaceholder')}
             autoFocus
           />
         </div>
@@ -338,8 +307,9 @@ function StepBody({ step, value, onChange, onEnter }) {
 }
 
 function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvance, submitting, submitError, isLast }) {
+  const tr = useT();
   const buttonDisabled = !canAdvance || submitting;
-  const buttonLabel = submitting && isLast ? 'wysyłam…' : isLast ? 'wyślij rsvp' : 'dalej';
+  const buttonLabel = submitting && isLast ? tr('rsvp.submitting') : isLast ? tr('rsvp.submit') : tr('rsvp.next');
   return (
     <div key={step.id} className="rsvp-step-fade" style={{
       display: 'grid',
@@ -392,7 +362,7 @@ function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvanc
           display: 'inline-flex', alignItems: 'center', gap: 12,
         }}>
           <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
-          <span className="smallcaps">poprzednie</span>
+          <span className="smallcaps">{tr('rsvp.previous')}</span>
         </button>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
@@ -435,7 +405,8 @@ function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvanc
 /* ── Long-form variant (all questions on one page) ─────────────────────── */
 
 function LongForm({ answers, setAnswer, onSubmit, canSubmit, submitting, submitError }) {
-  const visible = activeSteps(answers);
+  const tr = useT();
+  const visible = activeSteps(answers).map((s) => stepWithLabels(s, tr));
   return (
     <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
       {visible.map((step, i) => (
@@ -498,7 +469,7 @@ function LongForm({ answers, setAnswer, onSubmit, canSubmit, submitting, submitE
           fontWeight: 500,
           opacity: submitting ? 0.7 : 1,
         }}>
-          {submitting ? 'wysyłam…' : 'wyślij rsvp →'}
+          {submitting ? tr('rsvp.submitting') : `${tr('rsvp.submit')} →`}
         </button>
       </div>
     </div>
@@ -550,7 +521,14 @@ function ConfettiPetals() {
 }
 
 function SuccessScreen({ answers, onReset, onBack }) {
+  const tr = useT();
   const isComing = answers.attending === 'yes';
+  const titleHtml = isComing
+    ? tr('rsvp.success.comingTitle').replace('{name}', firstName(answers.name, tr))
+    : answers.attending === 'no'
+      ? tr('rsvp.success.notTitle')
+      : tr('rsvp.success.maybeTitle');
+  const bodyText = isComing ? tr('rsvp.success.comingBody') : tr('rsvp.success.notBody');
   return (
     <section style={{
       position: 'relative',
@@ -565,7 +543,7 @@ function SuccessScreen({ answers, onReset, onBack }) {
 
       <div style={{ position: 'relative', maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>
         <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)', marginBottom: 28 }}>
-          rsvp · zapisane
+          {tr('rsvp.success.kicker')}
         </div>
 
         <h1 style={{
@@ -576,24 +554,9 @@ function SuccessScreen({ answers, onReset, onBack }) {
           letterSpacing: '-0.04em',
           margin: 0,
           color: 'var(--cream)',
-        }}>
-          {isComing ? (
-            <>
-              dzięki, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>{firstName(answers.name)}</span>.<br/>
-              <span style={{ fontStyle: 'italic', fontWeight: 300 }}>do</span> zobaczenia 15 sierpnia.
-            </>
-          ) : answers.attending === 'no' ? (
-            <>
-              <span style={{ fontStyle: 'italic', fontWeight: 300 }}>żałujemy</span>, ale rozumiemy.<br/>
-              dzięki za odpowiedź.
-            </>
-          ) : (
-            <>
-              <span style={{ fontStyle: 'italic', fontWeight: 300 }}>zapisane</span>.<br/>
-              czekamy <span style={{ fontStyle: 'italic', fontWeight: 300 }}>na</span> ostateczną decyzję.
-            </>
-          )}
-        </h1>
+        }}
+          dangerouslySetInnerHTML={{ __html: titleHtml }}
+        />
 
         <p style={{
           fontFamily: 'var(--sans)',
@@ -605,9 +568,7 @@ function SuccessScreen({ answers, onReset, onBack }) {
           marginInline: 'auto',
           textWrap: 'pretty',
         }}>
-          {isComing
-            ? 'wszystkie szczegóły – dokładny adres, parking, shuttle, mapa – wyślemy mailem na początku lipca. jeśli coś się zmieni, dajcie znać.'
-            : 'jeśli coś się zmieni – wystarczy wrócić tutaj i wypełnić formularz jeszcze raz. nadpiszemy odpowiedź.'}
+          {bodyText}
         </p>
 
         <div style={{ marginTop: 56, display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -623,7 +584,7 @@ function SuccessScreen({ answers, onReset, onBack }) {
             textTransform: 'uppercase',
             fontWeight: 500,
           }}>
-            ← powrót na cover
+            {tr('rsvp.success.backCover')}
           </button>
           <button onClick={onReset} style={{
             background: 'transparent',
@@ -637,7 +598,7 @@ function SuccessScreen({ answers, onReset, onBack }) {
             textDecoration: 'underline',
             textUnderlineOffset: 4,
           }}>
-            edytuj odpowiedzi
+            {tr('rsvp.success.editAnswers')}
           </button>
         </div>
       </div>
@@ -645,21 +606,23 @@ function SuccessScreen({ answers, onReset, onBack }) {
   );
 }
 
-function firstName(full) {
-  if (!full) return 'kochani';
+function firstName(full, tr) {
+  if (!full) return tr ? tr('rsvp.defaultName') : 'kochani';
   return (full.split(/\s+/)[0] || '').toLowerCase();
 }
 
 /* ── Main RSVP page ────────────────────────────────────────────────────── */
 
 function RSVPPage({ onBack, variant = 'steps' }) {
+  const tr = useT();
   const [answers, setAnswers] = React.useState(() => loadRSVP() || {});
   const [submitted, setSubmitted] = React.useState(() => !!loadRSVP()?.submittedAt);
   const [stepIdx, setStepIdx] = React.useState(0);
   const [submitting, setSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(null);
 
-  const visible = activeSteps(answers);
+  const rawVisible = activeSteps(answers);
+  const visible = rawVisible.map((s) => stepWithLabels(s, tr));
   const totalSteps = visible.length;
   const safeStepIdx = Math.min(stepIdx, totalSteps - 1);
   const currentStep = visible[safeStepIdx];
@@ -695,7 +658,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
       });
       if (!r.ok) {
         const err = await r.json().catch(() => null);
-        throw new Error(err?.error || `błąd serwera (${r.status})`);
+        throw new Error(err?.error || `error ${r.status}`);
       }
       const result = await r.json().catch(() => null);
       if (result && (result.sheets === false || result.email === false)) {
@@ -704,7 +667,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {
-      setSubmitError(e?.message || 'nie udało się wysłać — sprawdź połączenie i spróbuj jeszcze raz');
+      setSubmitError(e?.message || tr('rsvp.submitError'));
     } finally {
       setSubmitting(false);
     }
@@ -798,12 +761,13 @@ function ProgressBar({ idx, total }) {
 }
 
 function RSVPCover({ variant, compact }) {
+  const tr = useT();
   return (
-    <section style={{ padding: compact ? '64px 56px 32px 56px' : '80px 56px 56px 56px' }}>
+    <section style={{ padding: compact ? '64px var(--pad-x) 32px var(--pad-x)' : '80px var(--pad-x) 56px var(--pad-x)' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: compact ? 0 : 32 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>03 – rsvp</div>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('rsvp.coverKicker')}</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-          {variant === 'long' ? 'jeden ekran · §03' : 'krok po kroku · §03'}
+          {variant === 'long' ? tr('rsvp.coverAnnotLong') : tr('rsvp.coverAnnot')}
         </div>
       </div>
 
@@ -816,10 +780,9 @@ function RSVPCover({ variant, compact }) {
             lineHeight: 0.92,
             letterSpacing: '-0.04em',
             margin: 0,
-          }}>
-            dajcie <span style={{ fontStyle: 'italic', fontWeight: 300 }}>znać</span><br/>
-            czy <span style={{ fontStyle: 'italic', fontWeight: 300 }}>będziecie</span>.
-          </h1>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('rsvp.coverTitle') }}
+          />
           <p style={{
             fontFamily: 'var(--sans)',
             fontSize: 15,
@@ -829,7 +792,7 @@ function RSVPCover({ variant, compact }) {
             maxWidth: 380,
             textWrap: 'pretty',
           }}>
-            kilka krótkich pytań, dwie minuty. odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.
+            {tr('rsvp.coverBody')}
           </p>
         </div>
       )}
@@ -838,6 +801,7 @@ function RSVPCover({ variant, compact }) {
 }
 
 function PaginationBack({ onBack }) {
+  const tr = useT();
   return (
     <section style={{ padding: '40px var(--pad-x) 64px var(--pad-x)', borderTop: '1px solid var(--rule)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -847,9 +811,9 @@ function PaginationBack({ onBack }) {
           color: 'var(--ink)',
         }}>
           <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
-          <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>powrót na cover</span>
+          <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>{tr('rsvp.back')}</span>
         </button>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>§03 · rsvp · k&amp;s mmxxvi</div>
+        <div className="smallcaps" style={{ color: 'var(--muted)' }}>{tr('rsvp.pageMeta')}</div>
       </div>
     </section>
   );

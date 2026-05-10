@@ -64,22 +64,24 @@ function Cell({ big, label }) {
 }
 
 function Countdown() {
+  const tr = useT();
   const { d, h, m, s } = useCountdown('2026-08-15T15:30:00+02:00');
   const pad = (n) => String(n).padStart(2, '0');
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 18, fontFamily: 'var(--serif)' }}>
-      <Cell big={d} label="dni" />
+      <Cell big={d} label={tr('hero.d')} />
       <span style={{ color: 'var(--rule-strong)', fontSize: 24 }}>·</span>
-      <Cell big={pad(h)} label="godz" />
+      <Cell big={pad(h)} label={tr('hero.h')} />
       <span style={{ color: 'var(--rule-strong)', fontSize: 24 }}>·</span>
-      <Cell big={pad(m)} label="min" />
+      <Cell big={pad(m)} label={tr('hero.m')} />
       <span style={{ color: 'var(--rule-strong)', fontSize: 24 }}>·</span>
-      <Cell big={pad(s)} label="sek" />
+      <Cell big={pad(s)} label={tr('hero.s')} />
     </div>
   );
 }
 
 function CountdownMoment() {
+  const tr = useT();
   return (
     <div style={{ marginTop: 64 }}>
       <div style={{ height: 1, background: 'var(--rule)', width: '100%' }} />
@@ -91,7 +93,7 @@ function CountdownMoment() {
         padding: '24px 0',
         gap: 12,
       }}>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>widzimy się za:</div>
+        <div className="smallcaps" style={{ color: 'var(--muted)' }}>{tr('hero.countdownLabel')}</div>
         <Countdown />
       </div>
       <div style={{ height: 1, background: 'var(--rule)', width: '100%' }} />
@@ -100,6 +102,7 @@ function CountdownMoment() {
 }
 
 function Hero() {
+  const tr = useT();
   return (
     <section style={heroStyles.wrap}>
       <div style={{ position: 'relative' }}>
@@ -114,7 +117,7 @@ function Hero() {
 
       <div style={{ marginTop: 88, textAlign: 'center' }}>
         <div className="smallcaps" style={{ marginBottom: 24, color: 'var(--muted)' }}>
-          ślub &amp; cocktail party
+          {tr('hero.partyMeta')}
         </div>
         <h1 style={{
           fontFamily: 'var(--serif)',
@@ -136,7 +139,7 @@ function Hero() {
           lineHeight: 1,
           margin: '14px 0 0',
         }}>
-          Koprowscy
+          {tr('hero.coupleSurname')}
         </h2>
 
         <div style={{
@@ -148,7 +151,7 @@ function Hero() {
           flexWrap: 'wrap',
         }}>
           <span style={{ width: 48, height: 1, background: 'var(--rule-strong)' }} />
-          <span className="smallcaps" style={{ color: 'var(--ink)' }}>15 sierpnia 2026 · wrocław golf club</span>
+          <span className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('hero.venue')}</span>
           <span style={{ width: 48, height: 1, background: 'var(--rule-strong)' }} />
         </div>
       </div>

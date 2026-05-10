@@ -55,6 +55,12 @@
 
   ::selection { background: var(--ink); color: var(--cream); }
 
+  /* Default styling for <em> in headings (used by i18n strings with inline emphasis) */
+  h1 em, h2 em, h3 em, h4 em {
+    font-weight: 300;
+    font-style: italic;
+  }
+
   /* ── Responsive scaling helpers ─────────────────────────────────────── */
   /* Use --pad-x in inline styles for section side-padding so mobile shrinks. */
   :root {
@@ -132,11 +138,12 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="hero.jsx?v=5"></script>
-<script type="text/babel" src="sections.jsx?v=5"></script>
-<script type="text/babel" src="dresscode.jsx?v=5"></script>
-<script type="text/babel" src="plandnia.jsx?v=5"></script>
-<script type="text/babel" src="rsvp.jsx?v=5"></script>
-<script type="text/babel" src="app.jsx?v=5"></script>
+<script type="text/babel" src="i18n.jsx?v=6"></script>
+<script type="text/babel" src="hero.jsx?v=6"></script>
+<script type="text/babel" src="sections.jsx?v=6"></script>
+<script type="text/babel" src="dresscode.jsx?v=6"></script>
+<script type="text/babel" src="plandnia.jsx?v=6"></script>
+<script type="text/babel" src="rsvp.jsx?v=6"></script>
+<script type="text/babel" src="app.jsx?v=6"></script>
 </body>
 </html>

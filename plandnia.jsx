@@ -1,13 +1,14 @@
 /* Plan Dnia subpage */
 
 function PlanDniaPage({ onBack }) {
+  const tr = useT();
   return (
     <main>
       <section style={{ padding: '120px var(--pad-x) 80px var(--pad-x)' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: 80 }}>
-          <div className="smallcaps" style={{ color: 'var(--ink)' }}>05 – plan dnia</div>
+          <div className="smallcaps" style={{ color: 'var(--ink)' }}>{tr('plandnia.kicker')}</div>
           <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-            timeline · §05
+            {tr('plandnia.annot')}
           </div>
         </div>
 
@@ -19,10 +20,9 @@ function PlanDniaPage({ onBack }) {
             lineHeight: 0.92,
             letterSpacing: '-0.04em',
             margin: 0,
-          }}>
-            <span style={{ fontStyle: 'italic', fontWeight: 300 }}>more info</span><br/>
-            na miejscu
-          </h1>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('plandnia.title') }}
+          />
         </div>
       </section>
 
@@ -34,7 +34,7 @@ function PlanDniaPage({ onBack }) {
       }}>
         <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
           <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)', marginBottom: 28 }}>
-            najważniejsza informacja na ten moment
+            {tr('plandnia.darkKicker')}
           </div>
 
           <h2 style={{
@@ -45,10 +45,9 @@ function PlanDniaPage({ onBack }) {
             letterSpacing: '-0.03em',
             margin: 0,
             color: 'var(--cream)',
-          }}>
-            <span style={{ fontStyle: 'italic', fontWeight: 300 }}>16:00</span> zaczynamy zaślubiny,<br/>
-            kończymy <span style={{ fontStyle: 'italic', fontWeight: 300 }}>około 4:00</span>.
-          </h2>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('plandnia.darkTitle') }}
+          />
 
           <p style={{
             fontFamily: 'var(--serif)',
@@ -57,9 +56,9 @@ function PlanDniaPage({ onBack }) {
             fontSize: 22,
             color: 'rgba(255,252,240,0.78)',
             marginTop: 40,
-          }}>
-            be there or be square &lt;3
-          </p>
+          }}
+            dangerouslySetInnerHTML={{ __html: tr('plandnia.darkSub') }}
+          />
         </div>
       </section>
 
@@ -71,9 +70,9 @@ function PlanDniaPage({ onBack }) {
             color: 'var(--ink)',
           }}>
             <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
-            <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>powrót na cover</span>
+            <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>{tr('plandnia.back')}</span>
           </button>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>§05 · plan dnia · k&amp;s mmxxvi</div>
+          <div className="smallcaps" style={{ color: 'var(--muted)' }}>{tr('plandnia.pageMeta')}</div>
         </div>
       </section>
     </main>
