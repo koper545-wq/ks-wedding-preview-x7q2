@@ -697,6 +697,10 @@ function RSVPPage({ onBack, variant = 'steps' }) {
         const err = await r.json().catch(() => null);
         throw new Error(err?.error || `błąd serwera (${r.status})`);
       }
+      const result = await r.json().catch(() => null);
+      if (result && (result.sheets === false || result.email === false)) {
+        console.warn('[rsvp] partial success', result);
+      }
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {

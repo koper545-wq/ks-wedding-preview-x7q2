@@ -55,6 +55,11 @@ export default async function handler(req, res) {
     user_agent:     clean(req.headers['user-agent'], 300),
     source:         clean(body.source || 'web', 60),
   };
+  // "na" (nie dotyczy) is a UI-only value — treat as no plus-one info provided.
+  if (data.plus_one_has === 'na') {
+    data.plus_one_has = '';
+    data.plus_one_name = '';
+  }
 
   // ── validate ──
   if (!data.name) return bad(res, 400, 'name required');
@@ -175,6 +180,11 @@ export default async function handler(req, res) {
       adminNotifyError = String(err);
     }
   }
+
+  // Log any downstream issues so they surface in Vercel function logs.
+  if (!sheetsOk) console.error('[rsvp] sheets failed', { name: data.name, email: data.email, sheetsError });
+  if (!emailOk)  console.error('[rsvp] email failed',  { email: data.email, emailError });
+  if (sheetsOk && emailOk) console.log('[rsvp] ok', { name: data.name, email: data.email, attending: data.attending });
 
   // 200 even if downstream partially failed — we logged it; UI shouldn't crash.
   return res.status(200).json({
