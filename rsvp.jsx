@@ -615,6 +615,7 @@ function firstName(full, tr) {
 
 function RSVPPage({ onBack, variant = 'steps' }) {
   const tr = useT();
+  const { lang } = useLang();
   const [answers, setAnswers] = React.useState(() => loadRSVP() || {});
   const [submitted, setSubmitted] = React.useState(() => !!loadRSVP()?.submittedAt);
   const [stepIdx, setStepIdx] = React.useState(0);
@@ -650,6 +651,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
         email:          answers.email || '',
         phone:          answers.phone || '',
         source:         variant === 'long' ? 'web-long' : 'web-steps',
+        lang:           lang || 'pl',
       };
       const r = await fetch('/api/rsvp', {
         method: 'POST',

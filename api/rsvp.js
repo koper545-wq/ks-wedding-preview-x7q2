@@ -54,6 +54,7 @@ export default async function handler(req, res) {
     phone:          clean(body.phone, 40),
     user_agent:     clean(req.headers['user-agent'], 300),
     source:         clean(body.source || 'web', 60),
+    lang:           (body.lang === 'en' || body.lang === 'pl') ? body.lang : 'pl',
   };
   // "na" (nie dotyczy) is a UI-only value — treat as no plus-one info provided.
   if (data.plus_one_has === 'na') {
@@ -128,12 +129,13 @@ export default async function handler(req, res) {
           from: MAIL_FROM,
           to: [data.email],
           reply_to: MAIL_REPLY_TO,
-          subject: subjectFor(data),
-          html: emailHtml(data),
-          text: emailText(data),
+          subject: subjectFor(data, data.lang),
+          html: emailHtml(data, data.lang),
+          text: emailText(data, data.lang),
           tags: [
             { name: 'kind', value: 'rsvp_confirmation' },
             { name: 'attending', value: data.attending },
+            { name: 'lang', value: data.lang },
           ],
         }),
       });
@@ -238,94 +240,160 @@ function adminFallbackHtml(d, sheetsError) {
   </body></html>`;
 }
 
+/* ── Email i18n ────────────────────────────────────────────────────────── */
+
+const MAIL_T = {
+  pl: {
+    subjectYes:   'dzięki – widzimy się 15 sierpnia · klara & szymon',
+    subjectNo:    'zapisaliśmy waszą odpowiedź · klara & szymon',
+    subjectMaybe: 'czekamy na ostateczną decyzję · klara & szymon',
+    docTitle:     'rsvp zapisane',
+    masthead:     'rsvp · zapisane',
+    greet:        (name) => `cześć ${name.toLowerCase()},`,
+    bodyYes:      'mamy twoje rsvp. cieszymy się, że będziecie z nami 15 sierpnia 2026.',
+    bodyNo:       'mamy twoje rsvp. żałujemy, że nie damy rady się spotkać – dziękujemy za odpowiedź.',
+    bodyMaybe:    'mamy twoje rsvp. czekamy na ostateczną decyzję – daj znać do końca maja.',
+    summary:      'podsumowanie:',
+    summaryHead:  'podsumowanie',
+    rowName:      'imię i nazwisko',
+    rowAttending: 'odpowiedź',
+    rowPlusOne:   'osoba towarzysząca',
+    rowDiet:      'dieta / alergie',
+    rowDrinks:    'bar',
+    rowPhone:     'telefon',
+    plusOneSolo:  'solo',
+    plusOneAnon:  '(bez imienia)',
+    editIntro:    'coś się zmieniło?',
+    editLink:     'wypełnij formularz jeszcze raz',
+    editTail:     '– nadpiszemy odpowiedź.',
+    editTextLine: 'coś się zmieniło? wróć na stronę i wypełnij formularz jeszcze raz, nadpiszemy odpowiedź.',
+    introYes:     'cieszymy się, że będziecie z nami. wszystkie szczegóły – dokładny adres, parking, shuttle, mapa – wyślemy na początku lipca na ten sam adres.',
+    introNo:      'dzięki, że dałeś znać. jeśli coś się zmieni, wystarczy wrócić na stronę i wypełnić formularz jeszcze raz.',
+    introMaybe:   'czekamy na ostateczną decyzję – postaraj się dać znać do końca maja, żebyśmy mogli domknąć listę.',
+    headlineYes:  (name) => `dzięki, <em style="font-style:italic;font-weight:300;">${name.toLowerCase()}</em>.<br/><em style="font-style:italic;font-weight:300;">do</em> zobaczenia 15 sierpnia.`,
+    headlineNo:   `<em style="font-style:italic;font-weight:300;">żałujemy</em>, ale rozumiemy.<br/>dzięki za odpowiedź.`,
+    headlineMaybe:`<em style="font-style:italic;font-weight:300;">zapisane</em>.<br/>czekamy na decyzję.`,
+    sign:         '– klara & szymon',
+    disclaimer:   (url) => `dostałeś tego maila bo wypełniłeś rsvp na <a href="${url}" style="color:rgba(46,46,46,0.7);">klaraiszymon.pl</a>`,
+    prettyAtt: { yes: 'tak, będziemy', no: 'nie damy rady', maybe: 'jeszcze nie wiem' },
+    prettyDrk: { alko: 'alkohol (wino · cocktails · wódka)', non_alko: 'non-alco (mocktails)', mix: 'i tak, i tak' },
+  },
+  en: {
+    subjectYes:   'thanks – see you on august 15 · klara & szymon',
+    subjectNo:    'we saved your reply · klara & szymon',
+    subjectMaybe: 'waiting for your final answer · klara & szymon',
+    docTitle:     'rsvp saved',
+    masthead:     'rsvp · saved',
+    greet:        (name) => `hi ${name.toLowerCase()},`,
+    bodyYes:      'we have your rsvp. we can\'t wait to celebrate with you on august 15, 2026.',
+    bodyNo:       'we have your rsvp. we\'re sad we won\'t see you – thanks for letting us know.',
+    bodyMaybe:    'we have your rsvp. waiting for your final answer – please let us know by end of may.',
+    summary:      'summary:',
+    summaryHead:  'summary',
+    rowName:      'name',
+    rowAttending: 'reply',
+    rowPlusOne:   'plus one',
+    rowDiet:      'diet / allergies',
+    rowDrinks:    'bar',
+    rowPhone:     'phone',
+    plusOneSolo:  'solo',
+    plusOneAnon:  '(no name yet)',
+    editIntro:    'anything changed?',
+    editLink:     'fill the form again',
+    editTail:     '– we\'ll overwrite your answer.',
+    editTextLine: 'anything changed? come back to the site and fill the form again, we\'ll overwrite your answer.',
+    introYes:     'we can\'t wait to see you. all the details – exact address, parking, shuttle, map – will arrive by email in early july, to this same address.',
+    introNo:      'thanks for letting us know. if anything changes, just come back to the site and fill the form again.',
+    introMaybe:   'we\'re waiting for your final answer – please try to let us know by end of may so we can close the list.',
+    headlineYes:  (name) => `thanks, <em style="font-style:italic;font-weight:300;">${name.toLowerCase()}</em>.<br/>see you on <em style="font-style:italic;font-weight:300;">august</em> 15.`,
+    headlineNo:   `<em style="font-style:italic;font-weight:300;">we\'re sad</em>, but we get it.<br/>thanks for letting us know.`,
+    headlineMaybe:`<em style="font-style:italic;font-weight:300;">saved</em>.<br/>waiting for your decision.`,
+    sign:         '– klara & szymon',
+    disclaimer:   (url) => `you got this email because you filled out the rsvp at <a href="${url}" style="color:rgba(46,46,46,0.7);">klaraiszymon.pl</a>`,
+    prettyAtt: { yes: 'yes, we\'ll be there', no: 'can\'t make it', maybe: 'not sure yet' },
+    prettyDrk: { alko: 'alcohol (wine · cocktails · vodka)', non_alko: 'non-alc (mocktails)', mix: 'both' },
+  },
+};
+
+function mt(lang) { return MAIL_T[lang] || MAIL_T.pl; }
+
 /* ── Email content ─────────────────────────────────────────────────────── */
 
-function subjectFor(d) {
-  if (d.attending === 'yes') return 'dzięki – widzimy się 15 sierpnia · klara & szymon';
-  if (d.attending === 'no')  return 'zapisaliśmy waszą odpowiedź · klara & szymon';
-  return 'czekamy na ostateczną decyzję · klara & szymon';
+function subjectFor(d, lang) {
+  const t = mt(lang);
+  if (d.attending === 'yes') return t.subjectYes;
+  if (d.attending === 'no')  return t.subjectNo;
+  return t.subjectMaybe;
 }
 
-function emailText(d) {
+function emailText(d, lang) {
+  const t = mt(lang);
   const lines = [
-    `cześć ${firstName(d.name).toLowerCase()},`,
+    t.greet(firstName(d.name)),
     '',
-    d.attending === 'yes'
-      ? 'mamy twoje rsvp. cieszymy się, że będziecie z nami 15 sierpnia 2026.'
-      : d.attending === 'no'
-        ? 'mamy twoje rsvp. żałujemy, że nie damy rady się spotkać – dziękujemy za odpowiedź.'
-        : 'mamy twoje rsvp. czekamy na ostateczną decyzję – daj znać do końca maja.',
+    d.attending === 'yes' ? t.bodyYes : d.attending === 'no' ? t.bodyNo : t.bodyMaybe,
     '',
-    'podsumowanie:',
-    `· imię i nazwisko: ${d.name}`,
-    `· odpowiedź: ${prettyAttending(d.attending)}`,
+    t.summary,
+    `· ${t.rowName}: ${d.name}`,
+    `· ${t.rowAttending}: ${prettyAttending(d.attending, lang)}`,
   ];
   if (d.attending === 'yes') {
-    if (d.plus_one_has === 'yes') lines.push(`· osoba towarzysząca: ${d.plus_one_name || '(bez imienia)'}`);
-    else if (d.plus_one_has === 'no') lines.push('· osoba towarzysząca: solo');
-    if (d.diet)   lines.push(`· dieta / alergie: ${d.diet}`);
-    if (d.drinks) lines.push(`· bar: ${prettyDrinks(d.drinks)}`);
+    if (d.plus_one_has === 'yes') lines.push(`· ${t.rowPlusOne}: ${d.plus_one_name || t.plusOneAnon}`);
+    else if (d.plus_one_has === 'no') lines.push(`· ${t.rowPlusOne}: ${t.plusOneSolo}`);
+    if (d.diet)   lines.push(`· ${t.rowDiet}: ${d.diet}`);
+    if (d.drinks) lines.push(`· ${t.rowDrinks}: ${prettyDrinks(d.drinks, lang)}`);
   }
-  if (d.phone) lines.push(`· telefon: ${d.phone}`);
+  if (d.phone) lines.push(`· ${t.rowPhone}: ${d.phone}`);
   lines.push('');
-  lines.push('coś się zmieniło? wróć na stronę i wypełnij formularz jeszcze raz, nadpiszemy odpowiedź.');
+  lines.push(t.editTextLine);
   lines.push(SITE_URL + '/#rsvp');
   lines.push('');
-  lines.push('– klara & szymon');
+  lines.push(t.sign);
   return lines.join('\n');
 }
 
-function prettyAttending(v) {
-  if (v === 'yes')   return 'tak, będziemy';
-  if (v === 'no')    return 'nie damy rady';
-  if (v === 'maybe') return 'jeszcze nie wiem';
-  return v;
+function prettyAttending(v, lang) {
+  return mt(lang).prettyAtt[v] || v;
 }
-function prettyDrinks(v) {
-  if (v === 'alko')     return 'alkohol (wino · cocktails · wódka)';
-  if (v === 'non_alko') return 'non-alco (mocktails)';
-  if (v === 'mix')      return 'i tak, i tak';
-  return v;
+function prettyDrinks(v, lang) {
+  return mt(lang).prettyDrk[v] || v;
 }
 
-function emailHtml(d) {
+function emailHtml(d, lang) {
+  const t = mt(lang);
   const isYes = d.attending === 'yes';
   const isNo  = d.attending === 'no';
 
   const headline = isYes
-    ? `dzięki, <em style="font-style:italic;font-weight:300;">${escapeHtml(firstName(d.name).toLowerCase())}</em>.<br/><em style="font-style:italic;font-weight:300;">do</em> zobaczenia 15 sierpnia.`
+    ? t.headlineYes(escapeHtml(firstName(d.name)))
     : isNo
-      ? `<em style="font-style:italic;font-weight:300;">żałujemy</em>, ale rozumiemy.<br/>dzięki za odpowiedź.`
-      : `<em style="font-style:italic;font-weight:300;">zapisane</em>.<br/>czekamy na decyzję.`;
+      ? t.headlineNo
+      : t.headlineMaybe;
 
-  const intro = isYes
-    ? 'cieszymy się, że będziecie z nami. wszystkie szczegóły – dokładny adres, parking, shuttle, mapa – wyślemy na początku lipca na ten sam adres.'
-    : isNo
-      ? 'dzięki, że dałeś znać. jeśli coś się zmieni, wystarczy wrócić na stronę i wypełnić formularz jeszcze raz.'
-      : 'czekamy na ostateczną decyzję – postaraj się dać znać do końca maja, żebyśmy mogli domknąć listę.';
+  const intro = isYes ? t.introYes : isNo ? t.introNo : t.introMaybe;
 
   const summaryRows = [
-    row('imię i nazwisko', escapeHtml(d.name)),
-    row('odpowiedź',       escapeHtml(prettyAttending(d.attending))),
+    row(t.rowName, escapeHtml(d.name)),
+    row(t.rowAttending, escapeHtml(prettyAttending(d.attending, lang))),
   ];
   if (isYes) {
-    if (d.plus_one_has === 'yes') summaryRows.push(row('osoba towarzysząca', escapeHtml(d.plus_one_name || '(bez imienia)')));
-    else if (d.plus_one_has === 'no') summaryRows.push(row('osoba towarzysząca', 'solo'));
-    if (d.diet)   summaryRows.push(row('dieta / alergie', escapeHtml(d.diet)));
-    if (d.drinks) summaryRows.push(row('bar', escapeHtml(prettyDrinks(d.drinks))));
+    if (d.plus_one_has === 'yes') summaryRows.push(row(t.rowPlusOne, escapeHtml(d.plus_one_name || t.plusOneAnon)));
+    else if (d.plus_one_has === 'no') summaryRows.push(row(t.rowPlusOne, escapeHtml(t.plusOneSolo)));
+    if (d.diet)   summaryRows.push(row(t.rowDiet, escapeHtml(d.diet)));
+    if (d.drinks) summaryRows.push(row(t.rowDrinks, escapeHtml(prettyDrinks(d.drinks, lang))));
   }
-  if (d.phone) summaryRows.push(row('telefon', escapeHtml(d.phone)));
+  if (d.phone) summaryRows.push(row(t.rowPhone, escapeHtml(d.phone)));
 
   // Site colors:
   //   --cream: hsl(51.66 36.3% 95.56%)  ≈  #F8F4E5
   //   --ink:   #2E2E2E
   //   --rule:  rgba(46,46,46,0.18)
   return `<!doctype html>
-<html lang="pl">
+<html lang="${lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>rsvp zapisane</title>
+<title>${escapeHtml(t.docTitle)}</title>
 </head>
 <body style="margin:0;padding:0;background:#F8F4E5;font-family:Georgia,'Cormorant Garamond',serif;color:#2E2E2E;-webkit-font-smoothing:antialiased;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F8F4E5;">
@@ -339,7 +407,7 @@ function emailHtml(d) {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="font-family:Georgia,'Cormorant Garamond',serif;font-weight:400;font-size:24px;letter-spacing:-0.06em;color:#2E2E2E;">k<span style="color:rgba(46,46,46,0.6);">·</span><em style="font-style:italic;">s</em></td>
-                  <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">rsvp · zapisane</td>
+                  <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">${escapeHtml(t.masthead)}</td>
                 </tr>
               </table>
             </td>
@@ -367,7 +435,7 @@ function emailHtml(d) {
           <!-- summary -->
           <tr>
             <td style="padding:48px 0 0;">
-              <p style="margin:0 0 18px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">podsumowanie</p>
+              <p style="margin:0 0 18px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">${escapeHtml(t.summaryHead)}</p>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid rgba(46,46,46,0.18);">
                 ${summaryRows.join('')}
               </table>
@@ -378,7 +446,7 @@ function emailHtml(d) {
           <tr>
             <td style="padding:40px 0 0;">
               <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.7;color:rgba(46,46,46,0.78);">
-                coś się zmieniło? <a href="${SITE_URL}/#rsvp" style="color:#2E2E2E;text-decoration:underline;text-underline-offset:3px;">wypełnij formularz jeszcze raz</a> – nadpiszemy odpowiedź.
+                ${escapeHtml(t.editIntro)} <a href="${SITE_URL}/#rsvp" style="color:#2E2E2E;text-decoration:underline;text-underline-offset:3px;">${escapeHtml(t.editLink)}</a> ${escapeHtml(t.editTail)}
               </p>
             </td>
           </tr>
@@ -400,7 +468,7 @@ function emailHtml(d) {
         </table>
 
         <p style="margin:48px 0 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.45);font-weight:500;">
-          dostałeś tego maila bo wypełniłeś rsvp na <a href="${SITE_URL}" style="color:rgba(46,46,46,0.7);">klaraiszymon.pl</a>
+          ${t.disclaimer(SITE_URL)}
         </p>
 
       </td>
