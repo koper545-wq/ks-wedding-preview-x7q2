@@ -406,7 +406,7 @@ function emailHtml(d, lang) {
             <td style="padding:0 0 20px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="font-family:Georgia,'Cormorant Garamond',serif;font-weight:400;font-size:24px;letter-spacing:-0.06em;color:#2E2E2E;">k<span style="color:rgba(46,46,46,0.6);">·</span><em style="font-style:italic;">s</em></td>
+                  <td><img src="${SITE_URL}/img/logo.svg" alt="k & s" width="48" height="24" style="display:block;height:24px;width:auto;border:0;outline:none;text-decoration:none;"></td>
                   <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">${escapeHtml(t.masthead)}</td>
                 </tr>
               </table>

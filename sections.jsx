@@ -49,23 +49,12 @@ function SectionInformacje() {
           <div style={{
             position: 'relative',
             width: '100%',
-            aspectRatio: '4 / 3',
+            aspectRatio: '1965 / 1802',
             background: 'var(--paper)',
             border: '1px solid var(--rule)',
             overflow: 'hidden',
           }}>
             <MapPlaceholder />
-            <div style={{
-              position: 'absolute',
-              left: 16, top: 16,
-              fontFamily: 'var(--sans)',
-              fontSize: 9,
-              letterSpacing: '0.24em',
-              textTransform: 'uppercase',
-              color: 'var(--muted)',
-              background: 'var(--cream)',
-              padding: '4px 8px',
-            }}>{tr('informacje.mapBadge')}</div>
           </div>
 
           <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16 }}>
@@ -137,50 +126,21 @@ function FactRow({ label, value, sub, last }) {
 }
 
 function MapPlaceholder() {
-  // SVG – minimalist editorial map mark
+  // Illustrated map image (img/map.jpg).
   return (
-    <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"
-         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-      <defs>
-        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(46,46,46,0.06)" strokeWidth="0.5" />
-        </pattern>
-        <pattern id="grid2" width="100" height="100" patternUnits="userSpaceOnUse">
-          <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(46,46,46,0.12)" strokeWidth="0.6" />
-        </pattern>
-      </defs>
-      <rect width="400" height="300" fill="#FAF7E8" />
-      <rect width="400" height="300" fill="url(#grid)" />
-      <rect width="400" height="300" fill="url(#grid2)" />
-      {/* roads */}
-      <path d="M 0 180 Q 120 160 220 200 T 400 230" fill="none" stroke="rgba(46,46,46,0.35)" strokeWidth="1.4" />
-      <path d="M 60 0 L 140 80 L 180 220 L 240 300" fill="none" stroke="rgba(46,46,46,0.25)" strokeWidth="1" />
-      <path d="M 0 80 Q 200 100 400 60" fill="none" stroke="rgba(46,46,46,0.2)" strokeWidth="0.8" strokeDasharray="2 4" />
-      {/* trees / golf area */}
-      <ellipse cx="240" cy="150" rx="80" ry="44" fill="rgba(46,46,46,0.05)" stroke="rgba(46,46,46,0.18)" strokeDasharray="3 3" />
-      {/* pin */}
-      <g transform="translate(238 142)">
-        <circle r="22" fill="rgba(46,46,46,0.1)" />
-        <circle r="5" fill="#2E2E2E" />
-        <circle r="11" fill="none" stroke="#2E2E2E" strokeWidth="0.8" />
-      </g>
-      <text x="260" y="142" fontFamily="Inter, sans-serif" fontSize="9" letterSpacing="2" fill="#2E2E2E">
-        WROCŁAW GOLF CLUB
-      </text>
-      <text x="260" y="156" fontFamily="Fraunces, serif" fontStyle="italic" fontSize="11" fill="rgba(46,46,46,0.6)">
-        Kryniczno
-      </text>
-      {/* compass */}
-      <g transform="translate(360 40)">
-        <circle r="16" fill="none" stroke="rgba(46,46,46,0.25)" strokeWidth="0.5" />
-        <line x1="0" y1="-14" x2="0" y2="14" stroke="#2E2E2E" strokeWidth="0.6" />
-        <line x1="-14" y1="0" x2="14" y2="0" stroke="#2E2E2E" strokeWidth="0.4" />
-        <text x="0" y="-18" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="#2E2E2E">N</text>
-        <text x="0" y="25" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="rgba(46,46,46,0.6)">S</text>
-        <text x="-19" y="2.5" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="rgba(46,46,46,0.6)">W</text>
-        <text x="19" y="2.5" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="rgba(46,46,46,0.6)">E</text>
-      </g>
-    </svg>
+    <img
+      src="img/map.jpg"
+      alt="mapa — wrocław golf club, kryniczno"
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        objectPosition: 'center',
+        display: 'block',
+      }}
+    />
   );
 }
 

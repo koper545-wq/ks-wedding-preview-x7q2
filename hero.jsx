@@ -20,22 +20,18 @@ const heroStyles = {
 };
 
 function Monogram({ size = 28 }) {
+  // SVG logo from /img/logo.svg — height matches `size`, width scales by 102:52 ratio.
   return (
-    <span style={{
-      fontFamily: 'var(--serif)',
-      fontSize: size,
-      letterSpacing: '-0.06em',
-      lineHeight: 1,
-      fontWeight: 400,
-      color: 'var(--ink)',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: size * 0.08,
-    }}>
-      <span>k</span>
-      <span style={{ fontSize: size * 0.55, transform: `translateY(-${size * 0.08}px)`, opacity: 0.85 }}>·</span>
-      <span style={{ fontStyle: 'italic' }}>s</span>
-    </span>
+    <img
+      src="img/logo.svg"
+      alt="k & s"
+      style={{
+        height: size,
+        width: 'auto',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+      }}
+    />
   );
 }
 
