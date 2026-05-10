@@ -194,6 +194,7 @@ function PlusOneField({ value, onChange }) {
         {[
           { val: 'yes', label: tr('rsvp.steps.plus_one.yes') },
           { val: 'no',  label: tr('rsvp.steps.plus_one.no') },
+          { val: 'na',  label: tr('rsvp.steps.plus_one.na') },
         ].map((o) => {
           const isActive = v.has === o.val;
           return (
