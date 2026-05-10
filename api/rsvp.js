@@ -241,22 +241,22 @@ function adminFallbackHtml(d, sheetsError) {
 /* ── Email content ─────────────────────────────────────────────────────── */
 
 function subjectFor(d) {
-  if (d.attending === 'yes') return 'Dzięki — widzimy się 15 sierpnia · klara & szymon';
-  if (d.attending === 'no')  return 'Zapisaliśmy Twoją odpowiedź · klara & szymon';
-  return 'Czekamy na ostateczną decyzję · klara & szymon';
+  if (d.attending === 'yes') return 'dzięki – widzimy się 15 sierpnia · klara & szymon';
+  if (d.attending === 'no')  return 'zapisaliśmy waszą odpowiedź · klara & szymon';
+  return 'czekamy na ostateczną decyzję · klara & szymon';
 }
 
 function emailText(d) {
   const lines = [
-    `Cześć ${firstName(d.name)},`,
+    `cześć ${firstName(d.name).toLowerCase()},`,
     '',
     d.attending === 'yes'
-      ? 'Mamy Twoje RSVP. Cieszymy się, że będziecie z nami 15 sierpnia 2026.'
+      ? 'mamy twoje rsvp. cieszymy się, że będziecie z nami 15 sierpnia 2026.'
       : d.attending === 'no'
-        ? 'Mamy Twoje RSVP. Żałujemy, że nie damy rady się spotkać — dziękujemy za odpowiedź.'
-        : 'Mamy Twoje RSVP. Czekamy na ostateczną decyzję — daj znać do końca maja.',
+        ? 'mamy twoje rsvp. żałujemy, że nie damy rady się spotkać – dziękujemy za odpowiedź.'
+        : 'mamy twoje rsvp. czekamy na ostateczną decyzję – daj znać do końca maja.',
     '',
-    'Podsumowanie:',
+    'podsumowanie:',
     `· imię i nazwisko: ${d.name}`,
     `· odpowiedź: ${prettyAttending(d.attending)}`,
   ];
@@ -268,11 +268,10 @@ function emailText(d) {
   }
   if (d.phone) lines.push(`· telefon: ${d.phone}`);
   lines.push('');
-  lines.push('Coś się zmieniło? Wróć na stronę i wypełnij formularz jeszcze raz, nadpiszemy odpowiedź.');
+  lines.push('coś się zmieniło? wróć na stronę i wypełnij formularz jeszcze raz, nadpiszemy odpowiedź.');
   lines.push(SITE_URL + '/#rsvp');
   lines.push('');
-  lines.push('— klara & szymon');
-  lines.push('15 sierpnia 2026 · wrocław');
+  lines.push('– klara & szymon');
   return lines.join('\n');
 }
 
@@ -283,8 +282,8 @@ function prettyAttending(v) {
   return v;
 }
 function prettyDrinks(v) {
-  if (v === 'alko')     return 'alko (wino, drinki, wódka)';
-  if (v === 'non_alko') return 'non-alko (soki, lemoniady)';
+  if (v === 'alko')     return 'alkohol (wino · cocktails · wódka)';
+  if (v === 'non_alko') return 'non-alco (mocktails)';
   if (v === 'mix')      return 'i tak, i tak';
   return v;
 }
@@ -294,16 +293,16 @@ function emailHtml(d) {
   const isNo  = d.attending === 'no';
 
   const headline = isYes
-    ? `dzięki, <em style="font-style:italic;font-weight:300;">${escapeHtml(firstName(d.name))}</em>.<br/><em style="font-style:italic;font-weight:300;">do</em> zobaczenia 15 sierpnia.`
+    ? `dzięki, <em style="font-style:italic;font-weight:300;">${escapeHtml(firstName(d.name).toLowerCase())}</em>.<br/><em style="font-style:italic;font-weight:300;">do</em> zobaczenia 15 sierpnia.`
     : isNo
       ? `<em style="font-style:italic;font-weight:300;">żałujemy</em>, ale rozumiemy.<br/>dzięki za odpowiedź.`
       : `<em style="font-style:italic;font-weight:300;">zapisane</em>.<br/>czekamy na decyzję.`;
 
   const intro = isYes
-    ? 'Cieszymy się, że będziecie z nami. Wszystkie szczegóły — dokładny adres, parking, shuttle, mapa — wyślemy na początku lipca na ten sam adres.'
+    ? 'cieszymy się, że będziecie z nami. wszystkie szczegóły – dokładny adres, parking, shuttle, mapa – wyślemy na początku lipca na ten sam adres.'
     : isNo
-      ? 'Dzięki, że dałeś znać. Jeśli coś się zmieni, wystarczy wrócić na stronę i wypełnić formularz jeszcze raz.'
-      : 'Czekamy na ostateczną decyzję — postaraj się dać znać do końca maja, żebyśmy mogli domknąć listę.';
+      ? 'dzięki, że dałeś znać. jeśli coś się zmieni, wystarczy wrócić na stronę i wypełnić formularz jeszcze raz.'
+      : 'czekamy na ostateczną decyzję – postaraj się dać znać do końca maja, żebyśmy mogli domknąć listę.';
 
   const summaryRows = [
     row('imię i nazwisko', escapeHtml(d.name)),
@@ -317,36 +316,40 @@ function emailHtml(d) {
   }
   if (d.phone) summaryRows.push(row('telefon', escapeHtml(d.phone)));
 
+  // Site colors:
+  //   --cream: hsl(51.66 36.3% 95.56%)  ≈  #F8F4E5
+  //   --ink:   #2E2E2E
+  //   --rule:  rgba(46,46,46,0.18)
   return `<!doctype html>
 <html lang="pl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RSVP zapisane</title>
+<title>rsvp zapisane</title>
 </head>
-<body style="margin:0;padding:0;background:#F4EFE0;font-family:Georgia,'Cormorant Garamond',serif;color:#2E2E2E;-webkit-font-smoothing:antialiased;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F4EFE0;">
+<body style="margin:0;padding:0;background:#F8F4E5;font-family:Georgia,'Cormorant Garamond',serif;color:#2E2E2E;-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F8F4E5;">
     <tr>
-      <td align="center" style="padding:48px 24px;">
-        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;width:100%;background:#FFFCF0;border:1px solid rgba(46,46,46,0.18);">
+      <td align="center" style="padding:56px 24px;">
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;width:100%;background:#F8F4E5;">
 
-          <!-- masthead -->
+          <!-- masthead: monogram + small label, hairline below -->
           <tr>
-            <td style="padding:36px 40px 24px;border-bottom:1px solid rgba(46,46,46,0.18);">
+            <td style="padding:0 0 20px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="font-family:Georgia,'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:28px;letter-spacing:-0.02em;color:#2E2E2E;">k·s</td>
-                  <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(46,46,46,0.62);">rsvp · zapisane</td>
+                  <td style="font-family:Georgia,'Cormorant Garamond',serif;font-weight:400;font-size:24px;letter-spacing:-0.06em;color:#2E2E2E;">k<span style="color:rgba(46,46,46,0.6);">·</span><em style="font-style:italic;">s</em></td>
+                  <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">rsvp · zapisane</td>
                 </tr>
               </table>
             </td>
           </tr>
+          <tr><td style="border-top:1px solid rgba(46,46,46,0.18);font-size:0;line-height:0;height:1px;">&nbsp;</td></tr>
 
           <!-- headline -->
           <tr>
-            <td style="padding:48px 40px 8px;">
-              <p style="margin:0 0 18px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);">vol. 01 — wrocław · summer mmxxvi</p>
-              <h1 style="margin:0;font-family:Georgia,'Cormorant Garamond',serif;font-weight:400;font-size:42px;line-height:1.05;letter-spacing:-0.03em;color:#2E2E2E;">
+            <td style="padding:56px 0 0;">
+              <h1 style="margin:0;font-family:Georgia,'Cormorant Garamond',serif;font-weight:400;font-size:46px;line-height:1.02;letter-spacing:-0.035em;color:#2E2E2E;">
                 ${headline}
               </h1>
             </td>
@@ -354,8 +357,8 @@ function emailHtml(d) {
 
           <!-- intro -->
           <tr>
-            <td style="padding:24px 40px 8px;">
-              <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.65;color:rgba(46,46,46,0.78);">
+            <td style="padding:28px 0 8px;">
+              <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.7;color:rgba(46,46,46,0.78);">
                 ${escapeHtml(intro)}
               </p>
             </td>
@@ -363,8 +366,8 @@ function emailHtml(d) {
 
           <!-- summary -->
           <tr>
-            <td style="padding:32px 40px 8px;">
-              <p style="margin:0 0 14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);">podsumowanie</p>
+            <td style="padding:48px 0 0;">
+              <p style="margin:0 0 18px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;">podsumowanie</p>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid rgba(46,46,46,0.18);">
                 ${summaryRows.join('')}
               </table>
@@ -373,23 +376,21 @@ function emailHtml(d) {
 
           <!-- edit link -->
           <tr>
-            <td style="padding:36px 40px 8px;">
-              <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.6;color:rgba(46,46,46,0.78);">
-                Coś się zmieniło? <a href="${SITE_URL}/#rsvp" style="color:#2E2E2E;text-decoration:underline;text-underline-offset:3px;">Wypełnij formularz jeszcze raz</a> — nadpiszemy odpowiedź.
+            <td style="padding:40px 0 0;">
+              <p style="margin:0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;line-height:1.7;color:rgba(46,46,46,0.78);">
+                coś się zmieniło? <a href="${SITE_URL}/#rsvp" style="color:#2E2E2E;text-decoration:underline;text-underline-offset:3px;">wypełnij formularz jeszcze raz</a> – nadpiszemy odpowiedź.
               </p>
             </td>
           </tr>
 
-          <!-- footer -->
+          <!-- footer signature -->
           <tr>
-            <td style="padding:48px 40px 36px;border-top:1px solid rgba(46,46,46,0.18);margin-top:36px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <td style="padding:64px 0 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="font-family:Georgia,'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:#2E2E2E;">
+                  <td style="border-top:1px solid #2E2E2E;width:32px;font-size:0;line-height:0;height:1px;">&nbsp;</td>
+                  <td style="padding-left:16px;font-family:Georgia,'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:18px;color:#2E2E2E;">
                     klara &amp; szymon
-                  </td>
-                  <td align="right" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(46,46,46,0.62);">
-                    15.viii.mmxxvi · wrocław
                   </td>
                 </tr>
               </table>
@@ -398,8 +399,8 @@ function emailHtml(d) {
 
         </table>
 
-        <p style="margin:18px 0 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(46,46,46,0.45);">
-          dostałeś tego maila bo wypełniłeś rsvp na <a href="${SITE_URL}" style="color:rgba(46,46,46,0.6);">klaraiszymon.pl</a>
+        <p style="margin:48px 0 0;font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.45);font-weight:500;">
+          dostałeś tego maila bo wypełniłeś rsvp na <a href="${SITE_URL}" style="color:rgba(46,46,46,0.7);">klaraiszymon.pl</a>
         </p>
 
       </td>
@@ -411,8 +412,8 @@ function emailHtml(d) {
 
 function row(label, value) {
   return `<tr>
-    <td style="padding:14px 0;border-bottom:1px solid rgba(46,46,46,0.18);font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(46,46,46,0.62);width:160px;vertical-align:top;">${label}</td>
-    <td style="padding:14px 0;border-bottom:1px solid rgba(46,46,46,0.18);font-family:Georgia,'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:#2E2E2E;">${value}</td>
+    <td style="padding:18px 0;border-bottom:1px solid rgba(46,46,46,0.18);font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(46,46,46,0.62);font-weight:500;width:160px;vertical-align:top;">${label}</td>
+    <td style="padding:18px 0;border-bottom:1px solid rgba(46,46,46,0.18);font-family:Georgia,'Cormorant Garamond',serif;font-weight:400;font-size:20px;line-height:1.3;color:#2E2E2E;">${value}</td>
   </tr>`;
 }
 
