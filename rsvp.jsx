@@ -291,7 +291,9 @@ function StepBody({ step, value, onChange, onEnter }) {
   return <TextField value={value} onChange={onChange} type={step.type} placeholder={step.placeholder} autoFocus onEnter={onEnter} />;
 }
 
-function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvance }) {
+function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvance, submitting, submitError, isLast }) {
+  const buttonDisabled = !canAdvance || submitting;
+  const buttonLabel = submitting && isLast ? 'wysyłam…' : isLast ? 'wyślij rsvp' : 'dalej';
   return (
     <div style={{
       display: 'grid',
@@ -356,24 +358,38 @@ function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvanc
           <span className="smallcaps">poprzednie</span>
         </button>
 
-        <button type="button" onClick={onNext} disabled={!canAdvance} style={{
-          background: canAdvance ? 'var(--ink)' : 'transparent',
-          color: canAdvance ? 'var(--cream)' : 'var(--muted)',
-          border: '1px solid ' + (canAdvance ? 'var(--ink)' : 'var(--rule-strong)'),
-          padding: '16px 28px',
-          cursor: canAdvance ? 'pointer' : 'not-allowed',
-          fontFamily: 'var(--sans)',
-          fontSize: 11,
-          letterSpacing: '0.22em',
-          textTransform: 'uppercase',
-          fontWeight: 500,
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 12,
-        }}>
-          {idx === total - 1 ? 'wyślij rsvp' : 'dalej'}
-          <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>→</span>
-        </button>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+          {submitError && isLast && (
+            <span style={{
+              fontFamily: 'var(--serif)',
+              fontStyle: 'italic',
+              fontSize: 14,
+              color: '#B36A4A',
+              maxWidth: 320,
+              textAlign: 'right',
+              lineHeight: 1.4,
+            }}>{submitError}</span>
+          )}
+          <button type="button" onClick={onNext} disabled={buttonDisabled} style={{
+            background: buttonDisabled ? 'transparent' : 'var(--ink)',
+            color: buttonDisabled ? 'var(--muted)' : 'var(--cream)',
+            border: '1px solid ' + (buttonDisabled ? 'var(--rule-strong)' : 'var(--ink)'),
+            padding: '16px 28px',
+            cursor: buttonDisabled ? 'not-allowed' : 'pointer',
+            fontFamily: 'var(--sans)',
+            fontSize: 11,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            fontWeight: 500,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 12,
+            opacity: submitting && isLast ? 0.7 : 1,
+          }}>
+            {buttonLabel}
+            <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>→</span>
+          </button>
+        </div>
       </footer>
     </div>
   );
@@ -381,7 +397,7 @@ function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvanc
 
 /* ── Long-form variant (all questions on one page) ─────────────────────── */
 
-function LongForm({ answers, setAnswer, onSubmit, canSubmit }) {
+function LongForm({ answers, setAnswer, onSubmit, canSubmit, submitting, submitError }) {
   const visible = activeSteps(answers);
   return (
     <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
@@ -420,7 +436,18 @@ function LongForm({ answers, setAnswer, onSubmit, canSubmit }) {
         </div>
       ))}
 
-      <div style={{ marginTop: 40, textAlign: 'right' }}>
+      <div style={{ marginTop: 40, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+        {submitError && (
+          <span style={{
+            fontFamily: 'var(--serif)',
+            fontStyle: 'italic',
+            fontSize: 14,
+            color: '#B36A4A',
+            maxWidth: 360,
+            textAlign: 'right',
+            lineHeight: 1.4,
+          }}>{submitError}</span>
+        )}
         <button type="button" onClick={onSubmit} disabled={!canSubmit} style={{
           background: canSubmit ? 'var(--ink)' : 'transparent',
           color: canSubmit ? 'var(--cream)' : 'var(--muted)',
@@ -432,8 +459,9 @@ function LongForm({ answers, setAnswer, onSubmit, canSubmit }) {
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
           fontWeight: 500,
+          opacity: submitting ? 0.7 : 1,
         }}>
-          wyślij rsvp →
+          {submitting ? 'wysyłam…' : 'wyślij rsvp →'}
         </button>
       </div>
     </div>
@@ -591,6 +619,8 @@ function RSVPPage({ onBack, variant = 'steps' }) {
   const [answers, setAnswers] = React.useState(() => loadRSVP() || {});
   const [submitted, setSubmitted] = React.useState(() => !!loadRSVP()?.submittedAt);
   const [stepIdx, setStepIdx] = React.useState(0);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(null);
 
   const visible = activeSteps(answers);
   const totalSteps = visible.length;
@@ -603,15 +633,46 @@ function RSVPPage({ onBack, variant = 'steps' }) {
 
   const allValid = visible.every((s) => isStepValid(s, answers[s.id], answers));
 
-  const submit = () => {
+  const submit = async () => {
+    if (submitting) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    // Local save first — even if network dies, they don't lose entry.
     saveRSVP(answers);
-    setSubmitted(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      const payload = {
+        name:           answers.name || '',
+        attending:      answers.attending || '',
+        plus_one_has:   answers.plus_one?.has || '',
+        plus_one_name:  answers.plus_one?.name || '',
+        diet:           answers.diet || '',
+        drinks:         answers.drinks || '',
+        email:          answers.email || '',
+        phone:          answers.phone || '',
+        source:         variant === 'long' ? 'web-long' : 'web-steps',
+      };
+      const r = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!r.ok) {
+        const err = await r.json().catch(() => null);
+        throw new Error(err?.error || `błąd serwera (${r.status})`);
+      }
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {
+      setSubmitError(e?.message || 'nie udało się wysłać — sprawdź połączenie i spróbuj jeszcze raz');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const reset = () => {
     setSubmitted(false);
     setStepIdx(0);
+    setSubmitError(null);
   };
 
   // After submit
@@ -645,6 +706,9 @@ function RSVPPage({ onBack, variant = 'steps' }) {
               }}
               onPrev={() => setStepIdx(Math.max(0, safeStepIdx - 1))}
               canAdvance={canAdvanceStep}
+              submitting={submitting}
+              submitError={submitError}
+              isLast={safeStepIdx === totalSteps - 1}
             />
           </div>
         </section>
@@ -662,7 +726,9 @@ function RSVPPage({ onBack, variant = 'steps' }) {
           answers={answers}
           setAnswer={setAnswer}
           onSubmit={submit}
-          canSubmit={allValid}
+          canSubmit={allValid && !submitting}
+          submitting={submitting}
+          submitError={submitError}
         />
       </section>
       <PaginationBack onBack={onBack} />
