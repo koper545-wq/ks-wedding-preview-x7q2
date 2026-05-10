@@ -1,4 +1,4 @@
-/* Dress Code subpage — editorial column with 5 numbered blocks */
+/* Dress Code subpage */
 
 function DressCodeRule({ num, label, headline, body, accent }) {
   return (
@@ -21,9 +21,11 @@ function DressCodeRule({ num, label, headline, body, accent }) {
         }}>
           {num}
         </div>
-        <div className="smallcaps" style={{ color: 'var(--muted)', marginTop: 10 }}>
-          {label}
-        </div>
+        {label && (
+          <div className="smallcaps" style={{ color: 'var(--muted)', marginTop: 10 }}>
+            {label}
+          </div>
+        )}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 40, alignItems: 'start' }}>
@@ -38,7 +40,7 @@ function DressCodeRule({ num, label, headline, body, accent }) {
           }}>
             {headline}
           </h3>
-          <p style={{
+          <div style={{
             fontFamily: 'var(--sans)',
             fontSize: 15,
             lineHeight: 1.65,
@@ -48,7 +50,7 @@ function DressCodeRule({ num, label, headline, body, accent }) {
             textWrap: 'pretty',
           }}>
             {body}
-          </p>
+          </div>
         </div>
         {accent && (
           <div style={{ width: 120 }}>
@@ -90,20 +92,6 @@ function FabricIcon() {
         </pattern>
       </defs>
       <rect x="2" y="2" width="116" height="76" fill="url(#weave)" stroke="var(--rule-strong)" strokeWidth="0.5" />
-      <text x="60" y="46" textAnchor="middle" fontFamily="Inter" fontSize="8" letterSpacing="2" fill="var(--muted)">FIG. 02</text>
-    </svg>
-  );
-}
-
-function ShoeIcon() {
-  return (
-    <svg viewBox="0 0 120 80" style={{ width: '100%', height: 'auto' }}>
-      <g fill="none" stroke="var(--ink)" strokeWidth="0.8">
-        {/* simple block heel */}
-        <path d="M14 56 Q14 38 36 36 L82 32 Q104 30 104 46 L104 60 L96 60 L96 50 L18 50 Z" />
-        <line x1="14" y1="56" x2="104" y2="60" strokeWidth="0.5" />
-      </g>
-      <text x="60" y="74" textAnchor="middle" fontFamily="Inter" fontSize="8" letterSpacing="2" fill="var(--muted)">FIG. 03 — block heel</text>
     </svg>
   );
 }
@@ -113,22 +101,10 @@ function DressCodePage({ onBack }) {
     <main>
       {/* Cover */}
       <section style={{ padding: '80px 56px 56px 56px' }}>
-        <header style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr auto 1fr',
-          alignItems: 'center',
-          marginBottom: 18,
-        }}>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>vol. 01 — wrocław</div>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>k &amp; s · cocktail · ślub</div>
-          <div className="smallcaps" style={{ color: 'var(--muted)', textAlign: 'right' }}>summer mmxxvi</div>
-        </header>
-        <div className="rule-h" />
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginTop: 40, marginBottom: 32 }}>
-          <div className="smallcaps" style={{ color: 'var(--ink)' }}>0² — dress code</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: 32 }}>
+          <div className="smallcaps" style={{ color: 'var(--ink)' }}>04 – dress code</div>
           <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-            what to wear · §02
+            what to wear · §04
           </div>
         </div>
 
@@ -136,13 +112,13 @@ function DressCodePage({ onBack }) {
           <h1 style={{
             fontFamily: 'var(--serif)',
             fontWeight: 400,
-            fontSize: 'clamp(56px, 9vw, 144px)',
-            lineHeight: 0.92,
+            fontSize: 'clamp(48px, 7.5vw, 120px)',
+            lineHeight: 0.95,
             letterSpacing: '-0.04em',
             margin: 0,
           }}>
-            ubierzcie się <span style={{ fontStyle: 'italic', fontWeight: 300 }}>jak</span> na<br/>
-            letnie <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party.
+            ubierzcie się <span style={{ fontStyle: 'italic', fontWeight: 300 }}>elegancko</span>,<br/>
+            jak na letnie <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party.
           </h1>
           <p style={{
             fontFamily: 'var(--sans)',
@@ -153,7 +129,7 @@ function DressCodePage({ onBack }) {
             maxWidth: 380,
             textWrap: 'pretty',
           }}>
-            outdoor po południu, indoor wieczorem. lekko, oddychająco, elegancko — ale bez krawatów do kolan i czerni grobowej. poniżej pięć krótkich notatek.
+            outdoor po południu, indoor wieczorem.
           </p>
         </div>
       </section>
@@ -164,15 +140,27 @@ function DressCodePage({ onBack }) {
           <DressCodeRule
             num="01"
             label="tkaniny"
-            headline={<>len, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>jedwab</span>, lekka wełna, bawełna.</>}
-            body="lato + outdoor = oddychające. unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji. naturalne tkaniny zachowają was świeżymi do północy."
+            headline={<>lekkie <span style={{ fontStyle: 'italic', fontWeight: 300 }}>i</span> zwiewne.</>}
+            body={<>
+              polecamy oddychające materiały. unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji. to będzie letnie wesele! 🍓
+            </>}
             accent={<FabricIcon />}
           />
           <DressCodeRule
             num="02"
-            label="kolory dla pań"
-            headline={<>pastele, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>zieleń</span>, granat, ziemiste tony.</>}
-            body="przybrudzone róże, oliwka, pudry, terakota, granaty, grafity. wszystko co dobrze leży na trawie i w popołudniowym świetle. unikać neonów, czarnej długiej sukni i, naturalnie, bieli."
+            label="kolory sukienek"
+            headline={<>girls, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>nie</span> mamy bardzo sztywnych zasad, ale…</>}
+            body={<>
+              <p style={{ margin: 0 }}>
+                unikajcie bardzo mocnych kolorów, takich jak np. krwista czerwień czy neony.
+              </p>
+              <p style={{ margin: '14px 0 0' }}>
+                czerń jest ok, ale stawiajcie na kolory – to jest letnie wesele! naturalnie biel, ecru, kość słoniowa zarezerwowane są dla panny młodej.
+              </p>
+              <p style={{ margin: '14px 0 0' }}>
+                wzory czy kwieciste kreacje są jak najbardziej okej.
+              </p>
+            </>}
             accent={<ColorSwatches swatches={[
               { name: 'sage', color: '#9DA98F' },
               { name: 'navy', color: '#2B3A55' },
@@ -183,33 +171,17 @@ function DressCodePage({ onBack }) {
           />
           <DressCodeRule
             num="03"
-            label="kolory dla panów"
-            headline={<>granat, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>beż</span>, jasny szary, oliwka.</>}
-            body="garnitur lekki, najlepiej letni. bez czerni grobowej. krawat opcjonalny — równie chętnie widzimy odkryte kołnierzyki, jedwabne chusty albo nic. brązowe buty mile widziane."
+            label="dla panów"
+            headline={<>guys, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>nie</span> akceptujemy t-shirtów – koszule only!</>}
+            body={<>
+              stawiajcie na elegancki look. uprzedzając pytania – lniany garnitur też jest ok.
+            </>}
             accent={<ColorSwatches swatches={[
               { name: 'navy', color: '#2B3A55' },
               { name: 'beige', color: '#C7B59A' },
               { name: 'lt. grey', color: '#B5B2AA' },
               { name: 'olive', color: '#7C7B4E' },
             ]} />}
-          />
-          <DressCodeRule
-            num="04"
-            label="kolory zabronione"
-            headline={<><span style={{ fontStyle: 'italic', fontWeight: 300 }}>biel</span>, ecru, kość słoniowa.</>}
-            body="zarezerwowane dla panny młodej. dotyczy sukienek, garniturów, koszul w roli głównej, długich białych spódnic. biały szczegół (szal, koszula pod marynarką, biała koszula męska) — w porządku."
-            accent={<ColorSwatches swatches={[
-              { name: 'white', color: '#FFFFFF', border: true },
-              { name: 'ecru', color: '#F2EAD3', border: true },
-              { name: 'ivory', color: '#F8F4E3', border: true },
-            ]} />}
-          />
-          <DressCodeRule
-            num="05"
-            label="buty"
-            headline={<>outdoor + trawa = <span style={{ fontStyle: 'italic', fontWeight: 300 }}>nie</span> szpilki-iglice.</>}
-            body="ceremonia i pierwsza część na trawie. sugerujemy koturny, blokowe obcasy, eleganckie sandały, espadryle z paskiem. po 22:00 przenosimy się do środka — wtedy wszystko gra."
-            accent={<ShoeIcon />}
           />
         </div>
       </section>
@@ -224,21 +196,18 @@ function DressCodePage({ onBack }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
           <div>
             <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)', marginBottom: 18 }}>jeśli macie wątpliwości</div>
-            <p style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(26px, 3.2vw, 40px)', fontWeight: 400, lineHeight: 1.15, letterSpacing: '-0.02em', margin: 0, color: 'var(--cream)' }}>
-              napiszcie. <span style={{ fontStyle: 'italic', fontWeight: 300 }}>chętniej</span> doradzimy niż patrzymy na wątpliwy outfit.
+            <p style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(26px, 3.2vw, 40px)', fontWeight: 400, lineHeight: 1.2, letterSpacing: '-0.02em', margin: 0, color: 'var(--cream)' }}>
+              piszcie, <span style={{ fontStyle: 'italic', fontWeight: 300 }}>postaramy się</span> doradzić i odpowiedzieć na wszystkie Wasze pytania!
             </p>
           </div>
-          <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'rgba(255,252,240,0.7)', lineHeight: 1.7, textAlign: 'right' }}>
+          <div style={{ fontFamily: 'var(--sans)', fontSize: 15, color: 'rgba(255,252,240,0.85)', lineHeight: 1.7, textAlign: 'right' }}>
             klara@wedded.studio
-            <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'rgba(255,252,240,0.45)', marginTop: 6 }}>
-              odpowiadamy w 24h
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Pagination — back to landing */}
-      <section style={{ padding: '40px 56px 64px 56px', borderTop: '1px solid var(--rule)' }}>
+      {/* Pagination – back to landing */}
+      <section style={{ padding: '40px 56px 32px 56px', borderTop: '1px solid var(--rule)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button onClick={onBack} style={{
             background: 'transparent', border: 'none', cursor: 'pointer', padding: 0,
@@ -248,9 +217,11 @@ function DressCodePage({ onBack }) {
             <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
             <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>powrót na cover</span>
           </button>
-          <div className="smallcaps" style={{ color: 'var(--muted)' }}>§02 · dress code · k&amp;s mmxxvi</div>
+          <div className="smallcaps" style={{ color: 'var(--muted)' }}>§04 · dress code · k&amp;s mmxxvi</div>
         </div>
       </section>
+
+      <SiteFooter />
     </main>
   );
 }

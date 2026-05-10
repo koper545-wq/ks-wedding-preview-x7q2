@@ -1,4 +1,4 @@
-/* Sections — 00 Informacje, Intro/Soon, Format Wesela */
+/* Sections – 00 Informacje, Intro/Soon, Format Wesela */
 
 /* ── 00 Informacje ──────────────────────────────────────────────────────── */
 
@@ -8,11 +8,8 @@ function SectionInformacje() {
       padding: '120px 56px 120px 56px',
       borderTop: '1px solid var(--rule)',
     }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 56 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>00 — informacje ogólne</div>
-        <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-          general · §00
-        </div>
+      <div style={{ marginBottom: 56 }}>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>01</div>
       </div>
 
       <div style={{
@@ -21,7 +18,7 @@ function SectionInformacje() {
         gap: 64,
         marginRight: 64,
       }}>
-        {/* LEFT — facts */}
+        {/* LEFT – facts */}
         <div>
           <h2 style={{
             fontFamily: 'var(--serif)',
@@ -32,19 +29,20 @@ function SectionInformacje() {
             margin: '0 0 56px',
           }}>
             sobota,<br/>
-            <span style={{ fontStyle: 'italic', fontWeight: 300 }}>piętnasty</span> sierpnia
+            <span style={{ fontStyle: 'italic', fontWeight: 300 }}>15</span> sierpnia
           </h2>
 
           <FactRow label="data" value="15.08.2026" sub="sobota" />
-          <FactRow label="początek" value="15:30" sub="cocktail · zbieranie gości · ceremonia 16:30" />
-          <FactRow label="koniec" value="~04:00" sub="późna noc — zostajemy do rana" />
+          <FactRow label="początek" value="15:00" sub="cocktail hour · spokojne zbieranie gości" />
+          <FactRow label="ceremonia" value="16:00" sub="ceremonia wśród zieleni · more info na miejscu" />
+          <FactRow label="koniec" value="~04:00" sub="świętujemy do rana" />
           <FactRow label="miejsce" value="Wrocław Golf Club" sub="Kryniczno, ul. Golfowa 1" />
           <FactRow label="dojazd" value="ok. 25 min od centrum" sub="własny transport · parking na miejscu" last />
         </div>
 
         <div className="rule-v" />
 
-        {/* RIGHT — map */}
+        {/* RIGHT – map */}
         <div>
           <div style={{
             position: 'relative',
@@ -65,16 +63,33 @@ function SectionInformacje() {
               color: 'var(--muted)',
               background: 'var(--cream)',
               padding: '4px 8px',
-            }}>fig. 01 — kryniczno</div>
+            }}>dojazd</div>
           </div>
 
           <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 16 }}>
-            <div style={{ fontFamily: 'var(--serif)', fontSize: 16, fontStyle: 'italic', color: 'var(--ink)', lineHeight: 1.4, maxWidth: '60%' }}>
-              parking i shuttle z centrum<br/>
-              <span style={{ fontStyle: 'normal', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--muted)' }}>
-                — szczegóły dosypiemy bliżej daty
-              </span>
-            </div>
+            <ul style={{
+              listStyle: 'none',
+              margin: 0,
+              padding: 0,
+              fontFamily: 'var(--sans)',
+              fontSize: 13,
+              lineHeight: 1.7,
+              color: 'var(--ink)',
+              maxWidth: '70%',
+            }}>
+              <li style={{ display: 'flex', gap: 10 }}>
+                <span style={{ color: 'var(--muted)' }}>·</span>
+                <span>na miejscu znajduje się duży parking</span>
+              </li>
+              <li style={{ display: 'flex', gap: 10 }}>
+                <span style={{ color: 'var(--muted)' }}>·</span>
+                <span>dla chętnych będą dostępne taksówki</span>
+              </li>
+              <li style={{ display: 'flex', gap: 10, color: 'var(--muted)', fontStyle: 'italic', fontFamily: 'var(--serif)', fontSize: 14 }}>
+                <span>·</span>
+                <span>więcej szczegółów soon</span>
+              </li>
+            </ul>
             <a href="https://maps.google.com/?q=Wrocław+Golf+Club+Kryniczno"
                target="_blank" rel="noreferrer"
                className="smallcaps"
@@ -120,7 +135,7 @@ function FactRow({ label, value, sub, last }) {
 }
 
 function MapPlaceholder() {
-  // SVG — minimalist editorial map mark
+  // SVG – minimalist editorial map mark
   return (
     <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"
          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
@@ -151,13 +166,17 @@ function MapPlaceholder() {
         WROCŁAW GOLF CLUB
       </text>
       <text x="260" y="156" fontFamily="Fraunces, serif" fontStyle="italic" fontSize="11" fill="rgba(46,46,46,0.6)">
-        kryniczno
+        Kryniczno
       </text>
       {/* compass */}
       <g transform="translate(360 40)">
+        <circle r="16" fill="none" stroke="rgba(46,46,46,0.25)" strokeWidth="0.5" />
         <line x1="0" y1="-14" x2="0" y2="14" stroke="#2E2E2E" strokeWidth="0.6" />
-        <line x1="-10" y1="0" x2="10" y2="0" stroke="#2E2E2E" strokeWidth="0.4" />
-        <text x="0" y="-18" textAnchor="middle" fontFamily="Inter" fontSize="7" fill="#2E2E2E">N</text>
+        <line x1="-14" y1="0" x2="14" y2="0" stroke="#2E2E2E" strokeWidth="0.4" />
+        <text x="0" y="-18" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="#2E2E2E">N</text>
+        <text x="0" y="25" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="rgba(46,46,46,0.6)">S</text>
+        <text x="-19" y="2.5" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="rgba(46,46,46,0.6)">W</text>
+        <text x="19" y="2.5" textAnchor="middle" fontFamily="Inter" fontSize="7" letterSpacing="1" fill="rgba(46,46,46,0.6)">E</text>
       </g>
     </svg>
   );
@@ -173,7 +192,7 @@ function SectionSoon() {
       position: 'relative',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 24 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0¹ — list do gości</div>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0¹ – list do gości</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
           a note · §01
         </div>
@@ -203,7 +222,7 @@ function SectionSoon() {
             margin: 0,
             textWrap: 'pretty',
           }}>
-            już niedługo spotykamy się, żeby świętować razem z wami. tę stronę stworzyliśmy, żeby ułatwić nam wszystkim komunikację.
+            specjalnie dla Was stworzyliśmy dedykowaną stronę z ważnymi informacjami. mamy nadzieję, że odpowiemy tu na wszystkie Wasze pytania.
           </p>
           <p style={{
             fontFamily: 'var(--sans)',
@@ -214,13 +233,13 @@ function SectionSoon() {
             maxWidth: 420,
             textWrap: 'pretty',
           }}>
-            wypełnijcie proszę sekcję RSVP wraz z mailem, na który będziemy wysyłać kolejne aktualizacje — plan dnia, dress code, i kilka miejsc do zobaczenia we Wrocławiu.
+            na początku bardzo prosimy o wypełnienie RSVP wraz z mailem, na który będziemy wysyłać wszelkie aktualizacje. już nie możemy się doczekać wspólnego świętowania!
           </p>
 
           <div style={{ marginTop: 56, display: 'flex', alignItems: 'center', gap: 16 }}>
             <span style={{ width: 32, height: 1, background: 'var(--ink)' }} />
             <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18, color: 'var(--ink)' }}>
-              klara &amp; szymon
+              k &amp; s
             </span>
           </div>
         </div>
@@ -229,7 +248,7 @@ function SectionSoon() {
   );
 }
 
-/* ── Format wesela — 01 / 02 / 03 ───────────────────────────────────────── */
+/* ── Format wesela – 01 / 02 / 03 ───────────────────────────────────────── */
 
 function SectionFormat({ onDressCode }) {
   return (
@@ -238,7 +257,7 @@ function SectionFormat({ onDressCode }) {
       borderTop: '1px solid var(--rule)',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 80 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0² — format wesela</div>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0² – format wesela</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
           how it goes · §02
         </div>
@@ -251,9 +270,9 @@ function SectionFormat({ onDressCode }) {
         lineHeight: 0.95,
         letterSpacing: '-0.035em',
         margin: '0 0 80px',
-        maxWidth: '11ch',
+        maxWidth: '14ch',
       }}>
-        nie typowe polskie wesele — <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party.
+        letnie, polskie wesele – <span style={{ fontStyle: 'italic', fontWeight: 300 }}>cocktail</span> party na tarasie.
       </h2>
 
       <div style={{
@@ -264,36 +283,34 @@ function SectionFormat({ onDressCode }) {
       }}>
         <FormatColumn
           number="01"
-          name="cocktail"
-          tagline="lekka, przepuszczalna formuła"
-          time="15:30 — 22:00"
-          body="zamiast usadzenia przy stole na osiem godzin — bufet, bary, krążenie. wpadasz do tej grupy, do tamtej rozmowy, znikasz na chwilę i wracasz."
+          name={<>jedzenie <em>&amp;</em> bar</>}
+          tagline="lekka formuła"
+          body={<>
+            zamiast kolacji – bufet, pizza z pieca i grill.<br/>
+            bar z naszymi fav koktajlami,<br/>
+            stół z polskimi winami i polską wódką.
+          </>}
         />
         <div className="rule-v" />
         <FormatColumn
           number="02"
           name="outdoor"
           tagline="popołudnie i wczesny wieczór"
-          time="słońce → zachód"
-          body="ceremonia i pierwsza część w ogrodzie. trawa, drewno, długie cienie. dress code dopasowany do warunków — patrz sekcja Dress Code."
+          body="ceremonia i pierwsza część odbędzie się na zewnątrz. muzyka na żywo, pierwszy taniec, rozmowy i gry."
         />
         <div className="rule-v" />
         <FormatColumn
           number="03"
           name={<><span>late</span> <em>night</em></>}
-          tagline="po dwudziestej drugiej"
-          time="22:00 — ~04:00"
-          body="przenosimy się do środka. dj, tańce, wódka, o północy tradycyjny barszcz z krokiecikiem. kończymy nad ranem — zostawcie sobie kacowy poranek."
+          tagline="po 22:00"
+          body="przenosimy się do środka i zaczynamy tańce!"
         />
       </div>
 
-      <div style={{ marginTop: 96, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--rule)', paddingTop: 32, marginRight: 64 }}>
+      <div style={{ marginTop: 96, borderTop: '1px solid var(--rule)', paddingTop: 32, marginRight: 64, textAlign: 'center' }}>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18, color: 'var(--muted)' }}>
-          dalej — co założyć?
+          dokładny plan ceremonii soon
         </div>
-        <button onClick={onDressCode} className="smallcaps" style={{ color: 'var(--ink)', background: 'transparent', border: 'none', cursor: 'pointer', textDecoration: 'none', borderBottom: '1px solid var(--ink)', paddingBottom: 2, padding: 0, paddingBottom: 2 }}>
-          dress code →
-        </button>
       </div>
     </section>
   );
@@ -306,7 +323,7 @@ function FormatColumn({ number, name, tagline, time, body }) {
         <span style={{ fontFamily: 'var(--serif)', fontSize: 56, fontWeight: 300, lineHeight: 1, letterSpacing: '-0.04em', color: 'var(--ink)' }}>
           {number}
         </span>
-        <span className="smallcaps" style={{ color: 'var(--muted)' }}>{time}</span>
+        {time && <span className="smallcaps" style={{ color: 'var(--muted)' }}>{time}</span>}
       </div>
 
       <h3 style={{
@@ -320,7 +337,7 @@ function FormatColumn({ number, name, tagline, time, body }) {
         {name}
       </h3>
       <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 15, color: 'var(--muted)', marginBottom: 28 }}>
-        — {tagline}
+        – {tagline}
       </div>
 
       <p style={{
@@ -350,7 +367,7 @@ function SiteFooter() {
         <Monogram size={32} />
         <div style={{ textAlign: 'center' }}>
           <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>edition</div>
-          <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>vol. 01 — summer mmxxvi</div>
+          <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>vol. 01 – summer mmxxvi</div>
         </div>
         <div style={{ textAlign: 'right' }}>
           <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>kontakt</div>

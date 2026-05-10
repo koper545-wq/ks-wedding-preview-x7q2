@@ -1,25 +1,24 @@
-/* RSVP subpage — typeform-style step-by-step + long-form variant + easter egg on submit */
+/* RSVP subpage – typeform-style step-by-step + long-form variant + easter egg on submit */
 
 const RSVP_STEPS = [
   {
     id: 'name',
     kicker: 'pytanie 01',
-    label: 'jak <em>się</em> nazywacie?',
-    hint: 'imię i nazwisko, tak jak wpisujemy was na liście.',
+    label: 'imię <em>i</em> nazwisko',
+    hint: '',
     type: 'text',
-    placeholder: 'np. anna kowalska',
+    placeholder: 'np. Anna Kowalska i Jan Kowalski',
     required: true,
   },
   {
     id: 'attending',
     kicker: 'pytanie 02',
-    label: 'będziecie <em>z</em> nami?',
-    hint: 'wiemy, że to ważne pytanie. nie ma złej odpowiedzi.',
+    label: 'będziecie <em>na</em> naszym weselu 15.08?',
+    hint: 'odpowiedzcie jak najszybciej, najpóźniej do końca maja.',
     type: 'choice',
     options: [
-      { value: 'yes',   label: 'tak',           sub: 'jesteśmy, czekamy z lampką' },
-      { value: 'no',    label: 'nie damy rady', sub: 'wszystko rozumiemy' },
-      { value: 'maybe', label: 'jeszcze nie wiem', sub: 'damy znać do końca maja' },
+      { value: 'yes', label: 'tak', sub: '' },
+      { value: 'no',  label: 'nie', sub: '' },
     ],
     required: true,
   },
@@ -27,7 +26,7 @@ const RSVP_STEPS = [
     id: 'plus_one',
     kicker: 'pytanie 03',
     label: 'osoba <em>towarzysząca</em>?',
-    hint: 'jeśli tak — podajcie jej imię i nazwisko.',
+    hint: 'jeśli nie było jej na zaproszeniu – podajcie imię i nazwisko.',
     type: 'plus_one',
     onlyIfAttending: true,
   },
@@ -35,21 +34,20 @@ const RSVP_STEPS = [
     id: 'diet',
     kicker: 'pytanie 04',
     label: 'dieta <em>albo</em> alergie?',
-    hint: 'wegetarianizm, weganizm, gluten, orzechy, cokolwiek. dopiszemy do menu.',
+    hint: 'na przyjęciu będzie bufet, znajdziecie w nim dania wegetariańskie jak i mięsne, ale w razie mocniejszych alergii lub diety wegańskiej postaramy się przygotować coś osobno.',
     type: 'textarea',
-    placeholder: 'jem wszystko / wegetarianka / uczulenie na orzechy …',
+    placeholder: 'jem wszystko…',
     onlyIfAttending: true,
   },
   {
     id: 'drinks',
     kicker: 'pytanie 05',
-    label: 'do <em>baru</em> — z czy bez?',
-    hint: 'po prostu żeby zamówić odpowiednie ilości.',
+    label: 'co <em>do</em> baru?',
+    hint: 'chcemy zamówić odpowiednie ilości.',
     type: 'choice',
     options: [
-      { value: 'alko',     label: 'alko',          sub: 'wino, drinki, wódka — pełen pakiet' },
-      { value: 'non_alko', label: 'non-alko',      sub: 'soki, lemoniady, mocktails' },
-      { value: 'mix',      label: 'i tak, i tak',  sub: 'zależy od godziny' },
+      { value: 'alko',     label: 'alkohol',  sub: 'wino · cocktails · wódka' },
+      { value: 'non_alko', label: 'non-alco', sub: 'mocktails' },
     ],
     onlyIfAttending: true,
   },
@@ -57,18 +55,10 @@ const RSVP_STEPS = [
     id: 'email',
     kicker: 'pytanie 06',
     label: 'jaki <em>e-mail</em>?',
-    hint: 'na ten adres dosypiemy szczegóły bliżej daty — shuttle, mapy, drobiazgi.',
+    hint: 'na ten adres dosypiemy szczegóły bliżej daty.',
     type: 'email',
     placeholder: 'imie@domena.pl',
     required: true,
-  },
-  {
-    id: 'phone',
-    kicker: 'pytanie 07',
-    label: 'a <em>telefon</em>?',
-    hint: 'na wszelki wypadek. nie będziemy dzwonić bez powodu, słowo.',
-    type: 'tel',
-    placeholder: '+48 600 000 000',
   },
 ];
 
@@ -206,10 +196,11 @@ function PlusOneField({ value, onChange }) {
   const v = value || { has: null, name: '' };
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
-      <div style={{ display: 'flex', gap: 12 }}>
+      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         {[
           { val: 'yes', label: 'tak, przyjdę z kimś' },
           { val: 'no',  label: 'przyjdę solo' },
+          { val: 'na',  label: 'nie dotyczy' },
         ].map((o) => {
           const isActive = v.has === o.val;
           return (
@@ -307,15 +298,6 @@ function StepView({ step, idx, total, value, onChange, onNext, onPrev, canAdvanc
           {step.kicker}
         </span>
         <span style={{ flex: 1, height: 1, background: 'var(--rule)' }} />
-        <span style={{
-          fontFamily: 'var(--mono)',
-          fontSize: 10,
-          letterSpacing: '0.18em',
-          color: 'var(--muted)',
-          textTransform: 'uppercase',
-        }}>
-          {String(idx + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-        </span>
       </header>
 
       <h2 style={{
@@ -471,7 +453,7 @@ function LongForm({ answers, setAnswer, onSubmit, canSubmit, submitting, submitE
 /* ── Easter egg success screen ─────────────────────────────────────────── */
 
 function ConfettiPetals() {
-  // CSS-only floating "confetti" — small petal SVGs drifting down on stagger.
+  // CSS-only floating "confetti" – small petal SVGs drifting down on stagger.
   const petals = React.useMemo(() => {
     return Array.from({ length: 28 }).map((_, i) => ({
       id: i,
@@ -569,8 +551,8 @@ function SuccessScreen({ answers, onReset, onBack }) {
           textWrap: 'pretty',
         }}>
           {isComing
-            ? 'wszystkie szczegóły — dokładny adres, parking, shuttle, mapa — wyślemy mailem na początku lipca. jeśli coś się zmieni, dajcie znać.'
-            : 'jeśli coś się zmieni — wystarczy wrócić tutaj i wypełnić formularz jeszcze raz. nadpiszemy odpowiedź.'}
+            ? 'wszystkie szczegóły – dokładny adres, parking, shuttle, mapa – wyślemy mailem na początku lipca. jeśli coś się zmieni, dajcie znać.'
+            : 'jeśli coś się zmieni – wystarczy wrócić tutaj i wypełnić formularz jeszcze raz. nadpiszemy odpowiedź.'}
         </p>
 
         <div style={{ marginTop: 56, display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -692,8 +674,7 @@ function RSVPPage({ onBack, variant = 'steps' }) {
       <main>
         <RSVPCover variant={variant} />
         <section style={{ padding: '72px 56px 96px 56px', borderTop: '1px solid var(--rule)' }}>
-          <ProgressBar idx={safeStepIdx} total={totalSteps} />
-          <div style={{ marginTop: 56 }}>
+          <div>
             <StepView
               step={currentStep}
               idx={safeStepIdx}
@@ -760,22 +741,10 @@ function ProgressBar({ idx, total }) {
 function RSVPCover({ variant, compact }) {
   return (
     <section style={{ padding: compact ? '64px 56px 32px 56px' : '80px 56px 56px 56px' }}>
-      <header style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto 1fr',
-        alignItems: 'center',
-        marginBottom: 18,
-      }}>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>vol. 01 — wrocław</div>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>k &amp; s · cocktail · ślub</div>
-        <div className="smallcaps" style={{ color: 'var(--muted)', textAlign: 'right' }}>summer mmxxvi</div>
-      </header>
-      <div className="rule-h" />
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginTop: 40, marginBottom: compact ? 0 : 32 }}>
-        <div className="smallcaps" style={{ color: 'var(--ink)' }}>0⁴ — rsvp</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 64, marginBottom: compact ? 0 : 32 }}>
+        <div className="smallcaps" style={{ color: 'var(--ink)' }}>03 – rsvp</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'var(--muted)', textAlign: 'right' }}>
-          {variant === 'long' ? 'jeden ekran · §04' : 'krok po kroku · §04'}
+          {variant === 'long' ? 'jeden ekran · §03' : 'krok po kroku · §03'}
         </div>
       </div>
 
@@ -801,7 +770,7 @@ function RSVPCover({ variant, compact }) {
             maxWidth: 380,
             textWrap: 'pretty',
           }}>
-            siedem krótkich pytań, dwie minuty. odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.
+            kilka krótkich pytań, dwie minuty. odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.
           </p>
         </div>
       )}
@@ -821,7 +790,7 @@ function PaginationBack({ onBack }) {
           <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 18 }}>←</span>
           <span className="smallcaps" style={{ borderBottom: '1px solid var(--ink)', paddingBottom: 2 }}>powrót na cover</span>
         </button>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>§04 · rsvp · k&amp;s mmxxvi</div>
+        <div className="smallcaps" style={{ color: 'var(--muted)' }}>§03 · rsvp · k&amp;s mmxxvi</div>
       </div>
     </section>
   );

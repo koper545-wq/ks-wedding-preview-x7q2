@@ -1,4 +1,4 @@
-/* Hero — Feature variant: one big B&W photo + editorial typographic block */
+/* Hero – Feature variant: one big B&W photo + editorial typographic block */
 
 const heroStyles = {
   wrap: {
@@ -85,44 +85,24 @@ function CountdownMoment() {
       <div style={{ height: 1, background: 'var(--rule)', width: '100%' }} />
       <div style={{
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         padding: '24px 0',
-        gap: 24,
+        gap: 12,
       }}>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>odliczanie</div>
+        <div className="smallcaps" style={{ color: 'var(--muted)' }}>widzimy się za:</div>
         <Countdown />
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>do 15.08.2026</div>
       </div>
       <div style={{ height: 1, background: 'var(--rule)', width: '100%' }} />
     </div>
   );
 }
 
-function HeroMasthead() {
-  return (
-    <>
-      <header style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr auto 1fr',
-        alignItems: 'center',
-        marginBottom: 18,
-      }}>
-        <div style={heroStyles.cornerLabel}>vol. 01 — wrocław</div>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>k &amp; s · cocktail · ślub</div>
-        <div style={{ ...heroStyles.cornerLabel, textAlign: 'right' }}>summer mmxxvi</div>
-      </header>
-      <div className="rule-h" />
-    </>
-  );
-}
-
 function Hero() {
   return (
     <section style={heroStyles.wrap}>
-      <HeroMasthead />
-
-      <div style={{ marginTop: 28, position: 'relative' }}>
+      <div style={{ position: 'relative' }}>
         <div className="bw" style={{
           width: '100%',
           height: 'clamp(380px, 52vw, 640px)',
@@ -130,32 +110,11 @@ function Hero() {
         }}>
           <img src="img/wed1.jpg" alt="" loading="eager" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%' }} />
         </div>
-
-        <div style={{
-          position: 'absolute',
-          left: 0, bottom: -22,
-          fontFamily: 'var(--sans)',
-          fontSize: 9,
-          letterSpacing: '0.24em',
-          textTransform: 'uppercase',
-          color: 'var(--muted)',
-        }}>pl. 01 — long table, evening</div>
-
-        <div style={{
-          position: 'absolute',
-          right: 0, bottom: -22,
-          fontFamily: 'var(--serif)',
-          fontStyle: 'italic',
-          fontSize: 13,
-          color: 'var(--muted)',
-        }}>
-          shot on film · 2024
-        </div>
       </div>
 
       <div style={{ marginTop: 88, textAlign: 'center' }}>
         <div className="smallcaps" style={{ marginBottom: 24, color: 'var(--muted)' }}>
-          ślub &amp; cocktail party — fifteen aug. mmxxvi
+          ślub &amp; cocktail party
         </div>
         <h1 style={{
           fontFamily: 'var(--serif)',
@@ -189,7 +148,7 @@ function Hero() {
           flexWrap: 'wrap',
         }}>
           <span style={{ width: 48, height: 1, background: 'var(--rule-strong)' }} />
-          <span className="smallcaps" style={{ color: 'var(--ink)' }}>15 sierpnia 2026 · wrocław golf club, kryniczno</span>
+          <span className="smallcaps" style={{ color: 'var(--ink)' }}>15 sierpnia 2026 · wrocław golf club</span>
           <span style={{ width: 48, height: 1, background: 'var(--rule-strong)' }} />
         </div>
       </div>

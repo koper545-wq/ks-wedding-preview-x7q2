@@ -1,13 +1,12 @@
-/* App — top sticky masthead + state-based routing */
+/* App – top sticky masthead + state-based routing */
 
 function TopNav({ active, onJump, route, goto }) {
   const items = [
-    { id: 'informacje', label: 'informacje',  num: '00', kind: 'scroll' },
     { id: 'soon',       label: 'list',        num: '01', kind: 'scroll' },
-    { id: 'format',     label: 'format',      num: '02', kind: 'scroll' },
-    { id: 'dresscode',  label: 'dress code',  num: '02', kind: 'route' },
-    { id: 'plandnia',   label: 'plan dnia',   num: '03', kind: 'route' },
-    { id: 'rsvp',       label: 'rsvp',        num: '04', kind: 'route' },
+    { id: 'informacje', label: 'informacje',  num: '02', kind: 'scroll' },
+    { id: 'rsvp',       label: 'rsvp',        num: '03', kind: 'route' },
+    { id: 'dresscode',  label: 'dress code',  num: '04', kind: 'route' },
+    { id: 'plandnia',   label: 'plan dnia',   num: '05', kind: 'route' },
   ];
   const handleClick = (it) => {
     if (it.kind === 'route') { goto(it.id); return; }
@@ -75,7 +74,7 @@ function TopNav({ active, onJump, route, goto }) {
         color: 'var(--muted)',
         textTransform: 'uppercase',
       }}>
-        15 · viii · mmxxvi
+        15 / 08 / 2026
       </div>
     </nav>
   );
@@ -91,7 +90,7 @@ function RSVPTeaser({ onOpen }) {
       position: 'relative',
     }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 80, marginBottom: 64 }}>
-        <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)' }}>0³ — rsvp</div>
+        <div className="smallcaps" style={{ color: 'rgba(255,252,240,0.5)' }}>0³ – rsvp</div>
         <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'rgba(255,252,240,0.5)', textAlign: 'right' }}>
           please reply · §03
         </div>
@@ -119,7 +118,7 @@ function RSVPTeaser({ onOpen }) {
 
         <div>
           <p style={{ fontFamily: 'var(--sans)', fontSize: 15, lineHeight: 1.65, color: 'rgba(255,252,240,0.78)', maxWidth: 360, margin: 0 }}>
-            formularz rsvp z preferencjami żywieniowymi i adresem mailowym, na który będziemy wysyłać aktualizacje. trzy kroki, dwie minuty.
+            formularz rsvp z preferencjami żywieniowymi, zajmie Wam dwie minuty. prosimy o wypełnienie maksymalnie do końca czerwca!
           </p>
           <div style={{ marginTop: 40 }}>
             <button onClick={onOpen} style={{
@@ -133,7 +132,7 @@ function RSVPTeaser({ onOpen }) {
               <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 16 }}>→</span>
             </button>
             <div style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 14, color: 'rgba(255,252,240,0.55)', marginTop: 14 }}>
-              dwie minuty, siedem pytań
+              dwie minuty
             </div>
           </div>
         </div>
@@ -165,7 +164,10 @@ function App() {
     const els = ids.map((id) => document.getElementById(id)).filter(Boolean);
     const io = new IntersectionObserver((entries) => {
       const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-      if (visible[0]) setActive(visible[0].target.id);
+      if (visible[0]) {
+        const id = visible[0].target.id;
+        setActive(id === 'format' ? 'informacje' : id);
+      }
     }, { rootMargin: '-30% 0px -50% 0px', threshold: [0, 0.2, 0.5] });
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
@@ -189,8 +191,8 @@ function App() {
       ) : (
         <main>
           <div id="cover"><Hero /></div>
-          <div id="informacje"><SectionInformacje /></div>
           <div id="soon"><SectionSoon /></div>
+          <div id="informacje"><SectionInformacje /></div>
           <div id="format"><SectionFormat onDressCode={() => goto('dresscode')} /></div>
           <RSVPTeaser onOpen={() => goto('rsvp')} />
           <SiteFooter />
