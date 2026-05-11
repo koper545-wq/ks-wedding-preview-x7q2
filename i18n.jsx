@@ -43,7 +43,7 @@ const STRINGS = {
       },
       mapBadge: 'dojazd',
       mapPoints: [
-        'Na miejscu znajduje się duży parking.',
+        'Na miejscu znajduje się duży, bezpłatny parking.',
         'Dla chętnych będą dostępne taksówki.',
       ],
       mapsLink: 'google maps →',
@@ -271,7 +271,7 @@ const STRINGS = {
       },
       mapBadge: 'directions',
       mapPoints: [
-        'Large parking on site.',
+        'Large free parking on site.',
         'Taxis available on request.',
       ],
       mapsLink: 'google maps →',

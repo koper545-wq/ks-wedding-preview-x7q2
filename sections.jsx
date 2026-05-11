@@ -68,18 +68,12 @@ function SectionInformacje() {
               color: 'var(--ink)',
               maxWidth: '70%',
             }}>
-              <li style={{ display: 'flex', gap: 10 }}>
-                <span style={{ color: 'var(--muted)' }}>·</span>
-                <span>{points[0]}</span>
-              </li>
-              <li style={{ display: 'flex', gap: 10 }}>
-                <span style={{ color: 'var(--muted)' }}>·</span>
-                <span>{points[1]}</span>
-              </li>
-              <li style={{ display: 'flex', gap: 10, color: 'var(--muted)', fontStyle: 'italic', fontFamily: 'var(--serif)', fontSize: 14 }}>
-                <span>·</span>
-                <span>{points[2]}</span>
-              </li>
+              {(Array.isArray(points) ? points : []).filter(Boolean).map((p, i) => (
+                <li key={i} style={{ display: 'flex', gap: 10 }}>
+                  <span style={{ color: 'var(--muted)' }}>·</span>
+                  <span>{p}</span>
+                </li>
+              ))}
             </ul>
             <a href="https://maps.google.com/?q=Wrocław+Golf+Club+Kryniczno"
                target="_blank" rel="noreferrer"
