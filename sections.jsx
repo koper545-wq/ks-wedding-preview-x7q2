@@ -308,17 +308,16 @@ function SiteFooter() {
     <footer style={{
       padding: '64px var(--pad-x) 56px var(--pad-x)',
       borderTop: '1px solid var(--rule)',
-      marginRight: 0,
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginRight: 64, gap: 48 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 48 }}>
         <Monogram size={32} />
         <div style={{ textAlign: 'right' }}>
           <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 6 }}>{tr('footer.contact')}</div>
           <div style={{ fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--ink)' }}>{tr('footer.contactValue')}</div>
         </div>
       </div>
-      <div className="rule-h" style={{ marginTop: 40, marginBottom: 24, marginRight: 64 }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: 64, fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+      <div className="rule-h" style={{ marginTop: 40, marginBottom: 24 }} />
+      <div className="footer-meta" style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--sans)', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--muted)', gap: 16, flexWrap: 'wrap' }}>
         <span>{tr('footer.copyright')}</span>
         <span>{tr('footer.madeBy')} <em style={{ fontFamily: 'var(--serif)', textTransform: 'none', letterSpacing: 0, fontSize: 13 }}>wedded</em></span>
       </div>

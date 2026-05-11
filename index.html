@@ -115,13 +115,26 @@
       display: block !important;
       margin-right: 0 !important;
     }
-    .stack-mobile > * + * { margin-top: 32px; }
+    /* 48px gives breathing room when a tight-line-height headline (descenders dip
+       below baseline) is followed by body text — !important needed because most
+       siblings have inline `margin: 0`. */
+    .stack-mobile > * + * { margin-top: 48px !important; }
     /* Vertical 1px divider columns become horizontal dividers in stacked flow */
     .stack-mobile > .vdiv {
       width: 100% !important;
       height: 1px !important;
       background: var(--rule);
     }
+
+    /* Footer meta row — stack vertically with both edges anchored. */
+    .footer-meta {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 8px !important;
+      margin-right: 0 !important;
+    }
+    .footer-meta > :first-child { text-align: left; }
+    .footer-meta > :last-child  { text-align: right; }
   }
 
   /* RSVP step fade-in (used by .rsvp-step-fade injected from rsvp.jsx) */
@@ -138,13 +151,13 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="i18n.jsx?v=11"></script>
-<script type="text/babel" src="hero.jsx?v=11"></script>
-<script type="text/babel" src="sections.jsx?v=11"></script>
-<script type="text/babel" src="dresscode.jsx?v=11"></script>
-<script type="text/babel" src="plandnia.jsx?v=11"></script>
-<script type="text/babel" src="prezenty.jsx?v=11"></script>
-<script type="text/babel" src="rsvp.jsx?v=11"></script>
-<script type="text/babel" src="app.jsx?v=11"></script>
+<script type="text/babel" src="i18n.jsx?v=12"></script>
+<script type="text/babel" src="hero.jsx?v=12"></script>
+<script type="text/babel" src="sections.jsx?v=12"></script>
+<script type="text/babel" src="dresscode.jsx?v=12"></script>
+<script type="text/babel" src="plandnia.jsx?v=12"></script>
+<script type="text/babel" src="prezenty.jsx?v=12"></script>
+<script type="text/babel" src="rsvp.jsx?v=12"></script>
+<script type="text/babel" src="app.jsx?v=12"></script>
 </body>
 </html>

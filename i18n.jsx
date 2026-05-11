@@ -101,7 +101,7 @@ const STRINGS = {
       rule1: {
         label:    'tkaniny',
         headline: 'lekkie <em>i</em> zwiewne.',
-        body:     'Polecamy oddychające materiały. Unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji. To będzie letnie wesele! 🍓',
+        body:     'Polecamy oddychające materiały. Unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji.',
       },
       rule2: {
         label:    'kolory sukienek',
@@ -329,7 +329,7 @@ const STRINGS = {
       rule1: {
         label:    'fabrics',
         headline: 'light <em>and</em> airy.',
-        body:     'We recommend breathable materials. Avoid heavy synthetics, full-length satin, stiff constructions. It\'s a summer wedding! 🍓',
+        body:     'We recommend breathable materials. Avoid heavy synthetics, full-length satin, stiff constructions.',
       },
       rule2: {
         label:    'dress colors',
