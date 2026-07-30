@@ -38,6 +38,7 @@ const STRINGS = {
         start:     ['początek',  '15:00', 'Cocktail hour · spokojne zbieranie gości'],
         ceremony:  ['ceremonia', '16:00', 'Ceremonia wśród zieleni · more info na miejscu'],
         end:       ['koniec',    '~04:00', 'Świętujemy do rana'],
+        poprawiny: ['poprawiny', 'niedziela 16.08 · 13:00', 'Dla chętnych zajęcia z golfa · prosimy o potwierdzenie w RSVP'],
         venue:     ['miejsce',   'Wrocław Golf Club', 'Kryniczno, ul. Golfowa 1'],
         directions:['dojazd',    'ok. 25 min od centrum', 'Własny transport · parking na miejscu'],
       },
@@ -101,7 +102,7 @@ const STRINGS = {
       rule1: {
         label:    'tkaniny',
         headline: 'lekkie <em>i</em> zwiewne.',
-        body:     'Polecamy oddychające materiały. Unikajcie ciężkich syntetyków, satyny do podłogi, sztywnych konstrukcji.',
+        body:     'Polecamy oddychające materiały. Unikajcie ciężkich syntetyków i sztywnych konstrukcji.',
       },
       rule2: {
         label:    'kolory sukienek',
@@ -136,7 +137,30 @@ const STRINGS = {
     prezenty: {
       kicker: '06 – prezenty',
       annot:  'gifts · §06',
-      title:  '<em>more info</em><br>soon',
+      title:  'głównym prezentem będzie<br>wasza <em>obecność</em>.',
+      sub:    'W naszym wyjątkowym dniu niczego więcej nam nie trzeba. A jeśli mimo wszystko chcecie coś podarować — poniżej kilka wskazówek.',
+      rules: [
+        {
+          label:    'doświadczenia',
+          headline: 'zbieramy <em>doświadczenia</em>.',
+          body:     'Kulinarne i nie tylko — stronimy jednak od ekstremalnych.',
+        },
+        {
+          label:    'sztuka',
+          headline: 'fajna <em>sztuka</em> zawsze mile widziana.',
+          body:     '',
+        },
+        {
+          label:    'kwiaty',
+          headline: 'prosimy o <em>nieprzynoszenie</em> kwiatów.',
+          body:     'Po weselu wyjeżdżamy i nie będzie komu sprawić nimi radości. Zamiast tego możecie podarować nam swoją ulubioną książkę z dedykacją albo zdrapki lotto.',
+        },
+        {
+          label:    'koperty',
+          headline: 'no i wiadomo — <em>koperty</em> też przyjmujemy.',
+          body:     '',
+        },
+      ],
       back:   'powrót na cover',
       pageMeta: '§06 · prezenty · k&s mmxxvi',
     },
@@ -145,7 +169,7 @@ const STRINGS = {
       coverAnnot:  'krok po kroku · §04',
       coverAnnotLong: 'jeden ekran · §04',
       coverTitle:  'dajcie <em>znać</em><br>czy <em>będziecie</em>.',
-      coverBody:   'Sześć krótkich pytań, dwie minuty. Odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.',
+      coverBody:   'Kilka krótkich pytań, dwie minuty. Odpowiedzi zapisują się lokalnie, więc możecie wrócić i edytować, jeśli coś się zmieni.',
       progress:    'postęp',
       previous:    'poprzednie',
       next:        'dalej',
@@ -195,8 +219,26 @@ const STRINGS = {
             non_alko: ['non-alco', 'mocktails'],
           },
         },
-        email: {
+        poprawiny: {
           kicker: 'pytanie 06',
+          label:  'będziecie <em>na</em> poprawinach 16.08?',
+          hint:   'W niedzielę 16.08 o godzinie 13:00 odbędą się poprawiny — prosimy o potwierdzenie.',
+          options: {
+            yes:   ['tak', ''],
+            no:    ['nie', ''],
+          },
+        },
+        golf: {
+          kicker: 'pytanie 07',
+          label:  'zajęcia <em>z</em> golfa?',
+          hint:   'Na poprawinach będzie możliwość odbycia zajęć z golfa dla chętnych.',
+          options: {
+            yes:   ['tak, chętnie', ''],
+            no:    ['nie, dziękuję', ''],
+          },
+        },
+        email: {
+          kicker: 'pytanie 08',
           label:  'jaki <em>e-mail</em>?',
           hint:   'Na ten adres dosypiemy szczegóły bliżej daty.',
           placeholder: 'imie@domena.pl',
@@ -266,6 +308,7 @@ const STRINGS = {
         start:     ['start',        '3:00 PM',    'Cocktail hour · easy gathering'],
         ceremony:  ['ceremony',     '4:00 PM',    'Outdoor ceremony · more info on the day'],
         end:       ['end',          '~4:00 AM',   'We celebrate till morning'],
+        poprawiny: ['after-party',  'Sunday 08.16 · 1 PM', 'Optional golf lessons · please confirm in the RSVP'],
         venue:     ['venue',        'Wrocław Golf Club', 'Kryniczno, Golfowa 1'],
         directions:['directions',   'ca. 25 min from centre', 'Own transport · parking on site'],
       },
@@ -329,7 +372,7 @@ const STRINGS = {
       rule1: {
         label:    'fabrics',
         headline: 'light <em>and</em> airy.',
-        body:     'We recommend breathable materials. Avoid heavy synthetics, full-length satin, stiff constructions.',
+        body:     'We recommend breathable materials. Avoid heavy synthetics and stiff constructions.',
       },
       rule2: {
         label:    'dress colors',
@@ -364,7 +407,30 @@ const STRINGS = {
     prezenty: {
       kicker: '06 – gifts',
       annot:  'gifts · §06',
-      title:  '<em>more info</em><br>soon',
+      title:  'the main gift is<br>your <em>presence</em>.',
+      sub:    'That\'s truly all we need on our special day. But if you\'d still like to give something — a few pointers below.',
+      rules: [
+        {
+          label:    'experiences',
+          headline: 'we collect <em>experiences</em>.',
+          body:     'Culinary and beyond — though we steer clear of the extreme ones.',
+        },
+        {
+          label:    'art',
+          headline: 'nice <em>art</em> is always welcome.',
+          body:     '',
+        },
+        {
+          label:    'flowers',
+          headline: 'please <em>don\'t</em> bring flowers.',
+          body:     'We\'re leaving right after the wedding and there would be no one to enjoy them. Instead, you can gift us your favourite book with a dedication, or lotto scratch cards.',
+        },
+        {
+          label:    'envelopes',
+          headline: 'and of course — <em>envelopes</em> are welcome too.',
+          body:     '',
+        },
+      ],
       back:   'back to cover',
       pageMeta: '§06 · gifts · k&s mmxxvi',
     },
@@ -373,7 +439,7 @@ const STRINGS = {
       coverAnnot:  'step by step · §04',
       coverAnnotLong: 'one screen · §04',
       coverTitle:  'tell us if<br>you\'re <em>coming</em>.',
-      coverBody:   'Six short questions, two minutes. Answers save locally, so you can come back and edit if anything changes.',
+      coverBody:   'A few short questions, two minutes. Answers save locally, so you can come back and edit if anything changes.',
       progress:    'progress',
       previous:    'previous',
       next:        'next',
@@ -423,8 +489,26 @@ const STRINGS = {
             non_alko: ['non-alc',  'mocktails'],
           },
         },
-        email: {
+        poprawiny: {
           kicker: 'question 06',
+          label:  'joining the <em>after-party</em> on Aug 16?',
+          hint:   'On Sunday, August 16 at 1 PM we\'re hosting an after-party — please confirm.',
+          options: {
+            yes:   ['yes', ''],
+            no:    ['no',  ''],
+          },
+        },
+        golf: {
+          kicker: 'question 07',
+          label:  'a <em>golf</em> lesson?',
+          hint:   'At the after-party there will be optional golf lessons for anyone interested.',
+          options: {
+            yes:   ['yes, gladly',  ''],
+            no:    ['no, thanks', ''],
+          },
+        },
+        email: {
+          kicker: 'question 08',
           label:  'what <em>e-mail</em>?',
           hint:   'We\'ll send details closer to the date.',
           placeholder: 'name@domain.com',

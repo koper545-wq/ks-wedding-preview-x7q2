@@ -38,6 +38,7 @@ function SectionInformacje() {
           <FactRow label={facts.start[0]}      value={facts.start[1]}      sub={facts.start[2]} />
           <FactRow label={facts.ceremony[0]}   value={facts.ceremony[1]}   sub={facts.ceremony[2]} />
           <FactRow label={facts.end[0]}        value={facts.end[1]}        sub={facts.end[2]} />
+          <FactRow label={facts.poprawiny[0]}  value={facts.poprawiny[1]}  sub={facts.poprawiny[2]} />
           <FactRow label={facts.venue[0]}      value={facts.venue[1]}      sub={facts.venue[2]} />
           <FactRow label={facts.directions[0]} value={facts.directions[1]} sub={facts.directions[2]} last />
         </div>

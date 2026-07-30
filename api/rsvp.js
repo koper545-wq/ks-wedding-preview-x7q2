@@ -4,6 +4,7 @@
 const ATTENDING_VALUES = new Set(['yes', 'no', 'maybe']);
 const DRINKS_VALUES = new Set(['alko', 'non_alko', 'mix']);
 const PLUS_ONE_VALUES = new Set(['yes', 'no']);
+const YES_NO_VALUES = new Set(['yes', 'no']);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const MAIL_FROM = process.env.MAIL_FROM || 'klara & szymon <kontakt@klaraiszymon.pl>';
@@ -50,6 +51,8 @@ export default async function handler(req, res) {
     plus_one_name:  clean(body.plus_one_name, 120),
     diet:           clean(body.diet, 1000),
     drinks:         clean(body.drinks, 20),
+    poprawiny:      clean(body.poprawiny, 10),
+    golf:           clean(body.golf, 10),
     email:          clean(body.email, 200).toLowerCase(),
     phone:          clean(body.phone, 40),
     user_agent:     clean(req.headers['user-agent'], 300),
@@ -69,12 +72,18 @@ export default async function handler(req, res) {
   if (data.attending === 'yes') {
     if (data.plus_one_has && !PLUS_ONE_VALUES.has(data.plus_one_has)) return bad(res, 400, 'plus_one_has invalid');
     if (data.drinks && !DRINKS_VALUES.has(data.drinks)) return bad(res, 400, 'drinks invalid');
+    if (data.poprawiny && !YES_NO_VALUES.has(data.poprawiny)) return bad(res, 400, 'poprawiny invalid');
+    if (data.golf && !YES_NO_VALUES.has(data.golf)) return bad(res, 400, 'golf invalid');
+    // golf lessons happen at the after-party — meaningless without it
+    if (data.poprawiny !== 'yes') data.golf = '';
   } else {
     // hide irrelevant fields
     data.plus_one_has = '';
     data.plus_one_name = '';
     data.diet = '';
     data.drinks = '';
+    data.poprawiny = '';
+    data.golf = '';
   }
 
   // ── 1. Append to Google Sheet (best-effort) ──
@@ -211,6 +220,8 @@ function adminFallbackText(d, sheetsError) {
     `osoba towarzysząca: ${d.plus_one_has || '(n/a)'} ${d.plus_one_name || ''}`,
     `dieta: ${d.diet || '(brak)'}`,
     `bar: ${d.drinks || '(n/a)'}`,
+    `poprawiny: ${d.poprawiny || '(n/a)'}`,
+    `golf: ${d.golf || '(n/a)'}`,
     `email: ${d.email}`,
     `telefon: ${d.phone || '(brak)'}`,
     `źródło: ${d.source}`,
@@ -226,6 +237,8 @@ function adminFallbackHtml(d, sheetsError) {
     ['osoba towarzysząca', `${d.plus_one_has || '(n/a)'} ${d.plus_one_name || ''}`],
     ['dieta', d.diet || '(brak)'],
     ['bar', d.drinks || '(n/a)'],
+    ['poprawiny', d.poprawiny || '(n/a)'],
+    ['golf', d.golf || '(n/a)'],
     ['email', d.email],
     ['telefon', d.phone || '(brak)'],
     ['źródło', d.source],
@@ -260,6 +273,8 @@ const MAIL_T = {
     rowPlusOne:   'osoba towarzysząca',
     rowDiet:      'dieta / alergie',
     rowDrinks:    'bar',
+    rowPoprawiny: 'poprawiny (16.08)',
+    rowGolf:      'zajęcia z golfa',
     rowPhone:     'telefon',
     plusOneSolo:  'solo',
     plusOneAnon:  '(bez imienia)',
@@ -277,6 +292,7 @@ const MAIL_T = {
     disclaimer:   (url) => `dostałeś tego maila bo wypełniłeś rsvp na <a href="${url}" style="color:rgba(46,46,46,0.7);">klaraiszymon.pl</a>`,
     prettyAtt: { yes: 'tak, będziemy', no: 'nie damy rady', maybe: 'jeszcze nie wiem' },
     prettyDrk: { alko: 'alkohol (wino · cocktails · wódka)', non_alko: 'non-alco (mocktails)', mix: 'i tak, i tak' },
+    prettyYesNo: { yes: 'tak', no: 'nie' },
   },
   en: {
     subjectYes:   'thanks – see you on august 15 · klara & szymon',
@@ -295,6 +311,8 @@ const MAIL_T = {
     rowPlusOne:   'plus one',
     rowDiet:      'diet / allergies',
     rowDrinks:    'bar',
+    rowPoprawiny: 'after-party (aug 16)',
+    rowGolf:      'golf lesson',
     rowPhone:     'phone',
     plusOneSolo:  'solo',
     plusOneAnon:  '(no name yet)',
@@ -312,6 +330,7 @@ const MAIL_T = {
     disclaimer:   (url) => `you got this email because you filled out the rsvp at <a href="${url}" style="color:rgba(46,46,46,0.7);">klaraiszymon.pl</a>`,
     prettyAtt: { yes: 'yes, we\'ll be there', no: 'can\'t make it', maybe: 'not sure yet' },
     prettyDrk: { alko: 'alcohol (wine · cocktails · vodka)', non_alko: 'non-alc (mocktails)', mix: 'both' },
+    prettyYesNo: { yes: 'yes', no: 'no' },
   },
 };
 
@@ -342,6 +361,8 @@ function emailText(d, lang) {
     else if (d.plus_one_has === 'no') lines.push(`· ${t.rowPlusOne}: ${t.plusOneSolo}`);
     if (d.diet)   lines.push(`· ${t.rowDiet}: ${d.diet}`);
     if (d.drinks) lines.push(`· ${t.rowDrinks}: ${prettyDrinks(d.drinks, lang)}`);
+    if (d.poprawiny) lines.push(`· ${t.rowPoprawiny}: ${prettyYesNo(d.poprawiny, lang)}`);
+    if (d.poprawiny === 'yes' && d.golf) lines.push(`· ${t.rowGolf}: ${prettyYesNo(d.golf, lang)}`);
   }
   if (d.phone) lines.push(`· ${t.rowPhone}: ${d.phone}`);
   lines.push('');
@@ -357,6 +378,9 @@ function prettyAttending(v, lang) {
 }
 function prettyDrinks(v, lang) {
   return mt(lang).prettyDrk[v] || v;
+}
+function prettyYesNo(v, lang) {
+  return mt(lang).prettyYesNo[v] || v;
 }
 
 function emailHtml(d, lang) {
@@ -381,6 +405,8 @@ function emailHtml(d, lang) {
     else if (d.plus_one_has === 'no') summaryRows.push(row(t.rowPlusOne, escapeHtml(t.plusOneSolo)));
     if (d.diet)   summaryRows.push(row(t.rowDiet, escapeHtml(d.diet)));
     if (d.drinks) summaryRows.push(row(t.rowDrinks, escapeHtml(prettyDrinks(d.drinks, lang))));
+    if (d.poprawiny) summaryRows.push(row(t.rowPoprawiny, escapeHtml(prettyYesNo(d.poprawiny, lang))));
+    if (d.poprawiny === 'yes' && d.golf) summaryRows.push(row(t.rowGolf, escapeHtml(prettyYesNo(d.golf, lang))));
   }
   if (d.phone) summaryRows.push(row(t.rowPhone, escapeHtml(d.phone)));
 

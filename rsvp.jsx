@@ -32,8 +32,17 @@ const RSVP_STEPS = [
   { id: 'plus_one',  type: 'plus_one', onlyIfAttending: true },
   { id: 'diet',      type: 'textarea', onlyIfAttending: true },
   { id: 'drinks',    type: 'choice',   onlyIfAttending: true, optionValues: ['alko', 'non_alko'] },
+  { id: 'poprawiny', type: 'choice',   onlyIfAttending: true, optionValues: ['yes', 'no'] },
+  { id: 'golf',      type: 'choice',   onlyIfAttending: true, onlyIfPoprawiny: true, optionValues: ['yes', 'no'] },
   { id: 'email',     type: 'email',    required: true },
 ];
+
+/* Step hidden by a conditional flag? (mirrors activeSteps filtering) */
+function isStepHidden(step, answers) {
+  if (step.onlyIfAttending && answers.attending && answers.attending !== 'yes') return true;
+  if (step.onlyIfPoprawiny && answers.poprawiny && answers.poprawiny !== 'yes') return true;
+  return false;
+}
 
 function stepWithLabels(step, tr) {
   const base = `rsvp.steps.${step.id}`;
@@ -237,7 +246,7 @@ function PlusOneField({ value, onChange }) {
 
 function isStepValid(step, value, answers) {
   // hidden steps are auto-valid
-  if (step.onlyIfAttending && answers.attending && answers.attending !== 'yes') return true;
+  if (isStepHidden(step, answers)) return true;
 
   if (step.type === 'choice') return !!value;
   if (step.type === 'plus_one') {
@@ -264,7 +273,7 @@ function isStepValid(step, value, answers) {
 
 /* Reason a step is invalid (shown as inline hint after first interaction) */
 function stepValidationMessage(step, value, answers) {
-  if (step.onlyIfAttending && answers.attending && answers.attending !== 'yes') return null;
+  if (isStepHidden(step, answers)) return null;
   const v = typeof value === 'string' ? value.trim() : value;
   if (step.type === 'choice') return v ? null : 'wybierzcie jedną z opcji.';
   if (step.type === 'plus_one') {
@@ -292,10 +301,7 @@ function stepValidationMessage(step, value, answers) {
 }
 
 function activeSteps(answers) {
-  return RSVP_STEPS.filter((s) => {
-    if (s.onlyIfAttending && answers.attending && answers.attending !== 'yes') return false;
-    return true;
-  });
+  return RSVP_STEPS.filter((s) => !isStepHidden(s, answers));
 }
 
 /* ── Step renderer ─────────────────────────────────────────────────────── */
@@ -649,6 +655,8 @@ function RSVPPage({ onBack, variant = 'steps' }) {
         plus_one_name:  answers.plus_one?.name || '',
         diet:           answers.diet || '',
         drinks:         answers.drinks || '',
+        poprawiny:      answers.poprawiny || '',
+        golf:           answers.golf || '',
         email:          answers.email || '',
         phone:          answers.phone || '',
         source:         variant === 'long' ? 'web-long' : 'web-steps',

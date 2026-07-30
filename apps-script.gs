@@ -10,6 +10,8 @@
  * Pierwszy POST sam doda wiersz nagłówków, więc nic nie musisz robić ręcznie.
  */
 
+// 'poprawiny' i 'golf' są na końcu, żeby istniejące wiersze w arkuszu
+// zachowały wyrównanie kolumn — brakujące nagłówki dopisują się same.
 const HEADERS = [
   'timestamp',
   'name',
@@ -22,6 +24,8 @@ const HEADERS = [
   'phone',
   'user_agent',
   'source',
+  'poprawiny',
+  'golf',
 ];
 
 function doPost(e) {
@@ -34,6 +38,12 @@ function doPost(e) {
       sheet.appendRow(HEADERS);
       sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
       sheet.setFrozenRows(1);
+    } else if (sheet.getLastColumn() < HEADERS.length) {
+      // Sheet created before new columns existed — extend the header row.
+      const from = sheet.getLastColumn();
+      sheet.getRange(1, from + 1, 1, HEADERS.length - from)
+        .setValues([HEADERS.slice(from)])
+        .setFontWeight('bold');
     }
 
     sheet.appendRow([
@@ -48,6 +58,8 @@ function doPost(e) {
       body.phone || '',
       body.user_agent || '',
       body.source || '',
+      body.poprawiny || '',
+      body.golf || '',
     ]);
 
     return ContentService
