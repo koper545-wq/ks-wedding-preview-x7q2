@@ -46,7 +46,6 @@ const STRINGS = {
       mapPoints: [
         'Na miejscu znajduje się duży, bezpłatny parking.',
         'Będzie podstawiony shuttle, który będzie jeździł do rynku.',
-        'Dla chętnych będą dostępne taksówki.',
       ],
       mapsLink: 'google maps →',
     },
@@ -317,7 +316,6 @@ const STRINGS = {
       mapPoints: [
         'Large free parking on site.',
         'A shuttle will run to the market square.',
-        'Taxis available on request.',
       ],
       mapsLink: 'google maps →',
     },
