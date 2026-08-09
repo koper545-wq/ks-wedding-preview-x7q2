@@ -14,6 +14,11 @@ const STATUS_ORDER: Record<string, number> = {
   queued: 2,
 };
 
+/* Kolory na ciemnym pasku (atrament + krem, jak przycisk "wrzuć cokolwiek") */
+const CREAM_FULL = 'var(--cream)';
+const CREAM_SOFT = 'rgba(255, 252, 240, 0.72)';
+const CREAM_TRACK = 'rgba(255, 252, 240, 0.25)';
+
 /* Przyklejony do góry, kompaktowy pasek wysyłki: max 3 pliki + "+N w kolejce".
    Skończone pliki zwijają się do licznika ✓ w nagłówku paska. */
 export default function Queue({
@@ -47,13 +52,27 @@ export default function Queue({
       ? t.queue.keepOpen
       : t.queue.allSent(doneCount);
 
+  const track: React.CSSProperties = {
+    height: 2,
+    width: '100%',
+    background: CREAM_TRACK,
+    overflow: 'hidden',
+  };
+  const fill = (pct: number): React.CSSProperties => ({
+    height: '100%',
+    width: `${pct}%`,
+    background: CREAM_FULL,
+    transition: 'width 300ms ease',
+  });
+
   return (
     <div
       style={{
         position: 'sticky',
         top: 0,
         zIndex: 30,
-        background: 'var(--cream)',
+        background: 'var(--ink)',
+        color: CREAM_FULL,
         borderBottom: '1px solid var(--rule)',
       }}
     >
@@ -76,7 +95,7 @@ export default function Queue({
             className="smallcaps"
             style={{
               fontSize: 9,
-              color: 'var(--muted)',
+              color: busy || !online ? CREAM_FULL : CREAM_SOFT,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
@@ -88,7 +107,7 @@ export default function Queue({
             style={{
               fontFamily: 'var(--mono)',
               fontSize: 10,
-              color: 'var(--ink)',
+              color: CREAM_FULL,
               whiteSpace: 'nowrap',
             }}
           >
@@ -98,8 +117,8 @@ export default function Queue({
         </div>
 
         {busy && (
-          <div className="progress-track" style={{ marginTop: 6 }}>
-            <div className="progress-fill" style={{ width: `${totalPct}%` }} />
+          <div style={{ ...track, marginTop: 6 }}>
+            <div style={fill(totalPct)} />
           </div>
         )}
 
@@ -118,7 +137,7 @@ export default function Queue({
                   fontFamily: 'var(--mono)',
                   fontSize: 9,
                   letterSpacing: '0.03em',
-                  color: 'var(--muted)',
+                  color: CREAM_SOFT,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -131,7 +150,7 @@ export default function Queue({
                   fontFamily: 'var(--mono)',
                   fontSize: 9,
                   whiteSpace: 'nowrap',
-                  color: item.status === 'error' ? 'var(--ink)' : 'var(--muted)',
+                  color: CREAM_FULL,
                 }}
               >
                 {item.status === 'error' ? (
@@ -142,11 +161,11 @@ export default function Queue({
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      borderBottom: '1px solid var(--ink)',
+                      borderBottom: `1px solid ${CREAM_FULL}`,
                       cursor: 'pointer',
                       padding: 0,
                       fontSize: 9,
-                      color: 'var(--ink)',
+                      color: CREAM_FULL,
                     }}
                   >
                     {t.queue.failed} — {t.queue.retry}
@@ -154,15 +173,12 @@ export default function Queue({
                 ) : item.status === 'uploading' && online ? (
                   `${percent(item.sent, item.size)}%`
                 ) : (
-                  t.queue.waiting
+                  <span style={{ color: CREAM_SOFT }}>{t.queue.waiting}</span>
                 )}
               </span>
             </div>
-            <div className="progress-track" style={{ marginTop: 3, height: 1 }}>
-              <div
-                className="progress-fill"
-                style={{ width: `${percent(item.sent, item.size)}%` }}
-              />
+            <div style={{ ...track, height: 1, marginTop: 3 }}>
+              <div style={fill(percent(item.sent, item.size))} />
             </div>
           </div>
         ))}
@@ -170,7 +186,7 @@ export default function Queue({
         {extra > 0 && (
           <div
             className="smallcaps"
-            style={{ fontSize: 9, color: 'var(--muted)', marginTop: 7 }}
+            style={{ fontSize: 9, color: CREAM_SOFT, marginTop: 7 }}
           >
             {t.queue.inQueue(extra)}
           </div>
