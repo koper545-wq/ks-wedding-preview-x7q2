@@ -164,27 +164,41 @@ export default function App({ urlCode }: { urlCode: string | null }) {
     );
   }
 
+  const uploadBar = (
+    <Queue
+      t={t}
+      items={items}
+      online={online}
+      onRetry={(id) => queueRef.current?.retry(id)}
+    />
+  );
+
   if (!asked) {
     return (
-      <div style={container}>
-        {header}
-        <div className="rule-h" />
-        <NameScreen
+      <>
+        {uploadBar}
+        <div style={container}>
+          {header}
+          <div className="rule-h" />
+          <NameScreen
           t={t}
-          onDone={(n) => {
-            local.setName(n);
-            setName(n);
-            setAsked(true);
-          }}
-        />
-      </div>
+            onDone={(n) => {
+              local.setName(n);
+              setName(n);
+              setAsked(true);
+            }}
+          />
+        </div>
+      </>
     );
   }
 
   return (
-    <div style={container}>
-      {header}
-      <div className="rule-h" />
+    <>
+      {uploadBar}
+      <div style={container}>
+        {header}
+        <div className="rule-h" />
 
       <section className="fade-in" style={{ paddingTop: 56 }}>
         <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: 20 }}>
@@ -241,13 +255,6 @@ export default function App({ urlCode }: { urlCode: string | null }) {
           doneMissions={doneMissions}
           onFiles={handleFiles}
         />
-
-        <Queue
-          t={t}
-          items={items}
-          online={online}
-          onRetry={(id) => queueRef.current?.retry(id)}
-        />
       </section>
 
       <footer style={{ marginTop: 96, paddingBottom: 48 }}>
@@ -290,6 +297,7 @@ export default function App({ urlCode }: { urlCode: string | null }) {
           {toast}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

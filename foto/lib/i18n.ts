@@ -49,6 +49,14 @@ const STRINGS = {
       uploading: 'wysyłanie…',
       waiting: 'w kolejce',
       paused: 'wstrzymane',
+      inQueue: (n: number) => `+${n} w kolejce`,
+      allSent: (n: number) => {
+        const d = n % 10;
+        const h = n % 100;
+        const word =
+          n === 1 ? 'plik' : d >= 2 && d <= 4 && !(h >= 12 && h <= 14) ? 'pliki' : 'plików';
+        return `wysłane · ${n} ${word}`;
+      },
     },
     errors: {
       badType: 'to nie jest zdjęcie ani wideo.',
@@ -101,6 +109,8 @@ const STRINGS = {
       uploading: 'uploading…',
       waiting: 'queued',
       paused: 'paused',
+      inQueue: (n: number) => `+${n} queued`,
+      allSent: (n: number) => `uploaded · ${n} ${n === 1 ? 'file' : 'files'}`,
     },
     errors: {
       badType: 'that’s not a photo or a video.',
