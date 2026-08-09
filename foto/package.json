@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "get-token": "node scripts/get-token.mjs"
+    "get-token": "node scripts/get-token.mjs",
+    "sort": "node scripts/sort-by-time.mjs"
   },
   "dependencies": {
     "idb-keyval": "^6.2.1",
