@@ -3,3 +3,6 @@
 .DS_Store
 node_modules/
 .env*.local
+oauth_client.json
+foto/.next/
+foto/node_modules/
