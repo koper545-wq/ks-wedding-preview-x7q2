@@ -27,8 +27,12 @@ function clientIp(req: NextRequest): string {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
 }
 
+/* Brak ustawionego ACCESS_CODE = bramka wyłączona, wchodzi każdy.
+   Żeby ją przywrócić, wystarczy ustawić zmienną i zrobić redeploy. */
 function codeOk(code: unknown): boolean {
-  return typeof code === 'string' && code === process.env.ACCESS_CODE;
+  const required = process.env.ACCESS_CODE;
+  if (!required) return true;
+  return typeof code === 'string' && code === required;
 }
 
 /* GET /api/upload-session?k=KOD — walidacja kodu dostępu dla bramki na froncie. */

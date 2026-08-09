@@ -58,24 +58,20 @@ export default function App({ urlCode }: { urlCode: string | null }) {
       if (changed) setDoneMissions([...done]);
     });
 
-    const code = urlCode ?? local.getCode();
-    if (!code) {
-      setGate('bad');
-    } else {
-      fetch(`/api/upload-session?k=${encodeURIComponent(code)}`)
-        .then((res) => res.json())
-        .then((data: { ok: boolean }) => {
-          if (data.ok) {
-            local.setCode(code);
-            queue.setCode(code);
-            setGate('ok');
-            queue.restore();
-          } else {
-            setGate('bad');
-          }
-        })
-        .catch(() => setGate('bad'));
-    }
+    const code = urlCode ?? local.getCode() ?? '';
+    fetch(`/api/upload-session?k=${encodeURIComponent(code)}`)
+      .then((res) => res.json())
+      .then((data: { ok: boolean }) => {
+        if (data.ok) {
+          local.setCode(code);
+          queue.setCode(code);
+          setGate('ok');
+          queue.restore();
+        } else {
+          setGate('bad');
+        }
+      })
+      .catch(() => setGate('bad'));
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
