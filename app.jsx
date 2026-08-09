@@ -10,6 +10,7 @@ function TopNav({ active, onJump, route, goto }) {
     { id: 'dresscode',  labelKey: 'nav.dresscode',  num: '04', kind: 'route' },
     { id: 'plandnia',   labelKey: 'nav.plandnia',   num: '05', kind: 'route' },
     { id: 'prezenty',   labelKey: 'nav.prezenty',   num: '06', kind: 'route' },
+    { id: 'foto',       labelKey: 'nav.foto',       num: '07', kind: 'external', href: 'https://foto.klaraiszymon.pl/?k=wesele2026' },
   ];
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -17,6 +18,7 @@ function TopNav({ active, onJump, route, goto }) {
 
   const handleClick = (it) => {
     setMenuOpen(false);
+    if (it.kind === 'external') { window.open(it.href, '_blank', 'noopener'); return; }
     if (it.kind === 'route') { goto(it.id); return; }
     if (route !== 'home') { goto('home'); setTimeout(() => onJump(it.id), 50); return; }
     onJump(it.id);
