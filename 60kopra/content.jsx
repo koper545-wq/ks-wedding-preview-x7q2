@@ -65,7 +65,7 @@ const COPY = {
     kicker: '04',
     title:  'dress code',
     headline: 'elegancki',
-    body:  'Listopadowy wieczór w klubie golfowym — marynarka, sukienka, coś, w czym czujesz się dobrze i wyglądasz szykownie.',
+    body:  'Listopadowy wieczór w klubie golfowym — marynarka, sukienka, coś, w czym czujesz się dobrze, a wyglądasz jeszcze lepiej.',
     /* TODO: doprecyzować, jeśli tata ma konkretne życzenia (kolory, krawaty). */
     points: [],
   },
