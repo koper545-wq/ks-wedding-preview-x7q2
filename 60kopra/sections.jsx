@@ -70,7 +70,7 @@ function Hero({ onRsvp }) {
             {COPY.rsvp.deadline}
           </p>
 
-          <div style={{
+          <div className="hero-badges" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
