@@ -99,8 +99,27 @@ Wartość wzięta z pomiaru pikseli renderu, nie z panelu warstw.
 
 Tekst jest celowo **masełkowy** (`#F2E7CC`), a nie biały jak na zaproszeniu.
 
-Kroje: **Bona Nova SC** (nagłówki), **Antic Didone** (data, miejsce,
-wartości), **Inter** (reszta). Ziarno na całej stronie. Logo klubu
+**Ziarno** nie jest nakładką ani `feTurbulence` — to `img/grain.png`, kafel
+128×128 wygenerowany tak, żeby odtworzyć szum zmierzony na renderze
+zaproszenia: czysty szum per-piksel (autokorelacja ≈ 0 już przy 1 px),
+odchylenie standardowe ~10 na kanał, korelacja kanałów ~0,55 (szum lekko
+kolorowy, nie mono). Kolor tła jest zapieczony w kafelku; `background-color`
+został jako fallback. Generator z parametrami i ziarnem losowym siedzi
+w historii commita — kafel jest deterministyczny.
+
+**Kroje: uwaga na polskie znaki.** Zaproszenie używa **Antic Didone**, który
+na Google Fonts **nie ma podzbioru latin-ext** — ą ć ę ł ń ś ź ż spadały na
+Georgię. Bodoni Moda ma polski komplet, ale jako didone rysuje kreskę ł
+włosowo i „bezpłatny" czytało się jak „bezplatny". Ostatecznie serif to
+**Bona Nova** — ta sama superrodzina co display, krój Andrzeja Heidricha
+projektowany pod polską typografię, z najwyraźniejszymi diakrytykami
+z testowanych (kreska ł to 13,4% masy znaku wobec 8,3% w Bodoni Moda).
+
+Podzbiór latin-ext kroju display dociągamy z góry w `app.jsx` — ekran po
+wysłaniu RSVP wypisuje imię gościa, a bez tego „Paweł" mrugnąłby Georgią.
+
+Kroje: **Bona Nova SC** (nagłówki), **Bona Nova** (data, miejsce,
+wartości), **Inter** (reszta). Logo klubu
 (`img/wgc-logo.png` — eksport assetu z Figmy, 4096×826, proporcja 4.959
 zachowana w renderze) siedzi teraz w sekcji „kiedy i gdzie".
 

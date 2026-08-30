@@ -10,7 +10,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Antic+Didone&family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bona+Nova:ital,wght@0,400;0,700;1,400&family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   /* ── Tokeny — z zaproszenia (Figma 2008:539) ─────────────────────────── */
@@ -26,8 +26,14 @@
     --rule-strong: rgba(242, 231, 204, 0.48);
     --warn:      #E9B489;                    /* komunikaty błędów na zieleni */
 
-    --display: 'Bona Nova SC', 'Cormorant Garamond', Georgia, serif;
-    --serif:   'Antic Didone', Georgia, serif;
+    /* Antic Didone z zaproszenia NIE ma latin-ext — ą ć ę ł ń ś ź ż spadały
+       na Georgię. Bodoni Moda ma polski komplet, ale w didonie kreska ł jest
+       włosowa i w tekście „bezpłatny" czytało się jak „bezplatny".
+       Bona Nova (ten sam superrodzina co display, krój Andrzeja Heidricha,
+       projektowany pod polską typografię) ma najwyraźniejsze diakrytyki
+       z testowanych — pomiar: kreska ł to 13,4% masy znaku wobec 8,3% w Bodoni. */
+    --display: 'Bona Nova SC', Georgia, serif;
+    --serif:   'Bona Nova', Georgia, serif;
     --sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 
     --pad-x: 56px;
@@ -37,7 +43,12 @@
   html, body { margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--bg);
+    /* Ziarno odwzorowane z renderu zaproszenia — kafel 128×128 z szumem
+       per-piksel o zmierzonej amplitudzie. Kolor jest już w kafelku,
+       background-color zostaje jako fallback, gdyby PNG nie wstał. */
+    background-color: var(--bg);
+    background-image: url("img/grain.png");
+    background-repeat: repeat;
     color: var(--fg);
     font-family: var(--sans);
     font-size: 15px;
@@ -45,18 +56,6 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     min-height: 100vh;
-  }
-
-  /* Ziarno jak na zaproszeniu — jedna warstwa na całą stronę */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    pointer-events: none;
-    opacity: 0.05;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   .smallcaps {
@@ -107,8 +106,39 @@
     :root { --pad-x: 16px; }
   }
 
+  /* ── Po wysłaniu RSVP ────────────────────────────────────────────────── */
+  @keyframes rsvp-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes rsvp-rule {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  @keyframes rsvp-confetti {
+    0%   { opacity: 0; transform: translate3d(0, -10px, 0) rotate(var(--r)); }
+    12%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; transform: translate3d(var(--dx), var(--dy), 0) rotate(calc(var(--r) + 420deg)); }
+  }
+
+  .rsvp-rise { animation: rsvp-rise 620ms cubic-bezier(.2,.8,.2,1) both; }
+  .rsvp-rule {
+    transform-origin: left center;
+    animation: rsvp-rule 720ms cubic-bezier(.2,.8,.2,1) 120ms both;
+  }
+  .rsvp-confetti-piece {
+    position: absolute;
+    top: 0;
+    animation: rsvp-confetti var(--dur) cubic-bezier(.25,.6,.35,1) var(--delay) both;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+    /* Zostaje samo pojawienie się treści — bez ruchu i bez konfetti. */
+    .rsvp-rise { animation: none; }
+    .rsvp-rule { animation: none; }
+    .rsvp-confetti { display: none; }
   }
 </style>
 </head>
@@ -119,10 +149,10 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="content.jsx?v=4"></script>
-<script type="text/babel" src="ui.jsx?v=4"></script>
-<script type="text/babel" src="sections.jsx?v=4"></script>
-<script type="text/babel" src="rsvp.jsx?v=4"></script>
-<script type="text/babel" src="app.jsx?v=4"></script>
+<script type="text/babel" src="content.jsx?v=6"></script>
+<script type="text/babel" src="ui.jsx?v=6"></script>
+<script type="text/babel" src="sections.jsx?v=6"></script>
+<script type="text/babel" src="rsvp.jsx?v=6"></script>
+<script type="text/babel" src="app.jsx?v=6"></script>
 </body>
 </html>

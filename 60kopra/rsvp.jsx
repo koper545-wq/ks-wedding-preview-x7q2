@@ -84,7 +84,7 @@ function Field({ label, hint, error, children }) {
       {hint && <div style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 18, lineHeight: 1.55 }}>{hint}</div>}
       {children}
       {error && (
-        <div style={{ marginTop: 10, fontFamily: 'var(--serif)', fontSize: 14, color: 'var(--warn)' }}>
+        <div style={{ marginTop: 10, fontSize: 14, color: 'var(--warn)' }}>
           {error}
         </div>
       )}
@@ -116,14 +116,74 @@ function firstName(full) {
   return f ? f.charAt(0).toUpperCase() + f.slice(1).toLowerCase() : '';
 }
 
-function SuccessScreen({ answers, onReset }) {
+const CONFETTI_COLORS = ['#FAF4E4', '#F2E7CC', '#D9C79C', '#B9A87A'];
+
+/* Konfetti w barwach strony — sypie się raz, po ~4 s znika i nie wraca.
+   Cząstki liczone raz (useMemo), żeby rerender nie restartował animacji. */
+function Confetti({ count = 26 }) {
+  const pieces = React.useMemo(() => Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    dx: (Math.random() * 2 - 1) * 90,
+    dy: 180 + Math.random() * 220,
+    size: 5 + Math.random() * 7,
+    rot: Math.random() * 360,
+    dur: 2.6 + Math.random() * 1.8,
+    delay: Math.random() * 0.7,
+    round: Math.random() < 0.35,
+  })), [count]);
+
+  return (
+    <div className="rsvp-confetti" aria-hidden="true" style={{
+      position: 'absolute',
+      inset: '0 0 auto 0',
+      height: 0,
+      overflow: 'visible',
+      pointerEvents: 'none',
+    }}>
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          className="rsvp-confetti-piece"
+          style={{
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.round ? p.size : p.size * 0.42,
+            borderRadius: p.round ? '50%' : 1,
+            background: CONFETTI_COLORS[p.id % CONFETTI_COLORS.length],
+            opacity: 0.9,
+            ['--dx']: `${p.dx}px`,
+            ['--dy']: `${p.dy}px`,
+            ['--r']: `${p.rot}deg`,
+            ['--dur']: `${p.dur}s`,
+            ['--delay']: `${p.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function SuccessScreen({ answers, onReset, celebrate }) {
   const c = COPY.rsvp.success;
   const yes = answers.attending === 'yes';
   const html = yes ? c.yesTitle.replace('{name}', firstName(answers.name)) : c.noTitle;
+
+  // Konfetti tylko przy „tak" i tylko tuż po wysłaniu — kto wraca na stronę
+  // z zapisaną odpowiedzią, nie dostaje serpentyn przy każdym wejściu.
+  // Montujemy je raz i zdejmujemy po animacji, żeby nie zostawały w DOM.
+  const [showConfetti, setShowConfetti] = React.useState(celebrate && yes);
+  React.useEffect(() => {
+    if (!showConfetti) return;
+    const t = setTimeout(() => setShowConfetti(false), 5200);
+    return () => clearTimeout(t);
+  }, [showConfetti]);
+
   return (
-    <div style={{ maxWidth: 720 }}>
+    <div style={{ maxWidth: 720, position: 'relative' }}>
+      {showConfetti && <Confetti />}
       <Kicker style={{ marginBottom: 24 }}>{c.kicker}</Kicker>
-      <Rich as="h3" html={html} style={{
+      <Rich as="h3" className="rsvp-rise" html={html} style={{
         fontFamily: 'var(--display)',
         fontWeight: 400,
         fontSize: 'clamp(38px, 6vw, 68px)',
@@ -131,10 +191,13 @@ function SuccessScreen({ answers, onReset }) {
         color: 'var(--fg-strong)',
         margin: '0 0 28px',
       }} />
-      <p style={{ margin: '0 0 32px', fontSize: 15, lineHeight: 1.7, color: 'var(--muted)', maxWidth: 520 }}>
+      <div className="rsvp-rule" style={{ height: 1, background: 'var(--rule-strong)', margin: '0 0 28px' }} />
+
+      <p className="rsvp-rise" style={{ margin: '0 0 32px', fontSize: 15, lineHeight: 1.7, color: 'var(--muted)', maxWidth: 520, animationDelay: '160ms' }}>
         {yes ? c.yesBody : c.noBody}
       </p>
-      <button type="button" onClick={onReset} className="smallcaps" style={{
+      <button type="button" onClick={onReset} className="smallcaps rsvp-rise" style={{
+        animationDelay: '260ms',
         background: 'transparent',
         border: 'none',
         padding: 0,
@@ -154,6 +217,7 @@ function RSVPBlock() {
   const f = c.fields;
   const [answers, setAnswers] = React.useState(() => loadRSVP() || {});
   const [submitted, setSubmitted] = React.useState(() => !!loadRSVP()?.submittedAt);
+  const [justSubmitted, setJustSubmitted] = React.useState(false);
   const [touched, setTouched] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(null);
@@ -186,6 +250,7 @@ function RSVPBlock() {
       const result = await r.json().catch(() => null);
       if (result && result.sheets === false) console.warn('[rsvp] partial success', result);
       setSubmitted(true);
+      setJustSubmitted(true);
       const el = document.getElementById('rsvp');
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (e) {
@@ -198,11 +263,12 @@ function RSVPBlock() {
 
   const reset = () => {
     setSubmitted(false);
+    setJustSubmitted(false);
     setTouched(false);
     setSubmitError(null);
   };
 
-  if (submitted) return <SuccessScreen answers={answers} onReset={reset} />;
+  if (submitted) return <SuccessScreen answers={answers} onReset={reset} celebrate={justSubmitted} />;
 
   return (
     <div style={{ maxWidth: 640 }}>
@@ -239,7 +305,7 @@ function RSVPBlock() {
           <span style={{ fontFamily: 'var(--serif)', fontSize: 16 }}>→</span>
         </Button>
         {submitError && (
-          <span style={{ fontFamily: 'var(--serif)', fontSize: 14, color: 'var(--warn)' }}>
+          <span style={{ fontSize: 14, color: 'var(--warn)' }}>
             {submitError}
           </span>
         )}

@@ -11,6 +11,13 @@ function App() {
   React.useEffect(() => {
     document.title = COPY.meta.title;
 
+    // Ekran po wysłaniu RSVP wypisuje imię gościa krojem display, a podzbiór
+    // latin-ext ładuje się dopiero gdy jakiś polski znak faktycznie trafi na
+    // stronę. Bez tego „Paweł" mrugnąłby Georgią. Pobieramy z góry.
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('400 40px "Bona Nova SC"', 'ąćęłńóśźż').catch(() => {});
+    }
+
     // Wejście z linkiem #sekcja. 'instant' omija globalne scroll-behavior: smooth
     // (animowany skok był przerywany przez przywracanie scrolla przez przeglądarkę),
     // a powtórka po `load` łapie przesunięcie layoutu po doczytaniu fontów.
