@@ -32,7 +32,7 @@ Uwaga: `/api/rsvp` nie działa pod `http.server`. Do testu end-to-end użyj
 ## Deploy — stan na 2026-08-30
 
 - **Projekt Vercel:** `szymons-projects-a6eee558/60kopra`, Root Directory = `60kopra`
-- **Produkcja:** https://60kopra-g17c5pgh3-szymons-projects-a6eee558.vercel.app — działa
+- **Produkcja:** https://60kopra.vercel.app — działa
 - **Deploy:** automatyczny z `main` w repo `koper545-wq/ks-wedding-preview-x7q2`.
   CLI-owe `vercel --prod` z tego katalogu **nie zadziała** — Root Directory
   `60kopra` nie istnieje wewnątrz samego `60kopra/`. Deployujemy pushem do gita.
