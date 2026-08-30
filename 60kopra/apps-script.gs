@@ -1,17 +1,23 @@
 /**
  * 60kopra.pl — webhook RSVP → Google Sheets
  *
- * Instalacja:
- *   1. Utwórz NOWY arkusz Google Sheets (osobny od weselnego).
- *   2. Rozszerzenia → Apps Script → wklej ten plik (zastąp domyślną zawartość).
- *   3. Uruchom raz funkcję `testAuth` (▶️) i zatwierdź uprawnienia.
- *   4. Wdróż → Nowe wdrożenie → Typ: Aplikacja internetowa
- *        - Wykonaj jako: Ja
- *        - Kto ma dostęp: Wszyscy
- *   5. Skopiuj URL wdrożenia → Vercel env var SHEETS_WEBHOOK_URL (projekt 60kopra).
+ * Arkusz: „RSVP 60 urodziny — 07.11.2026"
+ * https://docs.google.com/spreadsheets/d/10KDYhsmMakHZXwAS3UZPNGmcu5BKSvH0GjZeIDQN6iI/edit
+ *
+ * Projekt jest SAMODZIELNY (nie przypięty do arkusza), dlatego otwiera arkusz
+ * po ID. Gdyby ktoś kiedyś wkleił ten kod w projekt przypięty do arkusza
+ * (Rozszerzenia → Apps Script), wystarczy wyczyścić SHEET_ID — kod sam
+ * przełączy się na aktywny arkusz.
+ *
+ * Wdrożenie: Wdróż → Nowe wdrożenie → Aplikacja internetowa
+ *   - Wykonaj jako: Ja
+ *   - Kto ma dostęp: Wszyscy
+ * URL wdrożenia (/exec) ląduje w Vercelu jako SHEETS_WEBHOOK_URL.
  *
  * Pierwszy POST sam dopisze wiersz nagłówków.
  */
+
+const SHEET_ID = '10KDYhsmMakHZXwAS3UZPNGmcu5BKSvH0GjZeIDQN6iI';
 
 const HEADERS = [
   'timestamp',
@@ -22,10 +28,17 @@ const HEADERS = [
   'source',
 ];
 
+function getSheet() {
+  const ss = SHEET_ID
+    ? SpreadsheetApp.openById(SHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+  return ss.getSheets()[0];
+}
+
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents);
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    const sheet = getSheet();
 
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(HEADERS);
@@ -63,8 +76,8 @@ function doGet() {
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
-/** Uruchom raz ręcznie, żeby zatwierdzić uprawnienia do arkusza. */
+/** Uruchom raz ręcznie, żeby zatwierdzić dostęp do arkusza (scope Drive). */
 function testAuth() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-  Logger.log('Otworzono: ' + sheet.getName());
+  const sheet = getSheet();
+  Logger.log('Otworzono: ' + sheet.getParent().getName() + ' / ' + sheet.getName());
 }

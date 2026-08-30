@@ -42,7 +42,7 @@ function FactRow({ label, value, sub, last }) {
   return (
     <div className="stack-mobile-tight" style={{
       display: 'grid',
-      gridTemplateColumns: '150px 1fr',
+      gridTemplateColumns: 'minmax(96px, 130px) 1fr',
       gap: 24,
       padding: '22px 0',
       borderBottom: last ? 'none' : '1px solid var(--rule)',
@@ -50,7 +50,12 @@ function FactRow({ label, value, sub, last }) {
     }}>
       <div className="smallcaps" style={{ color: 'var(--muted)' }}>{label}</div>
       <div>
-        <div style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(22px, 3vw, 30px)', lineHeight: 1.2 }}>{value}</div>
+        <div style={{
+          fontFamily: 'var(--serif)',
+          fontSize: 'clamp(20px, 2.6vw, 28px)',
+          lineHeight: 1.25,
+          textWrap: 'balance',
+        }}>{value}</div>
         {sub && <div style={{ fontSize: 14, color: 'var(--muted)', marginTop: 8, lineHeight: 1.55 }}>{sub}</div>}
       </div>
     </div>

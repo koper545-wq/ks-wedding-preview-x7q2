@@ -14,8 +14,6 @@ const EVENT = {
   venue:     'Wrocław Golf Club',
   address:   'Golfowa 2, 55-114 Kryniczno',
   mapsUrl:   'https://www.google.com/maps/search/?api=1&query=Wroc%C5%82aw+Golf+Club%2C+Golfowa+2%2C+55-114+Kryniczno',
-
-  contactEmail: 'kontakt@60kopra.pl',
 };
 
 const COPY = {
@@ -26,7 +24,7 @@ const COPY = {
 
   /* Góra strony: nagłówek + od razu formularz RSVP. Bez nawigacji. */
   top: {
-    title:   '60 URODZINY',
+    title:   '60 URODZINY KOPRA',
     logoAlt: 'Wrocław Golf Club',
     /* trzy hasła z dołu zaproszenia — [tekst pogrubiony, reszta] */
     badges: [
@@ -49,6 +47,7 @@ const COPY = {
       ['miejsce',  null,    null],          /* uzupełniane z EVENT */
     ],
     mapsLink: 'zobacz na mapie →',
+    mapAlt:   'mapa dojazdu — Wrocław Golf Club, Kryniczno',
   },
 
   transport: {
@@ -126,8 +125,7 @@ const COPY = {
   },
 
   footer: {
-    line:    '60 urodziny · 07.11.2026',
-    contact: 'kontakt',
+    line: '60 urodziny · 07.11.2026',
   },
 };
 

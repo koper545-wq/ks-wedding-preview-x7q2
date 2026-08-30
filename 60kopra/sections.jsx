@@ -87,51 +87,75 @@ function SectionInformacje() {
   ];
   return (
     <Section id="informacje" kicker={c.kicker} title={c.title}>
-      <p style={{ margin: '0 0 28px', maxWidth: 560, color: 'var(--muted)', fontSize: 15, lineHeight: 1.7 }}>
-        {c.intro}
-      </p>
-
-      <div style={{ borderTop: '1px solid var(--rule)' }}>
-        {rows.map(([label, value, sub], i) => (
-          <FactRow key={label} label={label} value={value} sub={sub} last={i === rows.length - 1} />
-        ))}
-      </div>
-
-      <div className="stack-mobile" style={{
-        marginTop: 32,
+      {/* auto-fit zamiast sztywnych 1fr 1fr: kolumny same schodzą pod siebie,
+          zanim zrobią się tak wąskie, że wartości zaczynają się łamać */}
+      <div style={{
         display: 'grid',
-        gridTemplateColumns: '1fr auto',
-        gap: 32,
-        alignItems: 'center',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+        gap: 56,
+        alignItems: 'start',
       }}>
+        {/* lewa: fakty, link do map, odliczanie */}
         <div>
+          <p style={{ margin: '0 0 28px', color: 'var(--muted)', fontSize: 15, lineHeight: 1.7 }}>
+            {c.intro}
+          </p>
+
+          <div style={{ borderTop: '1px solid var(--rule)' }}>
+            {rows.map(([label, value, sub], i) => (
+              <FactRow key={label} label={label} value={value} sub={sub} last={i === rows.length - 1} />
+            ))}
+          </div>
+
           <a href={EVENT.mapsUrl} target="_blank" rel="noopener" className="smallcaps" style={{
             display: 'inline-block',
+            marginTop: 28,
             color: 'var(--fg)',
             textDecoration: 'none',
             borderBottom: '1px solid var(--fg)',
             paddingBottom: 3,
           }}>{c.mapsLink}</a>
 
-          <div style={{ marginTop: 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 12 }}>
             <Kicker>{COPY.top.countdownLabel}</Kicker>
             <Countdown />
           </div>
         </div>
 
-        {/* logo klubu — asset z zaproszenia, proporcje 438.174 × 88.362 */}
-        <img
-          src="img/wgc-logo.png"
-          alt={COPY.top.logoAlt}
-          width="438"
-          height="88"
-          style={{
-            width: 'clamp(180px, 26vw, 300px)',
-            height: 'auto',
-            aspectRatio: '438.174 / 88.362',
-            opacity: 0.9,
-          }}
-        />
+        {/* prawa: rysowana mapa (ta sama co na stronie weselnej — to samo miejsce) */}
+        <div>
+          <a href={EVENT.mapsUrl} target="_blank" rel="noopener" style={{ display: 'block' }}>
+            <img
+              src="img/map.jpg"
+              alt={c.mapAlt}
+              width="1200"
+              height="1100"
+              style={{
+                display: 'block',
+                width: '100%',
+                height: 'auto',
+                aspectRatio: '1965 / 1802',
+                objectFit: 'cover',
+                border: '1px solid var(--rule)',
+              }}
+            />
+          </a>
+
+          {/* logo klubu — asset z zaproszenia, proporcje 438.174 × 88.362 */}
+          <img
+            src="img/wgc-logo.png"
+            alt={COPY.top.logoAlt}
+            width="438"
+            height="88"
+            style={{
+              marginTop: 28,
+              width: 'clamp(170px, 22vw, 260px)',
+              height: 'auto',
+              aspectRatio: '438.174 / 88.362',
+              opacity: 0.9,
+            }}
+          />
+        </div>
       </div>
     </Section>
   );
@@ -226,21 +250,10 @@ function SectionKwiaty() {
 }
 
 function SiteFooter() {
-  const c = COPY.footer;
   return (
     <footer style={{ padding: '44px var(--pad-x) 60px', borderTop: '1px solid var(--rule)' }}>
-      <div className="footer-meta" style={{
-        maxWidth: 1000,
-        margin: '0 auto',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: 16,
-      }}>
-        <div className="smallcaps" style={{ color: 'var(--muted)' }}>{c.line}</div>
-        <a href={`mailto:${EVENT.contactEmail}`} className="smallcaps" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
-          {c.contact} · {EVENT.contactEmail}
-        </a>
+      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+        <div className="smallcaps" style={{ color: 'var(--muted)' }}>{COPY.footer.line}</div>
       </div>
     </footer>
   );
