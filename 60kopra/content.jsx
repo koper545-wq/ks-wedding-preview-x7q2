@@ -24,22 +24,10 @@ const COPY = {
     description: '60 urodziny — Wrocław Golf Club, 7 listopada 2026.',
   },
 
-  nav: {
-    informacje: 'informacje',
-    transport:  'transport',
-    dresscode:  'dress code',
-    kwiaty:     'bez kwiatów',
-    rsvp:       'rsvp',
-    menu:       'menu',
-    open:       'otwórz menu',
-    close:      'zamknij menu',
-  },
-
-  /* Hero = zaproszenie 1:1 */
-  hero: {
-    big:      '60',
-    word:     'URODZINY',
-    logoAlt:  'Wrocław Golf Club',
+  /* Góra strony: nagłówek + od razu formularz RSVP. Bez nawigacji. */
+  top: {
+    title:   '60 URODZINY',
+    logoAlt: 'Wrocław Golf Club',
     /* trzy hasła z dołu zaproszenia — [tekst pogrubiony, reszta] */
     badges: [
       ['Elegancki', 'dress code'],
@@ -47,11 +35,10 @@ const COPY = {
       ['Bezpłatny transport', 'powrotny'],
     ],
     countdownLabel: 'zostało:',
-    cta:       'potwierdź obecność',
   },
 
   informacje: {
-    kicker: '01',
+    kicker: '02',
     title:  'kiedy i gdzie',
     intro:  'Wszystko, co trzeba wiedzieć przed sobotą.',
     /* Pokazujemy wyłącznie to, co wiemy z zaproszenia.
@@ -65,7 +52,7 @@ const COPY = {
   },
 
   transport: {
-    kicker: '02',
+    kicker: '03',
     title:  'transport',
     body:   'Zapewniamy bezpłatny transport powrotny z Wrocław Golf Club do centrum. Nie musisz się martwić o powrót.',
     /* TODO: godziny kursów i przystanek — dopóki lista jest pusta,
@@ -76,7 +63,7 @@ const COPY = {
   },
 
   dresscode: {
-    kicker: '03',
+    kicker: '04',
     title:  'dress code',
     headline: 'elegancki',
     body:  'Listopadowy wieczór w klubie golfowym — marynarka, sukienka, coś, w czym czujesz się dobrze i odświętnie.',
@@ -85,13 +72,13 @@ const COPY = {
   },
 
   kwiaty: {
-    kicker: '04',
+    kicker: '05',
     title:  'bez kwiatów',
     body:   'Bardzo prosimy o nieprzynoszenie kwiatów. Najważniejsza jest Wasza obecność — to w zupełności wystarczy.',
   },
 
   rsvp: {
-    kicker: '05',
+    kicker: '01',
     title:  'rsvp',
     body:   'Daj znać, czy będziesz. Nic więcej nie musisz wypełniać.',
     deadline: 'Prosimy o potwierdzenie do 17 października.',
@@ -139,7 +126,6 @@ const COPY = {
   },
 
   footer: {
-    brand:   '60 urodziny',
     line:    '60 urodziny · 07.11.2026',
     contact: 'kontakt',
   },

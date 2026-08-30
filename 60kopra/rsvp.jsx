@@ -149,7 +149,7 @@ function SuccessScreen({ answers, onReset }) {
 
 /* ── Formularz ─────────────────────────────────────────────────────────── */
 
-function RSVPSection() {
+function RSVPBlock() {
   const c = COPY.rsvp;
   const f = c.fields;
   const [answers, setAnswers] = React.useState(() => loadRSVP() || {});
@@ -202,54 +202,50 @@ function RSVPSection() {
     setSubmitError(null);
   };
 
+  if (submitted) return <SuccessScreen answers={answers} onReset={reset} />;
+
   return (
-    <Section id="rsvp" kicker={c.kicker} title={c.title}>
-      {submitted ? (
-        <SuccessScreen answers={answers} onReset={reset} />
-      ) : (
-        <div style={{ maxWidth: 640 }}>
-          <p style={{ margin: '0 0 8px', fontSize: 15, lineHeight: 1.7, color: 'var(--muted)' }}>{c.body}</p>
-          {c.deadline && (
-            <p style={{ margin: 0, fontFamily: 'var(--serif)', fontSize: 'clamp(18px, 2.2vw, 22px)', color: 'var(--fg-strong)' }}>{c.deadline}</p>
-          )}
-
-          <div style={{ marginTop: 24, borderTop: '1px solid var(--rule)' }}>
-            <Field label={f.name.label} hint={f.name.hint} error={touched ? errors.name : null}>
-              <TextField value={answers.name} onChange={(v) => setAnswer('name', v)} placeholder={f.name.placeholder} />
-            </Field>
-
-            <Field label={f.attending.label} hint={f.attending.hint} error={touched ? errors.attending : null}>
-              <ChoiceField
-                value={answers.attending}
-                onChange={(v) => setAnswer('attending', v)}
-                options={['yes', 'no'].map((v) => ({
-                  value: v,
-                  label: f.attending.options[v][0],
-                  sub:   f.attending.options[v][1],
-                }))}
-              />
-            </Field>
-
-            <Field label={f.email.label} hint={f.email.hint} error={touched ? errors.email : null}>
-              <TextField type="email" value={answers.email} onChange={(v) => setAnswer('email', v)} placeholder={f.email.placeholder} />
-            </Field>
-          </div>
-
-          <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-            <Button onClick={submit} disabled={submitting || (touched && !valid)}>
-              {submitting ? c.submitting : c.submit}
-              <span style={{ fontFamily: 'var(--serif)', fontSize: 16 }}>→</span>
-            </Button>
-            {submitError && (
-              <span style={{ fontFamily: 'var(--serif)', fontSize: 14, color: 'var(--warn)' }}>
-                {submitError}
-              </span>
-            )}
-          </div>
-        </div>
+    <div style={{ maxWidth: 640 }}>
+      <p style={{ margin: '0 0 8px', fontSize: 15, lineHeight: 1.7, color: 'var(--muted)' }}>{c.body}</p>
+      {c.deadline && (
+        <p style={{ margin: 0, fontFamily: 'var(--serif)', fontSize: 'clamp(18px, 2.2vw, 22px)', color: 'var(--fg-strong)' }}>{c.deadline}</p>
       )}
-    </Section>
+
+      <div style={{ marginTop: 24, borderTop: '1px solid var(--rule)' }}>
+        <Field label={f.name.label} hint={f.name.hint} error={touched ? errors.name : null}>
+          <TextField value={answers.name} onChange={(v) => setAnswer('name', v)} placeholder={f.name.placeholder} />
+        </Field>
+
+        <Field label={f.attending.label} hint={f.attending.hint} error={touched ? errors.attending : null}>
+          <ChoiceField
+            value={answers.attending}
+            onChange={(v) => setAnswer('attending', v)}
+            options={['yes', 'no'].map((v) => ({
+              value: v,
+              label: f.attending.options[v][0],
+              sub:   f.attending.options[v][1],
+            }))}
+          />
+        </Field>
+
+        <Field label={f.email.label} hint={f.email.hint} error={touched ? errors.email : null}>
+          <TextField type="email" value={answers.email} onChange={(v) => setAnswer('email', v)} placeholder={f.email.placeholder} />
+        </Field>
+      </div>
+
+      <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+        <Button onClick={submit} disabled={submitting || (touched && !valid)}>
+          {submitting ? c.submitting : c.submit}
+          <span style={{ fontFamily: 'var(--serif)', fontSize: 16 }}>→</span>
+        </Button>
+        {submitError && (
+          <span style={{ fontFamily: 'var(--serif)', fontSize: 14, color: 'var(--warn)' }}>
+            {submitError}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }
 
-Object.assign(window, { RSVPSection });
+Object.assign(window, { RSVPBlock });

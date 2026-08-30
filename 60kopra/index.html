@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>60 urodziny — 07.11.2026</title>
 <meta name="description" content="60 urodziny — Wrocław Golf Club, 7 listopada 2026. Informacje i potwierdzenie obecności.">
-<meta name="theme-color" content="#042406">
+<meta name="theme-color" content="#233B25">
 <meta name="robots" content="noindex">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,20 +14,22 @@
 
 <style>
   /* ── Tokeny — z zaproszenia (Figma 2008:539) ─────────────────────────── */
+  /* Zieleń wzięta z RENDERU, nie z fillu w kodzie: pod spodem jest #042406,
+     ale leży na nim tekstura, która realnie daje #233B25. Tekst na
+     zaproszeniu jest czysto biały — tu celowo masełkowy. */
   :root {
-    --bg:        #042406;                    /* ciemna zieleń tła */
-    --fg:        #EBE5D9;                    /* kremowy tekst / ramka */
-    --fg-strong: #FFFFFF;                    /* biel dla dużej typografii */
-    --muted:     rgba(235, 229, 217, 0.62);
-    --rule:      rgba(235, 229, 217, 0.22);
-    --rule-strong: rgba(235, 229, 217, 0.5);
-    --warn:      #E2A17A;                    /* komunikaty błędów na zieleni */
+    --bg:        #233B25;                    /* zieleń jak na renderze Figmy */
+    --fg:        #F2E7CC;                    /* masełkowy tekst */
+    --fg-strong: #FAF4E4;                    /* jaśniejszy masełkowy — duża typografia */
+    --muted:     rgba(242, 231, 204, 0.66);
+    --rule:      rgba(242, 231, 204, 0.22);
+    --rule-strong: rgba(242, 231, 204, 0.48);
+    --warn:      #E9B489;                    /* komunikaty błędów na zieleni */
 
     --display: 'Bona Nova SC', 'Cormorant Garamond', Georgia, serif;
     --serif:   'Antic Didone', Georgia, serif;
     --sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 
-    --radius: 50px;
     --pad-x: 56px;
   }
 
@@ -80,49 +82,20 @@
   input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.55; }
   input, textarea { color-scheme: dark; }
 
-  /* ── Ramka zaproszenia (hero) ────────────────────────────────────────── */
-  .invite-frame {
-    border: 1px solid var(--fg);
-    border-radius: var(--radius);
-  }
-
-  /* ── Hamburger ───────────────────────────────────────────────────────── */
-  .nav-hamburger {
-    display: none;
-    background: transparent;
-    border: 1px solid var(--rule-strong);
-    width: 38px; height: 38px;
-    cursor: pointer;
-    align-items: center; justify-content: center;
-    padding: 0;
-    border-radius: 999px;
-  }
-  .nav-hamburger span { display: block; width: 16px; height: 1px; background: var(--fg); position: relative; }
-  .nav-hamburger span::before,
-  .nav-hamburger span::after {
-    content: ''; position: absolute; left: 0; width: 100%; height: 1px; background: var(--fg);
-  }
-  .nav-hamburger span::before { top: -5px; }
-  .nav-hamburger span::after  { top:  5px; }
-
   /* ── Responsywność ───────────────────────────────────────────────────── */
   @media (max-width: 768px) {
-    :root { --pad-x: 22px; --radius: 30px; }
+    :root { --pad-x: 22px; }
     body { font-size: 14px; }
-
-    .nav-desktop-items { display: none !important; }
-    .nav-desktop-date  { display: none !important; }
-    .nav-hamburger { display: inline-flex !important; }
 
     .stack-mobile { display: block !important; }
     .stack-mobile > * + * { margin-top: 40px !important; }
 
     .stack-mobile-tight { grid-template-columns: 1fr !important; gap: 6px !important; }
 
-    /* Trzy hasła z zaproszenia: na wąskim ekranie jedno pod drugim,
-       bo przy zawijaniu w rzędzie zostawała wisząca kreska rozdzielająca. */
-    .hero-badges { flex-direction: column !important; gap: 12px !important; }
-    .hero-badges .badge-divider { display: none !important; }
+    /* Trzy hasła: na wąskim ekranie jedno pod drugim, bo przy zawijaniu
+       w rzędzie zostawała wisząca kreska rozdzielająca. */
+    .badge-row { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+    .badge-row .badge-divider { display: none !important; }
 
     .footer-meta {
       flex-direction: column !important;
@@ -146,10 +119,10 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-<script type="text/babel" src="content.jsx?v=3"></script>
-<script type="text/babel" src="ui.jsx?v=3"></script>
-<script type="text/babel" src="sections.jsx?v=3"></script>
-<script type="text/babel" src="rsvp.jsx?v=3"></script>
-<script type="text/babel" src="app.jsx?v=3"></script>
+<script type="text/babel" src="content.jsx?v=4"></script>
+<script type="text/babel" src="ui.jsx?v=4"></script>
+<script type="text/babel" src="sections.jsx?v=4"></script>
+<script type="text/babel" src="rsvp.jsx?v=4"></script>
+<script type="text/babel" src="app.jsx?v=4"></script>
 </body>
 </html>
