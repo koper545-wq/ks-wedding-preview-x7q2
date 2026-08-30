@@ -58,14 +58,38 @@ redirect `www` → `60kopra.pl`.
 
 | zmienna | wymagana | opis |
 |---|---|---|
-| `SHEETS_WEBHOOK_URL` | tak | URL wdrożenia Apps Script (patrz `apps-script.gs`) |
+| `SHEETS_WEBHOOK_URL` | tak | **ustawione** — URL wdrożenia Apps Script (patrz `apps-script.gs`) |
 | `ADMIN_NOTIFY_EMAIL` | zalecane | maile (po przecinku) — dostaną RSVP, gdy arkusz padnie |
 | `RESEND_API_KEY` | opcjonalna | bez niej maile potwierdzające są pomijane |
 | `MAIL_FROM` | opcjonalna | domyślnie `urodziny <kontakt@60kopra.pl>` |
 | `MAIL_REPLY_TO` | opcjonalna | domyślnie `kontakt@60kopra.pl` |
 | `SITE_URL` | opcjonalna | domyślnie `https://60kopra.pl` |
 
-**Dopóki `SHEETS_WEBHOOK_URL` nie jest ustawiony, formularz RSVP zwraca 503 i
+### Arkusz RSVP — działa
+
+- Arkusz: **RSVP 60 urodziny** —
+  https://docs.google.com/spreadsheets/d/10KDYhsmMakHZXwAS3UZPNGmcu5BKSvH0GjZeIDQN6iI/edit
+- Projekt Apps Script (samodzielny): `1j0Pz1nsWAs1kLc_8M1d8Qgkhm9PYXQaDxxydyoHLbfceVRsMMmbOAsUZ`
+- Wdrożenie: aplikacja internetowa, „Wykonaj jako: Ja", „Kto ma dostęp: Każdy"
+- `SHEETS_WEBHOOK_URL` ustawiony w Vercelu (production + preview + development)
+
+Sprawdzone end-to-end: formularz na 60kopra.pl → `/api/rsvp` → wiersz w arkuszu,
+z polskimi znakami włącznie.
+
+**Uwaga przy testowaniu curl-em.** Apps Script wykonuje `doPost`, a potem
+odsyła 302 na `script.googleusercontent.com`. Ten adres **nie przyjmuje POST-a**,
+więc `curl --post301/302/303` kończy się 405 i stroną „Nie udało się otworzyć
+pliku" — mimo że wiersz już się zapisał. Poprawnie:
+
+```bash
+curl -s -o /dev/null -w "%{redirect_url}" -X POST -d '...' "$WEBHOOK"   # 1. POST
+curl -s "$ADRES_Z_PRZEKIEROWANIA"                                       # 2. GET
+```
+
+Node `fetch` z `redirect: 'follow'` robi to tak samo (302 zamienia POST na GET),
+dlatego funkcja w Vercelu działa bez kombinowania.
+
+**Gdyby `SHEETS_WEBHOOK_URL` zniknął, formularz RSVP zwraca 503 i
 pokazuje gościowi błąd.** To celowe: bez arkusza i bez maila awaryjnego
 zgłoszenie nie zostałoby nigdzie zapisane, a „zapisane" na ekranie byłoby
 kłamstwem. Podpięcie arkusza (patrz `apps-script.gs`) odblokowuje formularz.
