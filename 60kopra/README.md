@@ -17,8 +17,8 @@ serverless na Vercelu. Ta sama mechanika co strona weselna w katalogu wyżej.
   apps-script.gs  kod do wklejenia w Apps Script nowego arkusza
 ```
 
-Strona jest jednostronicowa — nawigacja to kotwice (`#informacje`, `#shuttle`,
-`#dresscode`, `#rsvp`).
+Landing one-pager, bez paska nawigacji. Kotwice nadal działają w linkach:
+`#rsvp` (góra), `#informacje`, `#transport`, `#dresscode`, `#kwiaty`.
 
 ## Lokalny podgląd
 
@@ -32,36 +32,27 @@ Uwaga: `/api/rsvp` nie działa pod `http.server`. Do testu end-to-end użyj
 ## Deploy — stan na 2026-08-30
 
 - **Projekt Vercel:** `szymons-projects-a6eee558/60kopra`, Root Directory = `60kopra`
-- **Produkcja:** https://60kopra.vercel.app — działa
+- **Produkcja:** https://60kopra.pl (i `www`) — działa, cert SSL wystawiony
+- **Zapasowy URL:** https://60kopra.vercel.app
 - **Deploy:** automatyczny z `main` w repo `koper545-wq/ks-wedding-preview-x7q2`.
   CLI-owe `vercel --prod` z tego katalogu **nie zadziała** — Root Directory
   `60kopra` nie istnieje wewnątrz samego `60kopra/`. Deployujemy pushem do gita.
 - **Ochrona:** Vercel Authentication zdjęta z produkcji (`ssoProtection.deploymentType = preview`),
   więc goście wchodzą bez logowania; preview deploye zostają chronione.
 
-### Domena — czeka na DNS w home.pl
+### Domena — podpięta
 
-`60kopra.pl` i `www.60kopra.pl` są dodane do projektu, ale domena stoi na
-nameserverach home.pl (`dns.home.pl`, `dns2`, `dns3`) i nie ma jeszcze rekordów.
-Do dodania w panelu home.pl:
+`60kopra.pl` i `www.60kopra.pl` wskazują na Vercel, rekordy w home.pl są
+ustawione i rozpropagowane:
 
 | typ | nazwa | wartość |
 |---|---|---|
-| `A` | `60kopra.pl` (@) | `216.198.79.1` |
-| `CNAME` | `www` | `efc33eb6540a0c7e.vercel-dns-017.com.` |
+| `A` | `60kopra.pl` | `216.198.79.1` |
+| `CNAME` | `www.60kopra.pl` | `efc33eb6540a0c7e.vercel-dns-017.com.` |
 
-Starsze wartości Vercela (`76.76.21.21` / `cname.vercel-dns.com.`) też działają,
-gdyby panel home.pl nie przyjął powyższych.
-
-Sanity check po zmianie:
-
-```bash
-dig +short 60kopra.pl A @dns.home.pl
-```
-
-Uwaga z poprzedniej rundy na tej samej rejestraturze: home.pl potrafi przyjąć
-wpisy w panelu, a nie zbumpować serialu SOA — wtedy zmiany nie trafiają na ich
-autorytatywne serwery i trzeba dzwonić na support.
+`www` serwuje tę samą stronę (nie przekierowuje na apex). Gdyby zależało nam
+na jednym kanonicznym adresie, w ustawieniach domeny w Vercelu można ustawić
+redirect `www` → `60kopra.pl`.
 
 ## Zmienne środowiskowe (Vercel → Settings → Environment Variables)
 
@@ -96,11 +87,22 @@ Przed podpięciem: `503 {"ok":false,"error":"rsvp storage unavailable",...}`.
 ## Stylistyka
 
 Wzorowana na zaproszeniu z Figmy — plik `Wedding (Copy)`, node `2008:539`.
-Stamtąd pochodzą: tło `#042406`, kremowa ramka `#EBE5D9` z promieniem 50,
-kroje **Bona Nova SC** (60 / URODZINY / nagłówki sekcji), **Antic Didone**
-(data, miejsce, wartości) i **Inter** (reszta), ziarno na całej stronie oraz
-logo klubu (`img/wgc-logo.png` — eksport assetu z Figmy, 4096×826,
-proporcja 4.959 zachowana w renderze).
+Strona **nie odtwarza już samego zaproszenia** — to landing one-pager
+z formularzem RSVP na samej górze i bez nawigacji. Z zaproszenia zostają
+dane i język wizualny.
+
+**Uwaga na kolor tła.** W kodzie z Figmy fill to `#042406`, ale to nie jest
+kolor, który widać: leży na nim tekstura, która realnie daje **`#233B25`** —
+i ta wartość jest w `--bg`. Gdyby ktoś kiedyś „poprawiał" tło do `#042406`
+prosto z Figmy, strona zrobi się wyraźnie ciemniejsza niż zaproszenie.
+Wartość wzięta z pomiaru pikseli renderu, nie z panelu warstw.
+
+Tekst jest celowo **masełkowy** (`#F2E7CC`), a nie biały jak na zaproszeniu.
+
+Kroje: **Bona Nova SC** (nagłówki), **Antic Didone** (data, miejsce,
+wartości), **Inter** (reszta). Ziarno na całej stronie. Logo klubu
+(`img/wgc-logo.png` — eksport assetu z Figmy, 4096×826, proporcja 4.959
+zachowana w renderze) siedzi teraz w sekcji „kiedy i gdzie".
 
 Tokeny siedzą w `:root` w `index.html` — cała zmiana kolorów idzie stamtąd.
 
