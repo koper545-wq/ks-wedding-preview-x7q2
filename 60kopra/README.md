@@ -108,6 +108,33 @@ curl -X POST https://60kopra.pl/api/rsvp -H "Content-Type: application/json" -d 
 Oczekiwane po podpięciu arkusza: `{"ok":true,"sheets":true,...}` + nowy wiersz.
 Przed podpięciem: `503 {"ok":false,"error":"rsvp storage unavailable",...}`.
 
+## Wysyłka zaproszenia (WhatsApp)
+
+**PNG nie może zawierać hiperlinku** — to plik rastrowy, nie ma w nim warstwy
+z odnośnikiem ani obszarów klikalnych. Żaden komunikator tego nie obejdzie.
+Dlatego działają dwie osobne drogi i obie są przygotowane:
+
+1. **Wklejenie samego linku `60kopra.pl`** — WhatsApp pobiera tagi Open Graph
+   z `index.html` i rysuje kartę z grafiką `img/og.png`. **Cała karta jest
+   klikalna** i otwiera stronę. To jest najbliższe „klikalnej grafice".
+2. **Wysłanie `img/zaproszenie.png` jako zdjęcia**, z linkiem w podpisie —
+   WhatsApp sam zamienia adres w podpisie na odnośnik. Grafika jest wtedy
+   w pełnej jakości i pionowa, a adres `60KOPRA.PL` jest też wypalony na niej.
+
+Najlepszy efekt daje jedno i drugie w jednej wiadomości: zdjęcie + podpis
+z linkiem.
+
+Obie grafiki generuje `scripts/make-share-images.py` (fonty ciągnie z Google
+Fonts do `scripts/.fonts/`, poza repo):
+
+```bash
+python3 scripts/make-share-images.py
+```
+
+Po podmianie `img/og.png` trzeba **podbić `?v=` w tagach `og:image`**
+w `index.html` — WhatsApp agresywnie cache'uje miniatury per URL i bez tego
+pokaże starą.
+
 ## Stylistyka
 
 Wzorowana na zaproszeniu z Figmy — plik `Wedding (Copy)`, node `2008:539`.
