@@ -3,9 +3,11 @@
 Generuje grafiki do wysyłki (WhatsApp) na bazie zaproszenia z Figmy,
 w palecie strony.
 
-  img/og.png           1200x630  — miniatura linku (Open Graph). To JĄ widać
+  img/og.jpg           1200x630  — miniatura linku (Open Graph). To JĄ widać
                                    jako klikalną kartę, gdy wkleisz 60kopra.pl
-                                   w WhatsAppie.
+                                   w WhatsAppie. JPEG, nie PNG, i lekki —
+                                   scraper WhatsAppa potrafi po cichu odrzucić
+                                   PNG-a oraz obrazek cięższy niż ~300 kB.
   img/zaproszenie.png  1080x1620 — pionowe zaproszenie do wysłania jako zdjęcie
                                    (link wtedy wkleja się w podpis).
 
@@ -152,6 +154,7 @@ def make_invite(path, W=1080, H=1620):
 # ── pozioma miniatura linku (Open Graph) ──────────────────────────────────
 
 def make_og(path, W=1200, H=630):
+    """Zapisujemy jako JPEG — WhatsApp bywa wybredny wobec PNG w og:image."""
     w, h = W * SS, H * SS
     im = grain_bg(w, h)
     d = ImageDraw.Draw(im)
@@ -180,13 +183,18 @@ def make_og(path, W=1200, H=630):
     y += 56 * SS
     draw_centered(d, cx, y, 'Wrocław Golf Club, Kryniczno', f_venue, mix(BODY, BG, 0.92))
 
-    im.resize((W, H), Image.LANCZOS).save(path, optimize=True)
+    out = im.resize((W, H), Image.LANCZOS)
+    # schodzimy z jakością, aż zmieścimy się bezpiecznie poniżej 300 kB
+    for q in (88, 82, 76, 70):
+        out.save(path, quality=q, optimize=True, progressive=False, subsampling=0)
+        if os.path.getsize(path) <= 200_000:
+            break
     return path
 
 
 if __name__ == '__main__':
     ensure_fonts()
-    for p in (make_og(os.path.join(IMG, 'og.png')),
+    for p in (make_og(os.path.join(IMG, 'og.jpg')),
               make_invite(os.path.join(IMG, 'zaproszenie.png'))):
         size = os.path.getsize(p)
         print(f'{os.path.relpath(p, ROOT):24s} {Image.open(p).size}  {size/1024:.0f} KB')

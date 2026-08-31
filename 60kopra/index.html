@@ -11,22 +11,26 @@
 <!-- Miniatura linku (WhatsApp, Messenger, iMessage, Signal…). To ona zamienia
      wklejony adres w klikalną kartę z grafiką. Musi siedzieć w statycznym HTML —
      crawlery tych komunikatorów nie wykonują JS-a, więc React by tu nie pomógł.
-     og:image musi być bezwzględnym adresem https i ważyć poniżej ~600 kB. -->
+
+     og:image: JPEG, bezwzględny adres https, BEZ query stringa i poniżej
+     ~300 kB. WhatsApp przy PNG-u albo adresie z "?v=" potrafi zaciągnąć sam
+     tytuł i opis, a grafikę po cichu pominąć — dokładnie to się tu wydarzyło. -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://60kopra.pl/">
 <meta property="og:site_name" content="60 urodziny Kopra">
 <meta property="og:locale" content="pl_PL">
 <meta property="og:title" content="60 urodziny Kopra">
 <meta property="og:description" content="Sobota, 7 listopada 2026, 18:00 · Wrocław Golf Club. Kliknij i potwierdź obecność.">
-<meta property="og:image" content="https://60kopra.pl/img/og.png?v=1">
-<meta property="og:image:type" content="image/png">
+<meta property="og:image" content="https://60kopra.pl/img/og.jpg">
+<meta property="og:image:secure_url" content="https://60kopra.pl/img/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="60 urodziny Kopra — 7 listopada 2026, Wrocław Golf Club">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="60 urodziny Kopra">
 <meta name="twitter:description" content="Sobota, 7 listopada 2026, 18:00 · Wrocław Golf Club. Kliknij i potwierdź obecność.">
-<meta name="twitter:image" content="https://60kopra.pl/img/og.png?v=1">
+<meta name="twitter:image" content="https://60kopra.pl/img/og.jpg">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

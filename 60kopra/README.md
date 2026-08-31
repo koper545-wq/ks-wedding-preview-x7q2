@@ -131,9 +131,23 @@ Fonts do `scripts/.fonts/`, poza repo):
 python3 scripts/make-share-images.py
 ```
 
-Po podmianie `img/og.png` trzeba **podbić `?v=` w tagach `og:image`**
-w `index.html` — WhatsApp agresywnie cache'uje miniatury per URL i bez tego
-pokaże starą.
+### Czego wymaga scraper WhatsAppa (sprawdzone bólem)
+
+Przy pierwszym podejściu karta zaciągnęła tytuł i opis, ale **grafikę pominęła
+bez żadnego błędu**. Winne były dwie rzeczy naraz:
+
+- `og:image` wskazywał **PNG** — WhatsApp bywa wobec nich wybredny; JPEG jest
+  pewny,
+- adres miał **query string** (`?v=1`) — część scraperów się na tym wykłada.
+
+Stąd `img/og.jpg`: JPEG, bez query stringa, poniżej 200 kB (generator sam
+schodzi z jakością, aż się zmieści). Nie zamieniaj tego z powrotem na PNG.
+
+**Cache.** WhatsApp trzyma miniaturę per adres i nie ma publicznego sposobu na
+jej wyczyszczenie. Po podmianie grafiki ten sam link długo pokazuje starą
+(albo pustą) kartę. Do sprawdzenia poprawki użyj innego adresu — wystarczy
+`https://60kopra.pl/?i=1` albo `https://www.60kopra.pl` — bo dla cache'a to
+osobne URL-e.
 
 ## Stylistyka
 
