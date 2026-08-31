@@ -3,7 +3,9 @@
 Buduje img/map.jpg z ilustrowanej mapy ze strony weselnej (../img/map.jpg).
 
 Poprawki względem oryginału:
-  1. usuwa gałązkę i wstawia w to miejsce logo Wrocław Golf Club,
+  1. usuwa gałązkę, duży napis „wrocław golf club" z kreską oraz pinezkę
+     z podpisem — nazwa klubu powtarzała się na mapie trzy razy. Zostaje
+     jedno duże logo,
   2. usuwa „Ostatnio oglądane" — resztkę interfejsu Google Maps, która
      została wypalona w ilustracji,
   3. przenosi znacznik „P" ze środka pola golfowego na parking przy klubie.
@@ -15,6 +17,8 @@ Uruchomienie:  python3 scripts/make-map.py
 """
 
 import os
+import random
+
 from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -26,58 +30,59 @@ LOGO = os.path.join(ROOT, 'img', 'wgc-logo.png')
 OUT_W = 1200          # mapa renderuje się w ~600 px, 1200 starcza na ekrany 2x
 
 # ── obszary do wyczyszczenia (współrzędne w oryginale 1965x1802) ──────────
-TWIG      = (140, 265, 640, 492)   # cała gałązka, łącznie z dolnym pędem
-RECENTLY  = (240, 692, 470, 740)
+# Cały blok etykiety: gałązka, napis serifowy, kreska, pinezka z podpisem.
+# Zamalowujemy go w całości i wstawiamy w to miejsce samo logo.
+LABEL     = (120, 265, 760, 745)
 OLD_P     = (804, 636, 892, 724)
 
 # lewy górny róg logo w miejscu gałązki (niezależny od TWIG, żeby zmiana
 # maski nie przesuwała logo)
-LOGO_POS = (150, 282)
-LOGO_W = 470
+LOGO_POS = (150, 400)
+LOGO_W = 620
 
 # środek nowego „P" — wąski prostokąt przylegający do budynku klubu,
 # podpięty pod drogę dojazdową
 NEW_P_CENTER = (1237, 698)
 
 
-def is_clean(im, box, bg, tol=14):
-    """Czy wycinek to samo tło (bez tuszu)?"""
-    px = im.crop(box).getdata()
-    return all(abs(p[0]-bg[0]) < tol and abs(p[1]-bg[1]) < tol and abs(p[2]-bg[2]) < tol
-               for p in px)
+def sample_bg(im, box, bg):
+    """Mediana koloru z ramki wokół obszaru — dopasowuje się do lokalnego tła."""
+    xs = list(range(box[0], box[2], 7))
+    ys = list(range(box[1], box[3], 7))
+    px = ([im.getpixel((x, max(0, box[1] - 12))) for x in xs] +
+          [im.getpixel((x, min(im.height - 1, box[3] + 12))) for x in xs] +
+          [im.getpixel((max(0, box[0] - 12), y)) for y in ys] +
+          [im.getpixel((min(im.width - 1, box[2] + 12), y)) for y in ys])
+    px = [p for p in px if all(abs(p[i] - bg[i]) < 18 for i in range(3))] or [bg]
+    return tuple(sorted(p[i] for p in px)[len(px) // 2] for i in range(3))
 
 
-def find_clean_patch(im, w, h, bg, avoid):
-    """Szuka czystego kawałka tła o zadanym rozmiarze, z dala od stref `avoid`."""
-    step = 20
-    for y in range(0, im.height - h, step):
-        for x in range(0, im.width - w, step):
-            box = (x, y, x + w, y + h)
-            if any(not (box[2] < a[0] or box[0] > a[2] or box[3] < a[1] or box[1] > a[3])
-                   for a in avoid):
-                continue
-            if is_clean(im, box, bg):
-                return box
-    raise RuntimeError('nie znalazłem czystego kawałka tła %dx%d' % (w, h))
+def erase(im, box, bg):
+    """Zamalowuje obszar płaskim tłem + drobnym ziarnem.
 
-
-def erase(im, box, bg, avoid):
-    """Zamalowuje obszar sklonowanym tłem, z miękką krawędzią."""
+    Wcześniej klonowałem tu kawałki tła z maską — zostawiało to poziome
+    pasma na stykach kafelków. Tło mapy w tym miejscu jest praktycznie
+    jednolite, więc płaskie wypełnienie z lekkim szumem jest i prostsze,
+    i czystsze.
+    """
+    fill = sample_bg(im, box, bg)
     w, h = box[2] - box[0], box[3] - box[1]
-    src = find_clean_patch(im, w, h, bg, avoid)
-    patch = im.crop(src)
-    mask = Image.new('L', (w, h), 255)
-    ImageDraw.Draw(mask).rectangle([0, 0, w - 1, h - 1], outline=0, width=3)
-    im.paste(patch, (box[0], box[1]), mask.filter(ImageFilter.GaussianBlur(2)))
+    patch = Image.new('RGB', (w, h), fill)
+    px = patch.load()
+    rnd = random.Random(1107)
+    for y in range(h):
+        for x in range(w):
+            d = rnd.randint(-2, 2)
+            px[x, y] = (max(0, min(255, fill[0] + d)),
+                        max(0, min(255, fill[1] + d)),
+                        max(0, min(255, fill[2] + d)))
+    im.paste(patch, (box[0], box[1]))
 
 
 def main():
     im = Image.open(SRC).convert('RGB')
     bg = im.getpixel((im.width - 40, 40))   # róg = czyste tło
     print('oryginał:', im.size, '| kolor tła:', bg)
-
-    avoid = [TWIG, RECENTLY, OLD_P, (100, 470, 760, 620), (150, 640, 640, 745),
-             (1100, 580, 1320, 800)]
 
     # 3a. „P" — najpierw kopiujemy oryginalny znacznik, żeby zachować styl
     p_patch = im.crop(OLD_P)
@@ -87,8 +92,8 @@ def main():
     p_mask = p_mask.filter(ImageFilter.GaussianBlur(2))
 
     # 1 + 2 + 3b. czyścimy gałązkę, „Ostatnio oglądane" i stare „P"
-    for box in (TWIG, RECENTLY, OLD_P):
-        erase(im, box, bg, avoid)
+    for box in (LABEL, OLD_P):
+        erase(im, box, bg)
 
     # 3c. wklejamy „P" na parkingu
     im.paste(p_patch, (NEW_P_CENTER[0] - pw // 2, NEW_P_CENTER[1] - ph // 2), p_mask)
