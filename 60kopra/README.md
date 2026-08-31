@@ -65,6 +65,30 @@ redirect `www` → `60kopra.pl`.
 | `MAIL_REPLY_TO` | opcjonalna | domyślnie `kontakt@60kopra.pl` |
 | `SITE_URL` | opcjonalna | domyślnie `https://60kopra.pl` |
 
+### Potwierdzenia mailem — bez zewnętrznej usługi
+
+Maile wysyła **Apps Script (`MailApp`)**, czyli konto Google właściciela
+skryptu. Nie ma tu Resend, klucza API ani rekordów DKIM/SPF. Limit darmowego
+Gmaila to 100 adresatów na dobę.
+
+Mail wychodzi **dopiero po udanym `appendRow`**, więc nikt nie dostanie
+potwierdzenia zgłoszenia, którego nie ma w arkuszu. Wywrotka wysyłki nie
+wywraca zapisu — Apps Script zwraca wtedy `mail: "failed: …"`, a funkcja
+w Vercelu przekazuje ten status dalej i loguje.
+
+Treść maila (osobna dla „tak" i „nie") żyje w `apps-script.gs` — jedno
+miejsce, bez duplikatu po stronie Vercela.
+
+**Po każdej zmianie kodu skryptu** trzeba zrobić Wdróż → Zarządzaj
+wdrożeniami → ✏️ → Wersja: **Nowa wersja**. Sam zapis w edytorze nie
+wpływa na to, co serwuje URL `/exec`.
+
+**Gotcha z edytorem Apps Script:** selektor funkcji nie zapamiętuje wyboru
+klikniętego automatem — edytor i tak uruchamia *pierwszą* funkcję w pliku.
+Jeśli trzeba uruchomić coś konkretnego (np. żeby zatwierdzić nowy zakres
+uprawnień), najprościej wstawić to tymczasowo na początek pliku. Wdrożona
+wersja jest zamrożona, więc majstrowanie przy szkicu nie rusza produkcji.
+
 ### Arkusz RSVP — działa
 
 - Arkusz: **RSVP 60 urodziny** —

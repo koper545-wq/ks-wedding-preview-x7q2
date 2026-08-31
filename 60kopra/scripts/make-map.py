@@ -26,14 +26,14 @@ LOGO = os.path.join(ROOT, 'img', 'wgc-logo.png')
 OUT_W = 1200          # mapa renderuje się w ~600 px, 1200 starcza na ekrany 2x
 
 # ── obszary do wyczyszczenia (współrzędne w oryginale 1965x1802) ──────────
-TWIG      = (140, 265, 470, 492)   # cała gałązka, łącznie z dolnym pędem
+TWIG      = (140, 265, 640, 492)   # cała gałązka, łącznie z dolnym pędem
 RECENTLY  = (240, 692, 470, 740)
 OLD_P     = (804, 636, 892, 724)
 
 # lewy górny róg logo w miejscu gałązki (niezależny od TWIG, żeby zmiana
 # maski nie przesuwała logo)
-LOGO_POS = (158, 300)
-LOGO_W = 330
+LOGO_POS = (150, 282)
+LOGO_W = 470
 
 # środek nowego „P" — wąski prostokąt przylegający do budynku klubu,
 # podpięty pod drogę dojazdową
