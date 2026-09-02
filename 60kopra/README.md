@@ -100,6 +100,16 @@ wersja jest zamrożona, więc majstrowanie przy szkicu nie rusza produkcji.
 Sprawdzone end-to-end: formularz na 60kopra.pl → `/api/rsvp` → wiersz w arkuszu,
 z polskimi znakami włącznie.
 
+**Kolumny arkusza dopisujemy tylko na KOŃCU** (`plus_one`, `plus_one_name`
+doszły właśnie tak). W arkuszu są prawdziwe zgłoszenia gości — wstawienie
+kolumny w środku rozjechałoby istniejące wiersze. `doPost` sam dociąga
+brakujące nagłówki przy pierwszym zapisie po zmianie.
+
+**Sprzątanie danych testowych:** nigdy klikaniem po arkuszu (próba zaznaczenia
+zakresu przez Name Box raz już rozwaliła wiersz nagłówków). Zamiast tego
+jednorazowa funkcja w Apps Script, która kasuje wyłącznie wiersze z `source`
+zaczynającym się od `smoke-` i loguje, co zostało.
+
 **Uwaga przy testowaniu curl-em.** Apps Script wykonuje `doPost`, a potem
 odsyła 302 na `script.googleusercontent.com`. Ten adres **nie przyjmuje POST-a**,
 więc `curl --post301/302/303` kończy się 405 i stroną „Nie udało się otworzyć
