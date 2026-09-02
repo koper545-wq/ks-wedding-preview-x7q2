@@ -96,6 +96,20 @@ const COPY = {
           no:  ['nie dam rady', ''],
         },
       },
+      /* poniższe dwa pola pokazują się dopiero po wybraniu „tak, będę" */
+      plusOne: {
+        label: 'osoba towarzysząca',
+        hint:  'Przyjdziesz z kimś?',
+        options: {
+          yes: ['tak, we dwoje', ''],
+          no:  ['przyjdę sam / sama', ''],
+        },
+      },
+      plusOneName: {
+        label: 'kto z Tobą przyjdzie?',
+        hint:  'Imię i nazwisko osoby towarzyszącej — dopiszemy ją do listy.',
+        placeholder: 'Anna Kowalska',
+      },
       email: {
         label: 'email',
         hint:  'Opcjonalnie — wyślemy potwierdzenie i ewentualne zmiany.',
@@ -108,15 +122,18 @@ const COPY = {
     submitError: 'Coś poszło nie tak. Spróbuj jeszcze raz.',
 
     errors: {
-      nameRequired: 'wpisz imię i nazwisko.',
-      nameShort:    'trochę za krótko.',
-      attending:    'zaznacz jedną z opcji.',
-      email:        'sprawdź pisownię — to nie wygląda na email.',
+      nameRequired:  'wpisz imię i nazwisko.',
+      nameShort:     'trochę za krótko.',
+      attending:     'zaznacz jedną z opcji.',
+      plusOne:       'zaznacz, czy przyjdziesz z kimś.',
+      plusOneName:   'wpisz imię i nazwisko osoby towarzyszącej.',
+      email:         'sprawdź pisownię — to nie wygląda na email.',
     },
 
     success: {
       kicker:     'zapisane',
       yesTitle:   'dzięki, <em>{name}</em>.<br/>do zobaczenia.',
+      yesBodyPair: 'Zapisaliśmy Was oboje. Gdyby coś się zmieniło, wypełnij formularz jeszcze raz — nadpiszemy.',
       noTitle:    '<em>szkoda</em>.<br/>dzięki za odpowiedź.',
       yesBody:    'Zapisaliśmy Twoją odpowiedź. Gdyby coś się zmieniło, wypełnij formularz jeszcze raz — nadpiszemy.',
       noBody:     'Zapisaliśmy Twoją odpowiedź. Gdyby coś się zmieniło, wypełnij formularz jeszcze raz — nadpiszemy.',

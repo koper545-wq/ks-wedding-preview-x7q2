@@ -29,6 +29,8 @@ const EVENT_WHEN = 'sobota, 7 listopada 2026, 18:00';
 const EVENT_WHERE_1 = 'Wrocław Golf Club';
 const EVENT_WHERE_2 = 'Golfowa 2, 55-114 Kryniczno';
 
+// UWAGA: nowe kolumny dopisujemy na KOŃCU. W arkuszu są już prawdziwe
+// zgłoszenia — wstawienie kolumny w środku rozjechałoby istniejące wiersze.
 const HEADERS = [
   'timestamp',
   'name',
@@ -36,6 +38,8 @@ const HEADERS = [
   'email',
   'user_agent',
   'source',
+  'plus_one',
+  'plus_one_name',
 ];
 
 function getSheet() {
@@ -68,6 +72,8 @@ function doPost(e) {
       body.email || '',
       body.user_agent || '',
       body.source || '',
+      body.plus_one || '',
+      body.plus_one_name || '',
     ]);
 
     // Potwierdzenie wysyłamy dopiero teraz — wiersz jest już w arkuszu.
@@ -111,6 +117,7 @@ function firstName(full) {
 function sendConfirmation(body) {
   const yes = body.attending === 'yes';
   const name = firstName(body.name);
+  const plusOne = (yes && body.plus_one === 'yes') ? (body.plus_one_name || '') : '';
 
   MailApp.sendEmail({
     to: body.email,
@@ -118,24 +125,29 @@ function sendConfirmation(body) {
     subject: yes
       ? 'Do zobaczenia 7 listopada — 60 urodziny Kopra'
       : 'Zapisaliśmy Twoją odpowiedź — 60 urodziny Kopra',
-    body: mailText(yes, name),
-    htmlBody: mailHtml(yes, name),
+    body: mailText(yes, name, plusOne),
+    htmlBody: mailHtml(yes, name, plusOne),
   });
 }
 
-function mailText(yes, name) {
+function mailText(yes, name, plusOne) {
   const lines = [
     'Cześć ' + name + ',',
     '',
     yes
-      ? 'mamy Twoje potwierdzenie. Cieszymy się, że będziesz.'
+      ? (plusOne
+          ? 'mamy Wasze potwierdzenie. Cieszymy się, że będziecie.'
+          : 'mamy Twoje potwierdzenie. Cieszymy się, że będziesz.')
       : 'mamy Twoją odpowiedź. Szkoda, że się nie zobaczymy — dzięki, że dałeś znać.',
   ];
   if (yes) {
     lines.push(
       '',
       'Kiedy: ' + EVENT_WHEN,
-      'Gdzie: ' + EVENT_WHERE_1 + ', ' + EVENT_WHERE_2,
+      'Gdzie: ' + EVENT_WHERE_1 + ', ' + EVENT_WHERE_2
+    );
+    if (plusOne) lines.push('Osoba towarzysząca: ' + plusOne);
+    lines.push(
       '',
       'Elegancki dress code · Bez kwiatów · Bezpłatny transport powrotny'
     );
@@ -148,7 +160,7 @@ function mailText(yes, name) {
   return lines.join('\n');
 }
 
-function mailHtml(yes, name) {
+function mailHtml(yes, name, plusOne) {
   const BG = '#233B25', FG = '#F2E7CC', STRONG = '#FAF4E4';
   const RULE = 'rgba(242,231,204,0.28)';
   const MUTED = 'rgba(242,231,204,0.72)';
@@ -160,7 +172,9 @@ function mailHtml(yes, name) {
     : 'Szkoda.<br>Dzięki za odpowiedź.';
 
   const lead = yes
-    ? 'Mamy Twoje potwierdzenie. Cieszymy się, że będziesz.'
+    ? (plusOne
+        ? 'Mamy Wasze potwierdzenie. Cieszymy się, że będziecie.'
+        : 'Mamy Twoje potwierdzenie. Cieszymy się, że będziesz.')
     : 'Mamy Twoją odpowiedź. Szkoda, że się nie zobaczymy — dzięki, że dałeś znać.';
 
   const details = yes ? (
@@ -168,6 +182,7 @@ function mailHtml(yes, name) {
       '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ' + RULE + ';">' +
         row('KIEDY', EVENT_WHEN, RULE, FG, STRONG, sans, serif) +
         row('GDZIE', EVENT_WHERE_1 + '<br>' + EVENT_WHERE_2, RULE, FG, STRONG, sans, serif) +
+        (plusOne ? row('Z KIM', esc(plusOne), RULE, FG, STRONG, sans, serif) : '') +
       '</table>' +
       '<p style="margin:26px 0 0;font-family:' + sans + ';font-size:13px;line-height:1.7;color:' + MUTED + ';">' +
         '<strong style="color:' + STRONG + ';">Elegancki</strong> dress code &nbsp;·&nbsp; Bez kwiatów &nbsp;·&nbsp; <strong style="color:' + STRONG + ';">Bezpłatny transport</strong> powrotny' +
@@ -237,6 +252,7 @@ function testAuth() {
 /** Wysyła próbne potwierdzenie na adres właściciela skryptu. */
 function testMail() {
   const me = Session.getEffectiveUser().getEmail();
-  sendConfirmation({ name: 'Jan Kowalski', attending: 'yes', email: me });
+  sendConfirmation({ name: 'Jan Kowalski', attending: 'yes', email: me,
+                     plus_one: 'yes', plus_one_name: 'Anna Kowalska' });
   Logger.log('Wysłano próbny mail na: ' + me);
 }

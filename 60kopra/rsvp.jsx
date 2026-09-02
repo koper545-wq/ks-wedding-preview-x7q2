@@ -77,9 +77,12 @@ function ChoiceField({ value, onChange, options }) {
   );
 }
 
-function Field({ label, hint, error, children }) {
+function Field({ label, hint, error, children, reveal }) {
   return (
-    <div style={{ padding: '32px 0', borderBottom: '1px solid var(--rule)' }}>
+    <div
+      className={reveal ? 'rsvp-rise' : undefined}
+      style={{ padding: '32px 0', borderBottom: '1px solid var(--rule)' }}
+    >
       <div className="smallcaps" style={{ color: 'var(--muted)', marginBottom: hint ? 8 : 16 }}>{label}</div>
       {hint && <div style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 18, lineHeight: 1.55 }}>{hint}</div>}
       {children}
@@ -94,6 +97,15 @@ function Field({ label, hint, error, children }) {
 
 /* ── Walidacja ─────────────────────────────────────────────────────────── */
 
+/* Pola o osobie towarzyszącej mają sens tylko dla przychodzących.
+   Trzymamy to w jednym miejscu — walidacja i render pytają o to samo. */
+function showsPlusOne(answers) {
+  return answers.attending === 'yes';
+}
+function showsPlusOneName(answers) {
+  return showsPlusOne(answers) && answers.plus_one === 'yes';
+}
+
 function validate(answers) {
   const e = COPY.rsvp.errors;
   const errors = {};
@@ -102,6 +114,14 @@ function validate(answers) {
   else if (name.length < 2) errors.name = e.nameShort;
 
   if (!answers.attending) errors.attending = e.attending;
+
+  if (showsPlusOne(answers) && !answers.plus_one) errors.plus_one = e.plusOne;
+
+  if (showsPlusOneName(answers)) {
+    const pn = (answers.plus_one_name || '').trim();
+    if (!pn) errors.plus_one_name = e.plusOneName;
+    else if (pn.length < 2) errors.plus_one_name = e.nameShort;
+  }
 
   const email = (answers.email || '').trim();
   if (email && !RSVP_EMAIL_RE.test(email)) errors.email = e.email;
@@ -194,7 +214,7 @@ function SuccessScreen({ answers, onReset, celebrate }) {
       <div className="rsvp-rule" style={{ height: 1, background: 'var(--rule-strong)', margin: '0 0 28px' }} />
 
       <p className="rsvp-rise" style={{ margin: '0 0 32px', fontSize: 15, lineHeight: 1.7, color: 'var(--muted)', maxWidth: 520, animationDelay: '160ms' }}>
-        {yes ? c.yesBody : c.noBody}
+        {yes ? (answers.plus_one === 'yes' ? c.yesBodyPair : c.yesBody) : c.noBody}
       </p>
       <button type="button" onClick={onReset} className="smallcaps rsvp-rise" style={{
         animationDelay: '260ms',
@@ -237,10 +257,12 @@ function RSVPBlock() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name:      (answers.name || '').trim(),
-          attending: answers.attending || '',
-          email:     (answers.email || '').trim().toLowerCase(),
-          source:    'web',
+          name:           (answers.name || '').trim(),
+          attending:      answers.attending || '',
+          plus_one:       showsPlusOne(answers) ? (answers.plus_one || '') : '',
+          plus_one_name:  showsPlusOneName(answers) ? (answers.plus_one_name || '').trim() : '',
+          email:          (answers.email || '').trim().toLowerCase(),
+          source:         'web',
         }),
       });
       if (!r.ok) {
@@ -294,13 +316,49 @@ function RSVPBlock() {
           />
         </Field>
 
+        {showsPlusOne(answers) && (
+          <Field
+            key="plus_one"
+            label={f.plusOne.label}
+            hint={f.plusOne.hint}
+            error={touched ? errors.plus_one : null}
+            reveal
+          >
+            <ChoiceField
+              value={answers.plus_one}
+              onChange={(v) => setAnswer('plus_one', v)}
+              options={['yes', 'no'].map((v) => ({
+                value: v,
+                label: f.plusOne.options[v][0],
+                sub:   f.plusOne.options[v][1],
+              }))}
+            />
+          </Field>
+        )}
+
+        {showsPlusOneName(answers) && (
+          <Field
+            key="plus_one_name"
+            label={f.plusOneName.label}
+            hint={f.plusOneName.hint}
+            error={touched ? errors.plus_one_name : null}
+            reveal
+          >
+            <TextField
+              value={answers.plus_one_name}
+              onChange={(v) => setAnswer('plus_one_name', v)}
+              placeholder={f.plusOneName.placeholder}
+            />
+          </Field>
+        )}
+
         <Field label={f.email.label} hint={f.email.hint} error={touched ? errors.email : null}>
           <TextField type="email" value={answers.email} onChange={(v) => setAnswer('email', v)} placeholder={f.email.placeholder} />
         </Field>
       </div>
 
       <div style={{ marginTop: 32, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-        <Button onClick={submit} disabled={submitting || (touched && !valid)}>
+        <Button onClick={submit} disabled={submitting}>
           {submitting ? c.submitting : c.submit}
           <span style={{ fontFamily: 'var(--serif)', fontSize: 16 }}>→</span>
         </Button>

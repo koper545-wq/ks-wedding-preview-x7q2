@@ -3,6 +3,7 @@
 // opcjonalnie wysyła potwierdzenie mailem przez Resend.
 
 const ATTENDING_VALUES = new Set(['yes', 'no']);
+const YES_NO = new Set(['yes', 'no']);
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Używane tylko przez awaryjne powiadomienie do organizatora (gdy padnie arkusz).
@@ -33,16 +34,29 @@ export default async function handler(req, res) {
   if (!body || typeof body !== 'object') return bad(res, 400, 'invalid body');
 
   const data = {
-    name:       clean(body.name, 120),
-    attending:  clean(body.attending, 10),
-    email:      clean(body.email, 200).toLowerCase(),
-    user_agent: clean(req.headers['user-agent'], 300),
-    source:     clean(body.source || 'web', 60),
+    name:          clean(body.name, 120),
+    attending:     clean(body.attending, 10),
+    plus_one:      clean(body.plus_one, 10),
+    plus_one_name: clean(body.plus_one_name, 120),
+    email:         clean(body.email, 200).toLowerCase(),
+    user_agent:    clean(req.headers['user-agent'], 300),
+    source:        clean(body.source || 'web', 60),
   };
 
   if (!data.name) return bad(res, 400, 'name required');
   if (!ATTENDING_VALUES.has(data.attending)) return bad(res, 400, 'attending invalid');
   if (data.email && !EMAIL_RE.test(data.email)) return bad(res, 400, 'email invalid');
+
+  if (data.attending === 'yes') {
+    if (data.plus_one && !YES_NO.has(data.plus_one)) return bad(res, 400, 'plus_one invalid');
+    // imię osoby towarzyszącej ma sens tylko przy „tak, we dwoje"
+    if (data.plus_one !== 'yes') data.plus_one_name = '';
+  } else {
+    // kto nie przychodzi, nie ma osoby towarzyszącej — czyścimy, żeby
+    // przypadkowe resztki ze stanu formularza nie trafiły do arkusza
+    data.plus_one = '';
+    data.plus_one_name = '';
+  }
 
   // ── 1. Dopis do arkusza (best-effort) ──
   const SHEETS_WEBHOOK_URL = process.env.SHEETS_WEBHOOK_URL;
@@ -151,6 +165,7 @@ function adminFallbackText(d, sheetsError) {
     '',
     `imię i nazwisko: ${d.name}`,
     `odpowiedź: ${d.attending}`,
+    `osoba towarzysząca: ${d.plus_one || '(n/d)'} ${d.plus_one_name || ''}`,
     `email: ${d.email || '(brak)'}`,
     `źródło: ${d.source}`,
     `user agent: ${d.user_agent}`,
