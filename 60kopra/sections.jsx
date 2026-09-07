@@ -32,10 +32,13 @@ function TopRSVP() {
     <header id="rsvp" style={{ padding: 'clamp(44px, 7vw, 88px) var(--pad-x) 88px' }}>
       <div style={{ maxWidth: 1000, margin: '0 auto' }}>
 
+        {/* „KOPROWSKIEGO" to 8,15 szerokości stopnia pisma i nie ma się gdzie
+            złamać, więc clamp musi je zmieścić na obu końcach skali:
+            przy 320 px ekranu (dostępne 288 px) i przy kontenerze 1000 px. */}
         <h1 style={{
           fontFamily: 'var(--display)',
           fontWeight: 400,
-          fontSize: 'clamp(52px, 10vw, 132px)',
+          fontSize: 'clamp(34px, 10.5vw, 116px)',
           lineHeight: 1.02,
           margin: 0,
           color: 'var(--fg-strong)',

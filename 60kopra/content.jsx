@@ -24,7 +24,7 @@ const COPY = {
 
   /* Góra strony: nagłówek + od razu formularz RSVP. Bez nawigacji. */
   top: {
-    title:   '60 URODZINY KOPRA',
+    title:   '60 URODZINY TOMKA KOPROWSKIEGO',
     logoAlt: 'Wrocław Golf Club',
     /* trzy hasła z dołu zaproszenia — [tekst pogrubiony, reszta] */
     badges: [
