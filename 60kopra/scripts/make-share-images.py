@@ -3,7 +3,7 @@
 Generuje grafiki do wysyłki (WhatsApp) na bazie zaproszenia z Figmy,
 w palecie strony.
 
-  img/og.jpg           1200x630  — miniatura linku (Open Graph). To JĄ widać
+  img/og.jpg           1200x900  — miniatura linku (Open Graph). To JĄ widać
                                    jako klikalną kartę, gdy wkleisz 60kopra.pl
                                    w WhatsAppie. JPEG, nie PNG, i lekki —
                                    scraper WhatsAppa potrafi po cichu odrzucić
@@ -153,8 +153,15 @@ def make_invite(path, W=1080, H=1620):
 
 # ── pozioma miniatura linku (Open Graph) ──────────────────────────────────
 
-def make_og(path, W=1200, H=630):
-    """Zapisujemy jako JPEG — WhatsApp bywa wybredny wobec PNG w og:image."""
+def make_og(path, W=1200, H=900):
+    """Miniatura linku. JPEG, nie PNG — scraper WhatsAppa bywa wobec PNG-ów
+    wybredny i potrafi je po cichu pominąć.
+
+    Format wyższy niż klasyczne 1200x630, bo tak karta wychodzi okazalej.
+    ALE: przy dużym podglądzie WhatsApp kadruje obraz mniej więcej do 1.91:1,
+    czyli do środkowego pasa ~1200x628. Wszystko, co niesie treść, musi się
+    zmieścić w tym pasie — reszta to margines, który wolno przyciąć.
+    """
     w, h = W * SS, H * SS
     im = grain_bg(w, h)
     d = ImageDraw.Draw(im)
@@ -164,36 +171,36 @@ def make_og(path, W=1200, H=630):
     d.rounded_rectangle([pad, pad, w - pad, h - pad],
                         radius=26 * SS, outline=mix(BODY, BG, 0.85), width=2 * SS)
 
-    f_lead  = font('BonaNova-Regular.ttf', 50 * SS)
-    f_big   = font('BonaNovaSC-Regular.ttf', 132 * SS)
-    f_word  = font('BonaNovaSC-Regular.ttf', 58 * SS)
-    f_date  = font('BonaNova-Regular.ttf', 36 * SS)
-    f_venue = font('BonaNova-Regular.ttf', 30 * SS)
+    f_head  = font('BonaNovaSC-Regular.ttf', 104 * SS)
+    f_na    = font('BonaNova-Regular.ttf', 46 * SS)
+    f_word  = font('BonaNovaSC-Regular.ttf', 76 * SS)
+    f_date  = font('BonaNova-Regular.ttf', 38 * SS)
+    f_venue = font('BonaNova-Regular.ttf', 32 * SS)
 
-    # Zaproszenie czyta się dalej jako jedno zdanie: „Serdecznie zapraszamy na
-    # 60 URODZINY KOPRA" — dlatego wstęp, a nie osobna, powtórzona nazwa.
-    y = 78 * SS
-    draw_centered(d, cx, y, 'Serdecznie zapraszamy na', f_lead, mix(BODY, BG, 0.95))
-    y += 84 * SS
+    y = 224 * SS
+    draw_centered(d, cx, y, 'ZAPROSZENIE', f_head, DISPLAY, tracking=6 * SS)
+    y += 132 * SS
 
-    draw_centered(d, cx, y, '60', f_big, DISPLAY)
-    y += 148 * SS
-    draw_centered(d, cx, y, 'URODZINY KOPRA', f_word, DISPLAY, tracking=3 * SS)
-    y += 98 * SS
+    # „na" schodzi w prawo — jak w odręcznym zaproszeniu, zamiast sztywnej osi
+    draw_centered(d, cx + 120 * SS, y, 'na', f_na, mix(BODY, BG, 0.9))
+    y += 96 * SS
+
+    draw_centered(d, cx, y, '60 URODZINY KOPRA', f_word, DISPLAY, tracking=3 * SS)
+    y += 128 * SS
 
     rule_w = 420 * SS
     d.line([cx - rule_w / 2, y, cx + rule_w / 2, y], fill=mix(BODY, BG, 0.8), width=2)
-    y += 32 * SS
+    y += 34 * SS
 
     draw_centered(d, cx, y, 'sobota, 7 listopada 2026, 18:00', f_date, DISPLAY)
-    y += 52 * SS
+    y += 56 * SS
     draw_centered(d, cx, y, 'Wrocław Golf Club, Kryniczno', f_venue, mix(BODY, BG, 0.92))
 
     out = im.resize((W, H), Image.LANCZOS)
     # schodzimy z jakością, aż zmieścimy się bezpiecznie poniżej 300 kB
-    for q in (88, 82, 76, 70):
+    for q in (88, 82, 76, 70, 64):
         out.save(path, quality=q, optimize=True, progressive=False, subsampling=0)
-        if os.path.getsize(path) <= 200_000:
+        if os.path.getsize(path) <= 220_000:
             break
     return path
 

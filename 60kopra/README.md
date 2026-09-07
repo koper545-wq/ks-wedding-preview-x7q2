@@ -174,8 +174,13 @@ bez żadnego błędu**. Winne były dwie rzeczy naraz:
   pewny,
 - adres miał **query string** (`?v=1`) — część scraperów się na tym wykłada.
 
-Stąd `img/og.jpg`: JPEG, bez query stringa, poniżej 200 kB (generator sam
+Stąd `img/og.jpg`: JPEG, bez query stringa, poniżej 220 kB (generator sam
 schodzi z jakością, aż się zmieści). Nie zamieniaj tego z powrotem na PNG.
+
+**Format 1200×900, ale projektowany pod kadr 1.91:1.** Przy dużym podglądzie
+WhatsApp przycina obraz do środkowego pasa ~1200×628 (czyli y 136–764).
+Wszystko, co niesie treść, musi się w nim zmieścić; poza pasem zostaje sam
+margines i krawędzie ramki. Skrypt ma to opisane przy `make_og`.
 
 **Cache.** WhatsApp trzyma miniaturę per adres i nie ma publicznego sposobu na
 jej wyczyszczenie. Po podmianie grafiki ten sam link długo pokazuje starą
