@@ -171,18 +171,17 @@ def make_og(path, W=1200, H=900):
     d.rounded_rectangle([pad, pad, w - pad, h - pad],
                         radius=26 * SS, outline=mix(BODY, BG, 0.85), width=2 * SS)
 
-    f_head  = font('BonaNovaSC-Regular.ttf', 104 * SS)
+    f_head  = font('BonaNovaSC-Regular.ttf', 76 * SS)   # ten sam stopień co wers z nazwą
     f_na    = font('BonaNova-Regular.ttf', 46 * SS)
     f_word  = font('BonaNovaSC-Regular.ttf', 76 * SS)
     f_date  = font('BonaNova-Regular.ttf', 38 * SS)
     f_venue = font('BonaNova-Regular.ttf', 32 * SS)
 
-    y = 224 * SS
-    draw_centered(d, cx, y, 'ZAPROSZENIE', f_head, DISPLAY, tracking=6 * SS)
-    y += 132 * SS
+    y = 250 * SS
+    draw_centered(d, cx, y, 'ZAPROSZENIE', f_head, DISPLAY, tracking=3 * SS)
+    y += 112 * SS
 
-    # „na" schodzi w prawo — jak w odręcznym zaproszeniu, zamiast sztywnej osi
-    draw_centered(d, cx + 120 * SS, y, 'na', f_na, mix(BODY, BG, 0.9))
+    draw_centered(d, cx, y, 'na', f_na, mix(BODY, BG, 0.9))
     y += 96 * SS
 
     draw_centered(d, cx, y, '60 URODZINY KOPRA', f_word, DISPLAY, tracking=3 * SS)
