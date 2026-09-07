@@ -3,7 +3,7 @@
 Generuje grafiki do wysyłki (WhatsApp) na bazie zaproszenia z Figmy,
 w palecie strony.
 
-  img/og.jpg           1200x900  — miniatura linku (Open Graph). To JĄ widać
+  img/og.jpg           1080x900  — miniatura linku (Open Graph). To JĄ widać
                                    jako klikalną kartę, gdy wkleisz 60kopra.pl
                                    w WhatsAppie. JPEG, nie PNG, i lekki —
                                    scraper WhatsAppa potrafi po cichu odrzucić
@@ -153,14 +153,15 @@ def make_invite(path, W=1080, H=1620):
 
 # ── pozioma miniatura linku (Open Graph) ──────────────────────────────────
 
-def make_og(path, W=1200, H=900):
+def make_og(path, W=1080, H=900):
     """Miniatura linku. JPEG, nie PNG — scraper WhatsAppa bywa wobec PNG-ów
     wybredny i potrafi je po cichu pominąć.
 
     Format wyższy niż klasyczne 1200x630, bo tak karta wychodzi okazalej.
     ALE: przy dużym podglądzie WhatsApp kadruje obraz mniej więcej do 1.91:1,
-    czyli do środkowego pasa ~1200x628. Wszystko, co niesie treść, musi się
-    zmieścić w tym pasie — reszta to margines, który wolno przyciąć.
+    czyli tutaj do środkowego pasa ~1080x565 (y 167–732). Wszystko, co niesie
+    treść, musi się zmieścić w tym pasie — reszta to margines, który wolno
+    przyciąć. Po zmianie szerokości warto ten pas przeliczyć na nowo.
     """
     w, h = W * SS, H * SS
     im = grain_bg(w, h)
