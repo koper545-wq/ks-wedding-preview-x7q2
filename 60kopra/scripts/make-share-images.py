@@ -164,7 +164,7 @@ def make_og(path, W=1200, H=630):
     d.rounded_rectangle([pad, pad, w - pad, h - pad],
                         radius=26 * SS, outline=mix(BODY, BG, 0.85), width=2 * SS)
 
-    f_lead  = font('BonaNova-Regular.ttf', 34 * SS)
+    f_lead  = font('BonaNova-Regular.ttf', 50 * SS)
     f_big   = font('BonaNovaSC-Regular.ttf', 132 * SS)
     f_word  = font('BonaNovaSC-Regular.ttf', 58 * SS)
     f_date  = font('BonaNova-Regular.ttf', 36 * SS)
@@ -172,9 +172,9 @@ def make_og(path, W=1200, H=630):
 
     # Zaproszenie czyta się dalej jako jedno zdanie: „Serdecznie zapraszamy na
     # 60 URODZINY KOPRA" — dlatego wstęp, a nie osobna, powtórzona nazwa.
-    y = 100 * SS
-    draw_centered(d, cx, y, 'Serdecznie zapraszamy na', f_lead, mix(BODY, BG, 0.9))
-    y += 66 * SS
+    y = 78 * SS
+    draw_centered(d, cx, y, 'Serdecznie zapraszamy na', f_lead, mix(BODY, BG, 0.95))
+    y += 84 * SS
 
     draw_centered(d, cx, y, '60', f_big, DISPLAY)
     y += 148 * SS
