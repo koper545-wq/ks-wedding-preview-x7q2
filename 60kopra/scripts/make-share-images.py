@@ -164,23 +164,29 @@ def make_og(path, W=1200, H=630):
     d.rounded_rectangle([pad, pad, w - pad, h - pad],
                         radius=26 * SS, outline=mix(BODY, BG, 0.85), width=2 * SS)
 
-    f_big   = font('BonaNovaSC-Regular.ttf', 150 * SS)
-    f_word  = font('BonaNovaSC-Regular.ttf', 62 * SS)
-    f_date  = font('BonaNova-Regular.ttf', 38 * SS)
-    f_venue = font('BonaNova-Regular.ttf', 32 * SS)
+    f_lead  = font('BonaNova-Regular.ttf', 34 * SS)
+    f_big   = font('BonaNovaSC-Regular.ttf', 132 * SS)
+    f_word  = font('BonaNovaSC-Regular.ttf', 58 * SS)
+    f_date  = font('BonaNova-Regular.ttf', 36 * SS)
+    f_venue = font('BonaNova-Regular.ttf', 30 * SS)
 
-    y = 86 * SS
+    # Zaproszenie czyta się dalej jako jedno zdanie: „Serdecznie zapraszamy na
+    # 60 URODZINY KOPRA" — dlatego wstęp, a nie osobna, powtórzona nazwa.
+    y = 100 * SS
+    draw_centered(d, cx, y, 'Serdecznie zapraszamy na', f_lead, mix(BODY, BG, 0.9))
+    y += 66 * SS
+
     draw_centered(d, cx, y, '60', f_big, DISPLAY)
-    y += 166 * SS
+    y += 148 * SS
     draw_centered(d, cx, y, 'URODZINY KOPRA', f_word, DISPLAY, tracking=3 * SS)
-    y += 106 * SS
+    y += 98 * SS
 
     rule_w = 420 * SS
     d.line([cx - rule_w / 2, y, cx + rule_w / 2, y], fill=mix(BODY, BG, 0.8), width=2)
-    y += 34 * SS
+    y += 32 * SS
 
     draw_centered(d, cx, y, 'sobota, 7 listopada 2026, 18:00', f_date, DISPLAY)
-    y += 56 * SS
+    y += 52 * SS
     draw_centered(d, cx, y, 'Wrocław Golf Club, Kryniczno', f_venue, mix(BODY, BG, 0.92))
 
     out = im.resize((W, H), Image.LANCZOS)
